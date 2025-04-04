@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAVCER</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">ZAVCER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="HomePage.html">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="Teachers.html">Преподаватели</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Studios.html">Репетиционные точки</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="studioCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="https://via.placeholder.com/600x400" class="d-block w-100" alt="Студия">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/600x400" class="d-block w-100" alt="Студия">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="https://via.placeholder.com/600x400" class="d-block w-100" alt="Студия">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#studioCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#studioCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+                </div>
+                <div class="d-grid gap-2">
+                    <a href="studios.html" class="btn btn-outline-secondary">← Вернуться к списку</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h1>Студия "Ритм"</h1>
+                <p class="lead">Профессиональная репетиционная точка для музыкантов</p>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Описание</h5>
+                        <p class="card-text">
+                            <strong>Адрес:</strong> ул. Центральная, 15<br>
+                            <strong>Площадь:</strong> 30 кв.м<br>
+                            <strong>Вместимость:</strong> до 5 человек<br>
+                            <strong>Цена:</strong> 500 руб/час<br>
+                            <strong>Минимальное время:</strong> 2 часа
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Оборудование</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Барабанная установка Yamaha</li>
+                            <li class="list-group-item">Гитары Fender и Gibson</li>
+                            <li class="list-group-item">Бас-гитара Ibanez</li>
+                            <li class="list-group-item">Клавишные Roland</li>
+                            <li class="list-group-item">Усилители и микрофоны</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Забронировать студию</h5>
+                        <form>
+                            <div class="mb-3">
+                                <label for="clientName" class="form-label">Ваше имя</label>
+                                <input type="text" class="form-control" id="clientName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="clientPhone" class="form-label">Телефон</label>
+                                <input type="tel" class="form-control" id="clientPhone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookingDate" class="form-label">Дата</label>
+                                <input type="date" class="form-control" id="bookingDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="hours" class="form-label">Количество часов</label>
+                                <select class="form-select" id="hours">
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5+</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Забронировать</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p>ZAVCER</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

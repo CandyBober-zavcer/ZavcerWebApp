@@ -1,0 +1,18 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.PebbleVM" #}
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Пример шаблона</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+        <h1>Пример Pebble-шаблона</h1>
+        <p><b>Данные шаблона: </b>{{ model.description }}</p>
+    </div>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

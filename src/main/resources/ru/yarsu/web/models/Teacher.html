@@ -5,131 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAVCER</title>
     <link href="../../public/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-        .content {
-            flex: 1 0 auto;
-        }
-        footer {
-            flex-shrink: 0;
-        }
-    </style>
+    <link rel="stylesheet" href="../../public/css/Teacher.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="HomePage.html">ZAVCER</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="HomePage.html">Главная</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="Teachers.html">Преподаватели</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="Studios.html">Репетиционные точки</a>
-                        </li>
-                    </ul>
+        <div class="container">
+            <a class="navbar-brand" href="HomePage.html">ZAVCER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="HomePage.html">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Teachers.html">Преподаватели</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Studios.html">Репетиционные точки</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 mb-5">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="https://sun9-53.userapi.com/s/v1/ig2/ZeIqzDnrib36STD8ZvkI-S0-a_bX2ItKpZhVjfN1poL8xq3rC_zhlVS48u2LyPIAFFxxLhL7Lsvt3wCvbX2F-AwD.jpg?quality=96&blur=50,20&as=32x24,48x36,72x54,108x81,160x120,240x180,360x269,480x359,540x404,640x479,720x539,806x603&from=bu&u=JQT28eFEKLcjP0hmRg2fGG5zrMfUXTKSCQY_Fo7ftKc&cs=806x603" class="img-fluid rounded mb-4" alt="Иван Петров">
+                <div class="d-grid gap-2">
+                    <a href="teachers.html" class="btn btn-outline-secondary">← Вернуться к списку</a>
                 </div>
             </div>
-        </nav>
+            <div class="col-md-8">
+                <h1>Иван Петров</h1>
+                <p class="lead">Преподаватель гитары, бас-гитары и укулеле</p>
 
-        <div class="container mt-5 mb-5">
-            <div class="row">
-                <div class="col-md-4">
-                    <img src="https://sun9-53.userapi.com/s/v1/ig2/ZeIqzDnrib36STD8ZvkI-S0-a_bX2ItKpZhVjfN1poL8xq3rC_zhlVS48u2LyPIAFFxxLhL7Lsvt3wCvbX2F-AwD.jpg?quality=96&blur=50,20&as=32x24,48x36,72x54,108x81,160x120,240x180,360x269,480x359,540x404,640x479,720x539,806x603&from=bu&u=JQT28eFEKLcjP0hmRg2fGG5zrMfUXTKSCQY_Fo7ftKc&cs=806x603" class="img-fluid rounded mb-4" alt="Иван Петров">
-                    <div class="d-grid gap-2">
-                        <a href="teachers.html" class="btn btn-outline-secondary">← Вернуться к списку</a>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">О преподавателе</h5>
+                        <p class="card-text">
+                            Опыт преподавания: 10 лет<br>
+                            Образование: Консерватория им. Чайковского<br>
+                            Стили: Рок, блюз, джаз, фанк, классика<br>
+                            Возраст учеников: от 10 лет
+                        </p>
                     </div>
                 </div>
-                <div class="col-md-8">
-                    <h1>Иван Петров</h1>
-                    <p class="lead">Преподаватель гитары, бас-гитары и укулеле</p>
 
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">О преподавателе</h5>
-                            <p class="card-text">
-                                Опыт преподавания: 10 лет<br>
-                                Образование: Консерватория им. Чайковского<br>
-                                Стили: Рок, блюз, джаз, фанк, классика<br>
-                                Возраст учеников: от 10 лет
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Расписание</h5>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>День</th>
-                                            <th>Время</th>
-                                            <th>Статус</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Понедельник</td>
-                                            <td>10:00-12:00</td>
-                                            <td><span class="badge bg-success">Свободно</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Среда</td>
-                                            <td>14:00-16:00</td>
-                                            <td><span class="badge bg-success">Свободно</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Пятница</td>
-                                            <td>18:00-20:00</td>
-                                            <td><span class="badge bg-danger">Занято</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Расписание</h5>
+                        <div class="calendar mb-3">
+                            <div class="calendar-header">
+                                <button class="calendar-nav" id="prevMonth">❮</button>
+                                <div class="calendar-title" id="currentMonthYear"></div>
+                                <button class="calendar-nav" id="nextMonth">❯</button>
                             </div>
+                            <div class="calendar-weekdays">
+                                <div>Пн</div>
+                                <div>Вт</div>
+                                <div>Ср</div>
+                                <div>Чт</div>
+                                <div>Пт</div>
+                                <div>Сб</div>
+                                <div>Вс</div>
+                            </div>
+                            <div class="calendar-days" id="calendarDays"></div>
+                        </div>
+                        <div class="time-slots-container" style="display: none;">
+                            <h6>Доступное время:</h6>
+                            <div class="time-slots" id="timeSlots"></div>
+                            <div class="reset-time">Сбросить выбор времени</div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Записаться на занятие</h5>
-                            <form>
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Ваше имя</label>
-                                    <input type="text" class="form-control" id="name" required>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Записаться на занятие</h5>
+                        <form id="bookingForm">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Ваше имя</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Телефон</label>
+                                <input type="tel" class="form-control" id="phone" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Выбранное время</label>
+                                <div class="booking-summary">
+                                    <p>Дата: <span id="summaryDate">не выбрано</span></p>
+                                    <p>Время: <span id="summaryTime">не выбрано</span></p>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="phone" class="form-label">Телефон</label>
-                                    <input type="tel" class="form-control" id="phone" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="date" class="form-label">Дата занятия</label>
-                                    <input type="date" class="form-control" id="date" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="instrument" class="form-label">Инструмент</label>
-                                    <select class="form-select" id="instrument">
-                                        <option>Гитара</option>
-                                        <option>Бас-гитара</option>
-                                        <option>Укулеле</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Отправить заявку</button>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="instrument" class="form-label">Инструмент</label>
+                                <select class="form-select" id="instrument">
+                                    <option>Гитара</option>
+                                    <option>Бас-гитара</option>
+                                    <option>Укулеле</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Отправить заявку</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -143,5 +124,6 @@
     </footer>
 
     <script src="../../public/js/bootstrap.bundle.min.js"></script>
+    <script src="../../public/js/Teacher.js"></script>
 </body>
 </html>

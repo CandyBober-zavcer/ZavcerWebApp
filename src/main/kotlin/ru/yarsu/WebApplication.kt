@@ -30,5 +30,5 @@ fun main() {
     println("Server started on http://localhost:" + server.port())
     println("Press enter to exit application.")
     readln()
-    server.block()
+    server.stop()
 }

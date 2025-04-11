@@ -11,7 +11,7 @@ class WebConfig(
         private val webPortLens = EnvironmentKey.int().required("web.port", "Application web port")
         override val defaultEnv =
             Environment.defaults(
-                webPortLens of 9000,
+                webPortLens of 8080,
             )
 
         fun createWebConfig(env: Environment): WebConfig {

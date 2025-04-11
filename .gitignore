@@ -1,2 +1,5 @@
-.idea
+.idea/
 logs/
+
+build/
+.gradle/

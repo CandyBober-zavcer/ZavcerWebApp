@@ -1,0 +1,12 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudioVM" #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>QQ</title>
+</head>
+<body>
+    Studio
+</body>
+</html>

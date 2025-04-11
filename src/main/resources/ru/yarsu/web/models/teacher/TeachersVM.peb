@@ -1,0 +1,12 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>QQ</title>
+</head>
+<body>
+    Teachers
+</body>
+</html>

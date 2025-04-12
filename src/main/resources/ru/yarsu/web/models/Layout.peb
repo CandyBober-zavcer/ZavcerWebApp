@@ -1,0 +1,48 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.home.HomePageVM" #}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAVCER</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/{% block style %}{% endblock %}.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="content">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/home">ZAVCER</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/home">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/teachers">Преподаватели</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/studios">Репетиционные точки</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+   {% block content %}
+   {% endblock %}
+    </div>
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p>Ну тут приколлы будут</p>
+        </div>
+    </footer>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/{% block script %}{% endblock %}.js"></script>
+</body>
+</html>

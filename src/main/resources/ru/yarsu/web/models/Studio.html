@@ -4,23 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAVCER</title>
-    <link href="../../public/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-        .content {
-            flex: 1 0 auto;
-        }
-        footer {
-            flex-shrink: 0;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../public/css/Studio.css">
 </head>
 <body>
     <div class="content">
@@ -105,7 +90,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Забронировать студию</h5>
-                            <form>
+                            <form id="bookingForm">
                                 <div class="mb-3">
                                     <label for="clientName" class="form-label">Ваше имя</label>
                                     <input type="text" class="form-control" id="clientName" required>
@@ -114,19 +99,44 @@
                                     <label for="clientPhone" class="form-label">Телефон</label>
                                     <input type="tel" class="form-control" id="clientPhone" required>
                                 </div>
+                                
+                                <!-- Календарь -->
                                 <div class="mb-3">
-                                    <label for="bookingDate" class="form-label">Дата</label>
-                                    <input type="date" class="form-control" id="bookingDate" required>
+                                    <label class="form-label">Выберите дату</label>
+                                    <div class="calendar">
+                                        <div class="calendar-header">
+                                            <button class="calendar-nav" id="prevMonth">❮</button>
+                                            <div class="calendar-title" id="currentMonthYear"></div>
+                                            <button class="calendar-nav" id="nextMonth">❯</button>
+                                        </div>
+                                        <div class="calendar-weekdays">
+                                            <div>Пн</div>
+                                            <div>Вт</div>
+                                            <div>Ср</div>
+                                            <div>Чт</div>
+                                            <div>Пт</div>
+                                            <div>Сб</div>
+                                            <div>Вс</div>
+                                        </div>
+                                        <div class="calendar-days" id="calendarDays"></div>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="hours" class="form-label">Количество часов</label>
-                                    <select class="form-select" id="hours">
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5+</option>
-                                    </select>
+                                
+                                <!-- Таймпикер -->
+                                <div class="time-picker">
+                                    <label class="form-label">Выберите время</label>
+                                    <div class="time-slots"></div>
+                                    <div class="reset-time">Сбросить выбор времени</div>
                                 </div>
+                                
+                                <!-- Сводка бронирования -->
+                                <div class="booking-summary">
+                                    <h6>Ваше бронирование:</h6>
+                                    <p>Дата: <span class="summary-date"></span></p>
+                                    <p>Время: <span class="summary-time"></span></p>
+                                    <p>Стоимость: <span class="summary-price"></span> руб.</p>
+                                </div>
+                                
                                 <button type="submit" class="btn btn-primary">Забронировать</button>
                             </form>
                         </div>
@@ -142,6 +152,7 @@
         </div>
     </footer>
 
-    <script src="../../public/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>\
+    <script src="../../public/js/Studio.js"></script>
 </body>
 </html>

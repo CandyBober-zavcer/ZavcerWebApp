@@ -4,18 +4,13 @@ import org.http4k.cloudnative.env.Environment
 import org.http4k.cloudnative.env.EnvironmentKey
 import org.http4k.lens.int
 
-class WebConfig(
-    val webPort: Int,
-) {
-    companion object : Config {
-        private val webPortLens = EnvironmentKey.int().required("web.port", "Application web port")
-        override val defaultEnv =
-            Environment.defaults(
-                webPortLens of 8080,
-            )
+class WebConfig(env: Environment) {
+    val port: Int = PORT(env)
 
-        fun createWebConfig(env: Environment): WebConfig {
-            return WebConfig(webPortLens(env))
-        }
+    companion object {
+        private val PORT = EnvironmentKey.int()
+            .defaulted("web.port", 8080, "HTTP server port")
+
+        operator fun invoke(env: Environment): WebConfig = WebConfig(env)
     }
 }

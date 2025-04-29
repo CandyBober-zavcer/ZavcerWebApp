@@ -118,4 +118,13 @@
             </div>
         </div>
 {% endblock %}
-{%block script%}Studio{% endblock %}
+{% block script %}
+    <script>
+        var userIdFromPebble = {{ model.user | default("null") }};
+        console.log("User ID from Pebble:", userIdFromPebble);
+        window.userId = userIdFromPebble;
+    </script>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/Studio.js"></script>
+{% endblock %}

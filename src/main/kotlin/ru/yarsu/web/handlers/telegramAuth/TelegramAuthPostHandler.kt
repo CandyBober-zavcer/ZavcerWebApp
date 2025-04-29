@@ -2,46 +2,74 @@ package ru.yarsu.web.handlers.telegramAuth
 
 import org.http4k.core.*
 import org.http4k.core.cookie.Cookie
+import org.http4k.core.cookie.SameSite
 import org.http4k.core.cookie.cookie
-import ru.yarsu.web.domain.models.telegram.JsonLogger
-import ru.yarsu.web.domain.models.telegram.telegramUserLens
+import org.http4k.format.Jackson
+import ru.yarsu.web.domain.models.telegram.*
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class TelegramAuthPostHandler : HttpHandler {
-    private val jsonLogger = JsonLogger("user_data.json")
+class TelegramAuthPostHandler(
+    private val jsonLogger: JsonLogger,
+    private val botToken: String
+) : HttpHandler {
 
     override fun invoke(request: Request): Response {
         return try {
-            // Логируем тело запроса для отладки
-            val bodyString = request.bodyString()
-            println("Тело запроса: $bodyString")
+            // Получаем данные из JSON
+            val formData = request.parseJsonData()
+            println("Received auth data: $formData")
 
-            // Извлекаем TelegramUser из запроса
-            val telegramUser = telegramUserLens(request)
-            println("Получен пользователь: $telegramUser")
+            // Проверяем подлинность данных
+            if (!isValidTelegramAuth(formData, botToken)) {
+                println("Telegram auth validation failed")
+                return Response(Status.UNAUTHORIZED).body("Invalid Telegram auth data")
+            }
 
-            // Логируем данные в JSON
-            jsonLogger.logToJson(telegramUser)
-
-            // Создаем куки с id пользователя
-            val cookie = Cookie(
-                name = "auth",
-                value = telegramUser.id.toString(),
-                httpOnly = true,
-                expires = ZonedDateTime.of(LocalDateTime.now().plusDays(7), ZoneId.of("Europe/Moscow")).toInstant()
+            // Создаем объект пользователя
+            val telegramUser = TelegramUser(
+                id = formData["id"]!!.toLong(),
+                first_name = formData["first_name"],
+                last_name = formData["last_name"],
+                username = formData["username"],
+                photo_url = formData["photo_url"],
+                auth_date = formData["auth_date"]!!.toLong(),
+                hash = formData["hash"]!!
             )
 
-            // Перенаправляем пользователя на главную страницу
-            Response(Status.FOUND)
-                .cookie(cookie)
+            // Логируем пользователя
+            jsonLogger.logToJson(telegramUser)
+
+            // Возвращаем ответ с кукой
+            return Response(Status.FOUND)
                 .header("Location", "/")
+                .cookie(createAuthCookie(telegramUser))
 
         } catch (e: Exception) {
-            println("Ошибка при обработке данных пользователя: ${e.message}")
-            e.printStackTrace()
-            Response(Status.BAD_REQUEST).body("Ошибка при авторизации!")
+            println("Telegram auth error: ${e.stackTraceToString()}")
+            Response(Status.BAD_REQUEST).body("Error processing Telegram auth")
         }
+    }
+
+    private fun Request.parseJsonData(): Map<String, String> {
+        val json = bodyString()
+        val parsed = Jackson.parse(json)
+        return parsed.fields().asSequence().associate { it.key to it.value.asText() }
+    }
+
+    private fun createAuthCookie(user: TelegramUser): Cookie {
+        return Cookie(
+            name = "tg_auth",
+            value = "${user.id}:${user.username ?: ""}", // username может быть null
+            path = "/",
+            httpOnly = true,
+            secure = true,
+            sameSite = SameSite.Strict,
+            expires = ZonedDateTime.of(
+                LocalDateTime.now().plusDays(7),
+                ZoneId.of("Europe/Moscow")
+            ).toInstant()
+        )
     }
 }

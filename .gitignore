@@ -3,3 +3,5 @@ logs/
 
 build/
 .gradle/
+
+data/telegram_users.json

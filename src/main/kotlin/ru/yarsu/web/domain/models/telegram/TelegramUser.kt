@@ -8,47 +8,45 @@ import java.io.File
 
 data class TelegramUser(
     val id: Long,
-    val first_name: String,
-    val last_name: String?,
     val username: String?,
-    val photo_url: String?,
-    val auth_date: Long,
-    val hash: String
+    val first_name: String? = null,
+    val last_name: String? = null,
+    val photo_url: String? = null,
+    val auth_date: Long? = null,
+    val hash: String? = null
 )
 
 class JsonLogger(private val filePath: String) {
-    private val objectMapper: ObjectMapper = ObjectMapper().apply {
+    private val objectMapper = ObjectMapper().apply {
         registerKotlinModule()
-        writerWithDefaultPrettyPrinter()
     }
 
     fun logToJson(user: TelegramUser) {
         try {
-            val file = File(filePath)
-            file.parentFile?.mkdirs()
+            val file = File(filePath).apply {
+                parentFile?.mkdirs()
+            }
 
-            val existingData: MutableList<TelegramUser> = if (file.exists() && file.length() > 0) {
-                objectMapper.readValue(file, object : com.fasterxml.jackson.core.type.TypeReference<List<TelegramUser>>() {})
+            val users = if (file.exists() && file.length() > 0) {
+                objectMapper.readValue(file,
+                    object : com.fasterxml.jackson.core.type.TypeReference<List<TelegramUser>>() {})
                     .toMutableList()
             } else {
                 mutableListOf()
             }
 
-            val existingUserIndex = existingData.indexOfFirst { it.id == user.id }
-
-            if (existingUserIndex >= 0) {
-                existingData[existingUserIndex] = user
-                println("Обновлены данные пользователя с id=${user.id}")
+            // Обновляем или добавляем пользователя
+            val existingIndex = users.indexOfFirst { it.id == user.id }
+            if (existingIndex >= 0) {
+                users[existingIndex] = user
             } else {
-                existingData.add(user)
-                println("Добавлен новый пользователь с id=${user.id}")
+                users.add(user)
             }
 
-            objectMapper.writeValue(file, existingData)
-            println("Данные сохранены в: ${file.absolutePath}")
+            objectMapper.writerWithDefaultPrettyPrinter()
+                .writeValue(file, users)
         } catch (e: Exception) {
-            println("Ошибка при записи в JSON: ${e.message}")
-            e.printStackTrace()
+            println("Error saving user data: ${e.message}")
         }
     }
 }

@@ -234,20 +234,19 @@ document.addEventListener('DOMContentLoaded', function() {
     resetTimeBtn.addEventListener('click', function() {
         resetTimeSelection();
     });
-    
-    // Обновление сводки бронирования
+
     function updateSummary() {
         if (selectedDate) {
             const date = new Date(selectedDate);
-            document.querySelector('.summary-date').textContent = 
-                `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+            document.querySelector('.summary-date').textContent =
+               `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
         }
-        
+
         if (startTime && endTime) {
             const startIndex = availableTimes.indexOf(startTime);
             const endIndex = availableTimes.indexOf(endTime);
             const hours = endIndex - startIndex + 1;
-            
+
             document.querySelector('.summary-time').textContent = `${startTime} - ${endTime}`;
             document.querySelector('.summary-price').textContent = hours * pricePerHour;
         } else if (startTime) {
@@ -262,14 +261,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработка формы
     document.getElementById('bookingForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         if (!selectedDate || !startTime || !endTime) {
             alert('Пожалуйста, выберите дату и время бронирования');
             return;
         }
-        
-        // Здесь должна быть отправка данных на сервер
-        alert(`Студия успешно забронирована на ${selectedDate} с ${startTime} до ${endTime}`);
+
+        console.log('userId =', window.userId);
+        const isAuthorized = !!window.userId;
+        console.log('isAuthorized =', isAuthorized);
+        if (!isAuthorized) {
+            alert("Необходима регистрация");
+            return;
+        }
+
+        const formData = {
+            date: selectedDate,
+            startTime: startTime,
+            endTime: endTime,
+            userId: window.userId
+        };
+
+        fetch('/studio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Ошибка при отправке");
+            return response.json();
+        })
+        .then(data => {
+            alert(`Студия успешно забронирована на ${selectedDate} с ${startTime} до ${endTime}`);
+        })
+        .catch(error => {
+            alert("Ошибка при бронировании.");
+            console.error(error);
+        });
     });
     
     // Запускаем календарь

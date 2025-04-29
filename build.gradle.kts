@@ -74,4 +74,5 @@ dependencies {
     testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
+    implementation("org.http4k:http4k-client-okhttp:5.15.0.0")
 }

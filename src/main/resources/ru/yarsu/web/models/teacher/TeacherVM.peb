@@ -90,4 +90,12 @@
 
 {% endblock %}
 
-{% block script %}Teacher{% endblock %}
+{% block script %}
+    <script>
+        window.userId = {{ model.user | default("null") }};
+    </script>
+
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/Teacher.js"></script>
+{% endblock %}
+

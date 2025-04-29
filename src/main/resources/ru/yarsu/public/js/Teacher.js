@@ -1,5 +1,6 @@
 // teacher-calendar.js
 document.addEventListener('DOMContentLoaded', function() {
+
     // 1. Настройка данных
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -259,27 +260,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обработка формы
     function handleFormSubmit(e) {
         e.preventDefault();
-        
+
         if (!selectedDate || !selectedTime) {
             alert('Пожалуйста, выберите дату и время занятия');
             return;
         }
-        
-        // Здесь должна быть отправка данных на сервер
+
+        const isAuthorized = !!window.userId;
+        if (!isAuthorized) {
+            alert("Необходима регистрация");
+            return;
+        }
+
         const formData = {
-            name: document.getElementById('name').value,
-            phone: document.getElementById('phone').value,
+            name: document.getElementById('name').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
             date: selectedDate,
             time: selectedTime,
-            instrument: document.getElementById('instrument').value
+            instrument: document.getElementById('instrument').value,
+            userId: window.userId
         };
-        
-        console.log('Данные для отправки:', formData);
-        alert(`Заявка отправлена! Вы записаны на ${formatSelectedDate(selectedDate)} в ${selectedTime}`);
+
+        fetch('/teacher', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (!response.ok) throw new Error("Ошибка при отправке");
+            return response.json();
+        })
+        .then(data => {
+            alert(`Заявка отправлена! Вы записаны на ${formatSelectedDate(selectedDate)} в ${selectedTime}`);
+        })
+        .catch(error => {
+            alert("Ошибка при отправке заявки.");
+            console.error(error);
+        });
     }
+
+
 
     // 5. Инициализация
     resetTimeBtn.addEventListener('click', resetTimeSelection);

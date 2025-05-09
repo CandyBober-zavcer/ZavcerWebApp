@@ -1,8 +1,9 @@
-import org.gradle.api.JavaVersion.VERSION_11
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.JavaVersion.VERSION_1_8
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.1.20"
     application
 }
 
@@ -21,6 +22,8 @@ val http4kConnectVersion: String by project
 val junitVersion: String by project
 val kotlinVersion: String by project
 
+val exposedVersion: String by project
+
 application {
     mainClass = "ru.yarsu.WebApplicationKt"
 }
@@ -31,16 +34,18 @@ tasks.withType<JavaExec>() {
 
 repositories {
     mavenCentral()
+    maven {
+        url = uri("https://dl.bintray.com/kotlin/exposed")
+    }
 }
 
 apply(plugin = "kotlin")
 
 tasks {
-    withType<KotlinCompile> {
-        kotlinOptions {
-            allWarningsAsErrors = false
-            jvmTarget = "11"
-            freeCompilerArgs += "-Xjvm-default=all"
+    withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+            freeCompilerArgs.add("-Xjvm-default=all")
         }
     }
 
@@ -49,8 +54,8 @@ tasks {
     }
 
     java {
-        sourceCompatibility = VERSION_11
-        targetCompatibility = VERSION_11
+        sourceCompatibility = VERSION_1_8
+        targetCompatibility = VERSION_1_8
     }
 }
 
@@ -63,6 +68,20 @@ dependencies {
     implementation("org.http4k:http4k-server-netty:${http4kVersion}")
     implementation("org.http4k:http4k-template-pebble:${http4kVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+//    implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jodatime:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
+//    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
+    implementation("com.h2database:h2:2.2.224")
+    implementation("mysql:mysql-connector-java:8.0.33")
+
     testImplementation("org.http4k:http4k-testing-approval:${http4kVersion}")
     testImplementation("org.http4k:http4k-testing-hamkrest:${http4kVersion}")
     testImplementation("org.http4k:http4k-testing-kotest:${http4kVersion}")

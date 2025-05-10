@@ -1,6 +1,9 @@
 package ru.yarsu.web
 
+import org.http4k.core.HttpHandler
 import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Response
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
@@ -19,9 +22,16 @@ import ru.yarsu.web.handlers.telegramAuth.TelegramAuthGetHandler
 import ru.yarsu.web.handlers.telegramAuth.TelegramAuthPostHandler
 import ru.yarsu.web.templates.ContextAwareViewRender
 
+class TestErrorHandler : HttpHandler {
+    override fun invoke(request: Request): Response {
+        throw RuntimeException("Искусственная ошибка 500 для теста.")
+    }
+}
+
 fun router(htmlView: ContextAwareViewRender, config: AppConfig): RoutingHttpHandler {
     return routes(
         "/" bind Method.GET to PebbleHandler(),
+        "/test-error" bind Method.GET to TestErrorHandler(), // Такого Хендлера нет
         "/ping" bind Method.GET to PingHandler(),
         "/auth/telegram" bind Method.GET to TelegramAuthGetHandler(htmlView),
         "/auth/telegram" bind Method.POST to TelegramAuthPostHandler(

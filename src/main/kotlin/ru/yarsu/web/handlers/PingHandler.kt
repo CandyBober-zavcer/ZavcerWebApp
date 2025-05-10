@@ -10,7 +10,7 @@ class PingHandler : HttpHandler {
         return if (user != null) {
             Response(Status.OK).body("Welcome, ${user.username}!")
         } else {
-            Response(Status.FOUND).header("Location", "/login")
+            Response(Status.FOUND).header("ru.yarsu.web.domain.article.Location", "/login")
         }
     }
 }

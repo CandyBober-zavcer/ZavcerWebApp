@@ -2,7 +2,7 @@
 
 
 {% extends "../Layout.peb" %}
-{% block style %}Studio{% endblock %}
+{% block style %}ru.yarsu.web.domain.article.Studio{% endblock %}
 {% block content %}
         <div class="container mt-4">
             <div class="row">
@@ -126,5 +126,5 @@
     </script>
 
     <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/Studio.js"></script>
+    <script src="../js/ru.yarsu.web.domain.article.Studio.js"></script>
 {% endblock %}

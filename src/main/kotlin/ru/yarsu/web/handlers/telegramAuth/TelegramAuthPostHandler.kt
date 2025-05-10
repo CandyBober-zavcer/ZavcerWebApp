@@ -17,17 +17,14 @@ class TelegramAuthPostHandler(
 
     override fun invoke(request: Request): Response {
         return try {
-            // Получаем данные из JSON
             val formData = request.parseJsonData()
             println("Received auth data: $formData")
 
-            // Проверяем подлинность данных
             if (!isValidTelegramAuth(formData, botToken)) {
                 println("Telegram auth validation failed")
                 return Response(Status.UNAUTHORIZED).body("Invalid Telegram auth data")
             }
 
-            // Создаем объект пользователя
             val telegramUser = TelegramUser(
                 id = formData["id"]!!.toLong(),
                 first_name = formData["first_name"],
@@ -38,12 +35,10 @@ class TelegramAuthPostHandler(
                 hash = formData["hash"]!!
             )
 
-            // Логируем пользователя
             jsonLogger.logToJson(telegramUser)
 
-            // Возвращаем ответ с кукой
             return Response(Status.FOUND)
-                .header("Location", "/")
+                .header("ru.yarsu.web.domain.article.Location", "/")
                 .cookie(createAuthCookie(telegramUser))
 
         } catch (e: Exception) {
@@ -61,7 +56,7 @@ class TelegramAuthPostHandler(
     private fun createAuthCookie(user: TelegramUser): Cookie {
         return Cookie(
             name = "tg_auth",
-            value = "${user.id}:${user.username ?: ""}", // username может быть null
+            value = "${user.id}:${user.username ?: ""}",
             path = "/",
             httpOnly = true,
             secure = true,

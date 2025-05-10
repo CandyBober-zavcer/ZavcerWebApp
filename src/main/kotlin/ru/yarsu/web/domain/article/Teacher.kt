@@ -12,6 +12,7 @@ package ru.yarsu.web.domain.article
  * @property instruments Список музыкальных инструментов, которым обучает преподаватель.
  */
 data class Teacher(
+    val id: Long,
     val fullName: String,
     val shortDescription: String,
     val experienceInfo: ExperienceInfo,

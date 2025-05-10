@@ -9,10 +9,10 @@ import java.io.File
 data class TelegramUser(
     val id: Long,
     val username: String?,
-    val first_name: String? = null,
-    val last_name: String? = null,
-    val photo_url: String? = null,
-    val auth_date: Long? = null,
+    val firstName: String? = null,
+    val lastName: String? = null,
+    val photoUrl: String? = null,
+    val authDate: Long? = null,
     val hash: String? = null
 )
 

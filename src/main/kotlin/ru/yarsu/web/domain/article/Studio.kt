@@ -17,7 +17,7 @@ package ru.yarsu.web.domain.article
  * @property schedule Расписание доступности студии.
  */
 data class Studio(
-    val id: String,
+    val id: Long,
     val name: String,
     val description: String?,
     val photoUrl: String?,
@@ -26,7 +26,7 @@ data class Studio(
     val capacity: Int,
     val areaSquareMeters: Double,
     val pricePerHour: Double,
-    val minBookingTimeHours: Int,
+    val minBookingTimeHours: Double,
     val equipment: List<Instrument>,
     val schedule: Schedule
 )

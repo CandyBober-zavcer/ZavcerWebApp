@@ -1,0 +1,177 @@
+package ru.yarsu.db
+
+import ru.yarsu.web.domain.article.*
+import java.time.LocalDate
+import java.time.LocalTime
+
+class StudiosData {
+    fun fillStudios(): List<Studio> {
+        return listOf(
+            Studio(
+                id = 1,
+                name = "Музыкальная студия №1",
+                description = "Уютная студия с современным оборудованием.",
+                photoUrl = "/img/studio1.png",
+                roles = PersonRole(
+                    owners = listOf(1001L),
+                    administrators = listOf(1002L, 1003L)
+                ),
+                location = Location("ул. Музыкальная, д. 5"),
+                capacity = 4,
+                areaSquareMeters = 30.0,
+                pricePerHour = 1500.0,
+                minBookingTimeHours = 1.0,
+                equipment = listOf(
+                    Instrument.ELECTRIC_GUITAR,
+                    Instrument.KEYBOARD,
+                    Instrument.DJEMBE
+                ),
+                schedule = Schedule(
+                    availability = mapOf(
+                        LocalDate.of(2025, 5, 15) to listOf(
+                            LocalTime.of(10, 0),
+                            LocalTime.of(11, 0),
+                            LocalTime.of(12, 0)
+                        ),
+                        LocalDate.of(2025, 5, 16) to listOf(
+                            LocalTime.of(14, 0),
+                            LocalTime.of(15, 0)
+                        )
+                    )
+                )
+
+            ),
+            Studio(
+                id = 2,
+                name = "Акустика+",
+                description = "Студия для сольных исполнений и вокала.",
+                photoUrl = "/img/studio2.png",
+                roles = PersonRole(
+                    owners = listOf(1010L),
+                    administrators = listOf(1011L)
+                ),
+                location = Location("пр. Независимости, д. 12"),
+                capacity = 2,
+                areaSquareMeters = 15.0,
+                pricePerHour = 1000.0,
+                minBookingTimeHours = 1.0,
+                equipment = listOf(
+                    Instrument.ACOUSTIC_GUITAR,
+                    Instrument.TROMBONE
+                ),
+                schedule = Schedule(
+                    availability = mapOf(
+                        LocalDate.of(2025, 5, 17) to listOf(
+                            LocalTime.of(9, 0),
+                            LocalTime.of(10, 0),
+                        ),
+                        LocalDate.of(2025, 5, 18) to listOf(
+                            LocalTime.of(13, 0),
+                            LocalTime.of(14, 0)
+                        )
+                    )
+                )
+            ),
+
+            Studio(
+                id = 3,
+                name = "RockHouse",
+                description = "Подходит для рок-групп. Отличная звукоизоляция и мощные усилители.",
+                photoUrl = "/img/studio3.png",
+                roles = PersonRole(
+                    owners = listOf(1020L),
+                    administrators = listOf(1021L)
+                ),
+                location = Location("ул. Рокеров, д. 7"),
+                capacity = 6,
+                areaSquareMeters = 40.0,
+                pricePerHour = 1800.0,
+                minBookingTimeHours = 2.0,
+                equipment = listOf(
+                    Instrument.ELECTRIC_GUITAR,
+                    Instrument.BASS,
+                    Instrument.DRUMS
+                ),
+                schedule = Schedule(
+                    availability = mapOf(
+                        LocalDate.of(2025, 5, 19) to listOf(
+                            LocalTime.of(16, 0),
+                            LocalTime.of(17, 0),
+                            LocalTime.of(18, 0)
+                        ),
+                        LocalDate.of(2025, 5, 20) to listOf(
+                            LocalTime.of(10, 0),
+                            LocalTime.of(11, 0)
+                        )
+                    )
+                )
+            ),
+
+            Studio(
+                id = 4,
+                name = "Jazz Loft",
+                description = "Лофт в центре города. Отличный выбор для джаз-бендов.",
+                photoUrl = "/img/studio4.png",
+                roles = PersonRole(
+                    owners = listOf(1030L),
+                    administrators = listOf(1031L, 1032L)
+                ),
+                location = Location("ул. Импровизации, д. 3"),
+                capacity = 5,
+                areaSquareMeters = 35.0,
+                pricePerHour = 1600.0,
+                minBookingTimeHours = 1.5,
+                equipment = listOf(
+                    Instrument.SAXOPHONE,
+                    Instrument.KEYBOARD,
+                    Instrument.DRUMS
+                ),
+                schedule = Schedule(
+                    availability = mapOf(
+                        LocalDate.of(2025, 5, 21) to listOf(
+                            LocalTime.of(15, 0),
+                            LocalTime.of(16, 30)
+                        ),
+                        LocalDate.of(2025, 5, 22) to listOf(
+                            LocalTime.of(18, 0)
+                        )
+                    )
+                )
+            ),
+
+            Studio(
+                id = 5,
+                name = "Drum Base",
+                description = "Специализирована под барабанщиков. Прочная конструкция, мощные томы.",
+                photoUrl = "/img/studio5.png",
+                roles = PersonRole(
+                    owners = listOf(1040L),
+                    administrators = emptyList()
+                ),
+                location = Location("ул. Ударников, д. 9"),
+                capacity = 1,
+                areaSquareMeters = 10.0,
+                pricePerHour = 800.0,
+                minBookingTimeHours = 0.5,
+                equipment = listOf(
+                    Instrument.DRUMS
+                ),
+                schedule = Schedule(
+                    availability = mapOf(
+                        LocalDate.of(2025, 5, 23) to listOf(
+                            LocalTime.of(8, 0),
+                            LocalTime.of(8, 30),
+                            LocalTime.of(9, 0)
+                        ),
+                        LocalDate.of(2025, 5, 24) to listOf(
+                            LocalTime.of(17, 0),
+                            LocalTime.of(17, 30),
+                            LocalTime.of(18, 0)
+                        )
+                    )
+                )
+            )
+
+        )
+    }
+}

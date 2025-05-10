@@ -22,6 +22,7 @@ enum class MusicStyle(val id: Int, private val displayName: String) {
     COUNTRY(13, "Кантри"),
     RNB(14, "R&B"),
     EXPERIMENTAL(15, "Экспериментальная музыка"),
+    PUNK(16, "Панк"),
     OTHER(16, "Другое");
 
     companion object {

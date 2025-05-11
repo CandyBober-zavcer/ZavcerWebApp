@@ -11,7 +11,7 @@ class StudiosData {
                 id = 1L,
                 name = "Музыкальная студия №1",
                 description = "Уютная студия с современным оборудованием.",
-                photoUrl = "/img/studio1.png",
+                photoUrl = listOf("https://avatars.mds.yandex.net/i?id=29d6e211074f66b4e77ee6e545ea34f1ed99ba33-6955035-images-thumbs&n=13"),
                 roles = PersonRole(
                     owners = listOf(1001L),
                     administrators = listOf(1002L, 1003L)
@@ -45,7 +45,7 @@ class StudiosData {
                 id = 2L,
                 name = "Акустика+",
                 description = "Студия для сольных исполнений и вокала.",
-                photoUrl = "/img/studio2.png",
+                photoUrl = listOf("https://yandex-images.clstorage.net/5Ohv12B14/43509b3HrQ9/PaYSGRP-VZKqw8MbHiMUPS6I2O5PKzaYvRPrIM3lKBkomZoXutd3QJO-hipIDtAGIBBI01bXRnSnm-GdsEwgrCkiAQiDOcDG-AQWGR7iVLp52BypWaoh3i2E6eWaJ-oNKgIVCnIL-MuedVq1VckGBCCQmkBHRwl6YcYiF-FIcDv7aBocFifamGPWRxYdJxn1cELa6t_vIhcwz6ZlxWAzELMFUQs_ifrM2nGVNBAGSkHo0l8eTwAPN_-CoNnnSb0wdiARmZ0rU1NsUQSQ1CMUf7cIUive7apfuI_j4AhpPFDywZeDsEk8SVq-X3eQBgOPZxdfG4EGxzFyCm4SL828OH0oG9kRYZJX55oF0FcvX_O8hlihEWnonj-Hq6wOIj4d-IPbyn5CeUIRt1H3lI0LySBbXBfLBM15ekKoWeEJfXO-KJAd3mQWFiuTDp5QZl-_sIgZZhSqZ9c-xGehTS5-3fDPW092yPFAmzzYuV_KzgGh35SfSo7Cdv_La19qRD19Oa_SHtWvHdJjmUldG6hZNzGF2qFdLapasgnm5ERv-R_3SJiOv0i0yN75nvOehEYGJRMd2YaBxbR8h6Vd4Qm58vToW5mcYV2RpRAPEt1un3E5yJihnWSs0XeOZCHOJz6ces_fRjbAdAQYflb3Xg4Dxe3dkJiHA8iztE7iXOyEPn03q1KQlqdcXihaAJ6b4JP2tw0Yr5yl4NCyR-goCGo_X3_FXowxSb4F0ntaNBqMisqt2t2TB47GfTPOItEphP41OCURGdrv2lFimYGZkysTdzzD02MRrC0ed0xu7QFpfBI0iVJC-Y32A5M-F3STBoICYFLXGcGCzjz6BGLX7ka3sfminx4f7F0Wr1lDGxYj1bYxAxphF-IhErEOZKeGb7RfOotQR3eB-YwfsxK7ns1ERWwd2dODSUJ-N40i1uKFMDp565Id3uVVGGPTR5eWa9Zz-0nS714polD1zmdtxQ"),
                 roles = PersonRole(
                     owners = listOf(1010L),
                     administrators = listOf(1011L)
@@ -77,7 +77,7 @@ class StudiosData {
                 id = 3L,
                 name = "RockHouse",
                 description = "Подходит для рок-групп. Отличная звукоизоляция и мощные усилители.",
-                photoUrl = "/img/studio3.png",
+                photoUrl = listOf("https://burobiz-a.akamaihd.net/uploads/images/44727/large_4503599658149925_8cbf.jpg"),
                 roles = PersonRole(
                     owners = listOf(1020L),
                     administrators = listOf(1021L)
@@ -111,7 +111,7 @@ class StudiosData {
                 id = 4L,
                 name = "Jazz Loft",
                 description = "Лофт в центре города. Отличный выбор для джаз-бендов.",
-                photoUrl = "/img/studio4.png",
+                photoUrl = listOf("https://theatre-light.ru/images/Gallery/2018/SmartAudio/smartaudio.jpg"),
                 roles = PersonRole(
                     owners = listOf(1030L),
                     administrators = listOf(1031L, 1032L)
@@ -143,7 +143,7 @@ class StudiosData {
                 id = 5L,
                 name = "Drum Base",
                 description = "Специализирована под барабанщиков. Прочная конструкция, мощные томы.",
-                photoUrl = "/img/studio5.png",
+                photoUrl = listOf("https://i.pinimg.com/736x/d3/82/17/d3821793ee346a0778b3066317793694.jpg"),
                 roles = PersonRole(
                     owners = listOf(1040L),
                     administrators = emptyList()

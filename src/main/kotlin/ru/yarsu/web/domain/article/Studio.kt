@@ -20,7 +20,7 @@ data class Studio(
     val id: Long,
     val name: String,
     val description: String?,
-    val photoUrl: String?,
+    val photoUrl: List<String>?,
     val roles: PersonRole,
     val location: Location,
     val capacity: Int,

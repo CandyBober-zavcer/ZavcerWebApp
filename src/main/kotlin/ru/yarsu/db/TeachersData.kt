@@ -10,6 +10,7 @@ class TeachersData {
             Teacher(
                 id = 1L,
                 fullName = "Серёга Пират",
+                photoUrl = listOf("https://i.ytimg.com/vi/GXHsLWlU2jQ/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGFUgEyh_MA8=&rs=AOn4CLBCwS6JXQfNbcx2PlwGzzgO3MZmFw"),
                 shortDescription = "Барабанщик и наставник по тяжёлой музыке",
                 experienceInfo = ExperienceInfo(
                     experienceYears = 12,
@@ -33,6 +34,7 @@ class TeachersData {
             Teacher(
                 id = 2L,
                 fullName = "Шаман",
+                photoUrl = listOf("http://cdn.iz.ru/sites/default/files/styles/900x506/public/news-2023-06/20230314_gaf_rk39_016.jpg?itok=BC-92G5P"),
                 shortDescription = "Вокалист и преподаватель сценического искусства",
                 experienceInfo = ExperienceInfo(
                     experienceYears = 8,
@@ -55,6 +57,7 @@ class TeachersData {
             Teacher(
                 id = 3L,
                 fullName = "Филипп Киркоров",
+                photoUrl = listOf("https://images.thevoicemag.ru/upload/img_cache/d2a/d2a4b203d393bf7a8f98e3d52a7ef85f_ce_1628x1080x0x228_cropped_1332x888.jpg"),
                 shortDescription = "Звезда поп-сцены, тренер артистизма",
                 experienceInfo = ExperienceInfo(
                     experienceYears = 25,
@@ -77,6 +80,7 @@ class TeachersData {
             Teacher(
                 id = 4L,
                 fullName = "Виктор Цой",
+                photoUrl = listOf("https://static.life.ru/posts/2018/05/1120502/289e5df8ca71d8a41a5af98958f32b2b.jpg"),
                 shortDescription = "Легенда рока, обучает гитаре и композиции",
                 experienceInfo = ExperienceInfo(
                     experienceYears = 18,

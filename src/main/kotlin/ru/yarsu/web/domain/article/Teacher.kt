@@ -14,6 +14,7 @@ package ru.yarsu.web.domain.article
 data class Teacher(
     val id: Long,
     val fullName: String,
+    val photoUrl: List<String>?,
     val shortDescription: String,
     val experienceInfo: ExperienceInfo,
     val roles: PersonRole,

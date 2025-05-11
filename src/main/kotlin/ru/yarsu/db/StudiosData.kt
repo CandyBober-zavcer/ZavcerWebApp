@@ -8,7 +8,7 @@ class StudiosData {
     fun fillStudios(): List<Studio> {
         return listOf(
             Studio(
-                id = 1,
+                id = 1L,
                 name = "Музыкальная студия №1",
                 description = "Уютная студия с современным оборудованием.",
                 photoUrl = "/img/studio1.png",
@@ -42,7 +42,7 @@ class StudiosData {
 
             ),
             Studio(
-                id = 2,
+                id = 2L,
                 name = "Акустика+",
                 description = "Студия для сольных исполнений и вокала.",
                 photoUrl = "/img/studio2.png",
@@ -74,7 +74,7 @@ class StudiosData {
             ),
 
             Studio(
-                id = 3,
+                id = 3L,
                 name = "RockHouse",
                 description = "Подходит для рок-групп. Отличная звукоизоляция и мощные усилители.",
                 photoUrl = "/img/studio3.png",
@@ -108,7 +108,7 @@ class StudiosData {
             ),
 
             Studio(
-                id = 4,
+                id = 4L,
                 name = "Jazz Loft",
                 description = "Лофт в центре города. Отличный выбор для джаз-бендов.",
                 photoUrl = "/img/studio4.png",
@@ -140,7 +140,7 @@ class StudiosData {
             ),
 
             Studio(
-                id = 5,
+                id = 5L,
                 name = "Drum Base",
                 description = "Специализирована под барабанщиков. Прочная конструкция, мощные томы.",
                 photoUrl = "/img/studio5.png",
@@ -171,7 +171,6 @@ class StudiosData {
                     )
                 )
             )
-
         )
     }
 }

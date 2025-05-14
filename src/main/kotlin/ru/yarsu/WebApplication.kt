@@ -6,10 +6,12 @@ import org.http4k.routing.static
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import org.jetbrains.exposed.sql.Database
+import ru.yarsu.db.DataBaseController
 import ru.yarsu.web.router
 
 fun main() {
     Database.connect("jdbc:mysql://localhost/test", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
+    DataBaseController().init()
     val appWithStaticResources =
         routes(
             router,

@@ -1,14 +1,32 @@
 package ru.yarsu.db
 
 import kotlinx.datetime.LocalDate
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.databasecontrollers.OccupationsController
 import ru.yarsu.db.databasecontrollers.SpotsController
 import ru.yarsu.db.databasecontrollers.UsersController
+import ru.yarsu.db.tables.DayOccupations
+import ru.yarsu.db.tables.HourOccupations
+import ru.yarsu.db.tables.Spots
+import ru.yarsu.db.tables.Users
+import ru.yarsu.db.tables.manyToMany.SpotsDays
+import ru.yarsu.db.tables.manyToMany.UsersDays
+import ru.yarsu.db.tables.manyToMany.UsersSpots
 import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.classes.User
 
 class DataBaseController {
+    /**
+     * Создаёт таблицы в базе данных.
+     */
+    fun init() {
+        transaction {
+            SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
+        }
+    }
+
     // Работа с Users
     fun getUserById(id: Int): User = UsersController().getUserById(id)
 

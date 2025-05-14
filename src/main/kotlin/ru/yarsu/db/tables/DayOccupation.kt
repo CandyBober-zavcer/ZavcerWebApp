@@ -4,15 +4,17 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.kotlin.datetime.*
 
 object DayOccupations : IntIdTable() {
-    val hour = integer("hour")
-    val occupation = reference("user", Users).nullable()
+    val day = date("day").uniqueIndex()
 }
 
-class DayOccupationLine(id: EntityID<Int>) : IntEntity(id) {
+class DayOccupationLine(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<DayOccupationLine>(DayOccupations)
 
-    var hour by DayOccupations.hour
-    var occupation by UserLine optionalReferencedOn DayOccupations.occupation
+    var day by DayOccupations.day
+    val hours by HourOccupationLine referrersOn HourOccupations.day
 }

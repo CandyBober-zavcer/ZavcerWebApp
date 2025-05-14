@@ -17,7 +17,9 @@ object Users : IntIdTable() {
     val roles = varchar("roles", 50)
 }
 
-class UserLine(id: EntityID<Int>) : IntEntity(id) {
+class UserLine(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<UserLine>(Users)
 
     var name by Users.name
@@ -30,6 +32,6 @@ class UserLine(id: EntityID<Int>) : IntEntity(id) {
 
     var images by Users.images.transform(
         { a -> a?.joinToString(SEPARATOR) },
-        { str -> str?.split(SEPARATOR)?.toTypedArray()}
+        { str -> str?.split(SEPARATOR)?.toTypedArray() },
     )
 }

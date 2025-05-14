@@ -5,7 +5,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import ru.yarsu.db.tables.manyToMany.SpotsDays
-import ru.yarsu.db.tables.manyToMany.SpotsUsers
+import ru.yarsu.db.tables.manyToMany.UsersSpots
 
 object Spots : IntIdTable() {
     val name = varchar("name", 50)
@@ -13,7 +13,9 @@ object Spots : IntIdTable() {
     val images = text("images")
 }
 
-class SpotLine(id: EntityID<Int>) : IntEntity(id) {
+class SpotLine(
+    id: EntityID<Int>,
+) : IntEntity(id) {
     companion object : IntEntityClass<SpotLine>(Spots) {
         const val SEPARATOR = ":"
     }
@@ -21,10 +23,10 @@ class SpotLine(id: EntityID<Int>) : IntEntity(id) {
     var name by Spots.name
     var description by Spots.description
     var twoWeekOccupation by DayOccupationLine via SpotsDays
-    var owners by UserLine via SpotsUsers
+    var owners by UserLine via UsersSpots
 
     var images by Spots.images.transform(
         { a -> a.joinToString(SEPARATOR) },
-        { str -> str.split(SEPARATOR).map { it }.toTypedArray() }
+        { str -> str.split(SEPARATOR).map { it }.toTypedArray() },
     )
 }

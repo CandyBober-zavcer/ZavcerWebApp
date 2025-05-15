@@ -1,0 +1,15 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.studio.EditStudioVM" #}
+
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Моя первая страница</title>
+</head>
+<body>
+  <h1>Привет, мир!</h1>
+  {{ model.studio }}
+  {{ model.user }}
+</body>
+</html>

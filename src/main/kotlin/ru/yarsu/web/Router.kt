@@ -12,12 +12,8 @@ import ru.yarsu.web.domain.models.telegram.JsonLogger
 import ru.yarsu.web.handlers.PebbleHandler
 import ru.yarsu.web.handlers.PingHandler
 import ru.yarsu.web.handlers.home.HomePageHandler
-import ru.yarsu.web.handlers.studio.StudioGetHandler
-import ru.yarsu.web.handlers.studio.StudioPostHandler
-import ru.yarsu.web.handlers.studio.StudiosGetHandler
-import ru.yarsu.web.handlers.teacher.TeacherGetHandler
-import ru.yarsu.web.handlers.teacher.TeacherPostHandler
-import ru.yarsu.web.handlers.teacher.TeachersGetHandler
+import ru.yarsu.web.handlers.studio.*
+import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.telegramAuth.TelegramAuthGetHandler
 import ru.yarsu.web.handlers.telegramAuth.TelegramAuthPostHandler
 import ru.yarsu.web.templates.ContextAwareViewRender
@@ -43,6 +39,13 @@ fun router(htmlView: ContextAwareViewRender, config: AppConfig): RoutingHttpHand
         "/studios" bind Method.GET to StudiosGetHandler(htmlView),
 //        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView),
-        "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView)
+        "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView),
+        "/edit/teacher/edit-{id}" bind Method.GET to EditTeacherGetHandler(htmlView),
+        "/edit/teacher/add" bind Method.GET to AddTeacherGetHandler(htmlView),
+        "/edit/teacher/delete" bind Method.GET to DeleteTeacherGetHandler(htmlView),
+
+        "/edit/studio/edit-{id}" bind Method.GET to EditStudioGetHandler(htmlView),
+        "/edit/studio/add" bind Method.GET to AddStudioGetHandler(htmlView),
+        "/edit/studio/delete" bind Method.GET to DeleteStudioGetHandler(htmlView),
     )
 }

@@ -6,6 +6,8 @@
     <a href="/teachers" class="btn btn-outline-secondary mb-4">
         ← Назад ко всем преподавателям
     </a>
+    <a href="/edit/teacher/edit-{studio.id}" class="btn btn-outline-warning mb-4">Редактировать</a>
+    <a href="/edit/teacher/delete" class="btn btn-outline-danger mb-4">Удалить</a>
 
     <div class="card shadow-lg">
         <div class="row g-0">

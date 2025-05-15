@@ -18,8 +18,7 @@ class StudioGetHandler(private val htmlView: ContextAwareViewRender) : HttpHandl
 
         val studio = StudiosData().fillStudios().find { it.id.toInt() == studioId }
 
-        if (studio == null) {
-            return Response(Status.NOT_FOUND).body("Студия не найдена")
+        if (studio == null) {            return Response(Status.NOT_FOUND).body("Студия не найдена")
         }
 
         val viewModel = StudioVM(

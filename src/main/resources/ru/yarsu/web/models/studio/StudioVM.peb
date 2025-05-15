@@ -7,6 +7,8 @@
     <a href="/studios" class="btn btn-outline-secondary mb-4">
         ← Назад ко всем студиям
     </a>
+    <a href="/edit/studio/edit-{studio.id}" class="btn btn-outline-warning mb-4">Редактировать</a>
+    <a href="/edit/studio/delete" class="btn btn-outline-danger mb-4">Удалить</a>
 
     <div class="card shadow-lg">
         <div class="row g-0">

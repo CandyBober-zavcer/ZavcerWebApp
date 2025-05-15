@@ -1,0 +1,5 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.DeleteTeacherVM" #}
+{% extends "../Layout.peb" %}
+
+{% block content %}
+{% endblock %}

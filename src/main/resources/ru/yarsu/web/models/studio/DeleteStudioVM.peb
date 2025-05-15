@@ -1,0 +1,6 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.studio.DeleteStudioVM" #}
+
+{% extends "../Layout.peb" %}
+
+{% block content %}
+{% endblock %}

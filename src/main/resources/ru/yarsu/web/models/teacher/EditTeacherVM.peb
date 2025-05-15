@@ -1,0 +1,5 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.EditTeacherVM" #}
+{% extends "../Layout.peb" %}
+
+{% block content %}
+{% endblock %}

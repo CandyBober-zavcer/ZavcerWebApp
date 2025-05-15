@@ -1,12 +1,12 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeacherVM" #}
     {% extends "../Layout.peb" %}
-
+    {% block style %}../css/Teacher.css{% endblock %}
     {% block content %}
 <div class="container mt-5">
     <a href="/teachers" class="btn btn-outline-secondary mb-4">
         ← Назад ко всем преподавателям
     </a>
-    <a href="/edit/teacher/edit-{studio.id}" class="btn btn-outline-warning mb-4">Редактировать</a>
+    <a href="/edit/teacher/edit-{{model.teacher.id}}" class="btn btn-outline-warning mb-4">Редактировать</a>
     <a href="/edit/teacher/delete" class="btn btn-outline-danger mb-4">Удалить</a>
 
     <div class="card shadow-lg">
@@ -86,12 +86,13 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block script %}
     <script>
         window.userId = {{ model.user | default("null") }};
     </script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/Teacher.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/Teacher.js"></script>
 {% endblock %}

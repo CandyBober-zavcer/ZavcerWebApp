@@ -23,7 +23,7 @@
                             <strong>Цена:</strong> {{ studio.pricePerHour }} руб/час
                         </p>
                         <a href="/studio/{{ studio.id }}" class="btn btn-primary">Забронировать</a>
-                        <a href="/edit/studio/edit-{studio.id}" class="btn btn-primary">Редактировать</a>
+                        <a href="/edit/studio/edit-{{studio.id}}" class="btn btn-primary">Редактировать</a>
                         <a href="/edit/studio/delete" class="btn btn-primary">Удалить</a>
                     </div>
                 </div>

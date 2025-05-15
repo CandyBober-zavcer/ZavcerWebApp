@@ -2,5 +2,36 @@
 {% extends "../Layout.peb" %}
 
 {% block content %}
-{{ model.teachers }}
+
+<div class="container mt-5">
+    <h2>Подтверждение удаления преподавателя</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">{{ model.teacher.fullName }}</h3>
+                <p class="card-text">{{ model.teacher.shortDescription }}</p>
+
+
+                <div class="mb-3">
+                    <h5>Информация об опыте:</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Полное имя: Радимир Гузанович</li>
+                        <li class="list-group-item">Опыт преподавания: 100 лет</li>
+                        <li class="list-group-item">Образование: Великолепное</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">Внимание!</h4>
+                    <p>Вы собираетесь удалить преподавателя. Это действие невозможно отменить.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="/teachers" class="btn btn-secondary">Отмена</a>
+            <button type="submit" class="btn btn-danger">Да, удалить преподавателя</button>
+        </div>
+    </form>
+</div>
 {% endblock %}

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Доступное время преподавателя (пример)
     const availableTimes = generateAvailableDates(currentYear, currentMonth, currentDay);
-    
+
     // Выходные дни (суббота и воскресенье)
     const blockedDates = getWeekendDates(currentYear, currentMonth, currentDay);
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const available = {};
         const daysInMonth = new Date(year, month + 2, 0).getDate();
         const endDay = Math.min(startDay + 60, daysInMonth); // 60 дней = ~2 месяца
-        
+
         // Добавляем рабочие дни (пн-пт) с интервалом в 2-3 дня
         for (let day = startDay; day <= endDay; day++) {
             const date = new Date(year, month, day);
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const startHour = 10; // Начало рабочего дня
         const endHour = 19;   // Конец рабочего дня
         const lessonDuration = 1; // Длительность занятия (часы)
-        
+
         // Создаем слоты каждый час
         for (let hour = startHour; hour <= endHour - lessonDuration; hour++) {
             // 70% вероятности что слот будет доступен
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const weekends = [];
         const daysInMonth = new Date(year, month + 2, 0).getDate();
         const endDay = Math.min(startDay + 60, daysInMonth);
-        
+
         for (let day = startDay; day <= endDay; day++) {
             const date = new Date(year, month, day);
             if (date.getDay() === 0 || date.getDay() === 6) {
@@ -98,14 +98,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация календаря
     function initCalendar() {
         renderCalendar();
-        
+
         prevMonthBtn.addEventListener('click', () => {
             if (!prevMonthBtn.classList.contains('disabled')) {
                 currentDate.setMonth(currentDate.getMonth() - 1);
                 renderCalendar();
             }
         });
-        
+
         nextMonthBtn.addEventListener('click', () => {
             if (!nextMonthBtn.classList.contains('disabled')) {
                 currentDate.setMonth(currentDate.getMonth() + 1);
@@ -118,24 +118,24 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        
+
         currentMonthYear.textContent = new Intl.DateTimeFormat('ru-RU', {
             month: 'long',
             year: 'numeric'
         }).format(currentDate);
-        
+
         const firstDay = new Date(year, month, 1);
         const lastDay = new Date(year, month + 1, 0);
         const firstDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
         const daysInMonth = lastDay.getDate();
-        
+
         calendarDays.innerHTML = '';
-        
+
         // Пустые ячейки предыдущего месяца
         for (let i = 0; i < firstDayOfWeek; i++) {
             calendarDays.appendChild(createDayElement('other-month'));
         }
-        
+
         // Дни текущего месяца
         for (let i = 1; i <= daysInMonth; i++) {
             const dayDate = new Date(year, month, i);
@@ -144,34 +144,34 @@ document.addEventListener('DOMContentLoaded', function() {
             const isBlocked = blockedDates.includes(dateStr);
             const isPast = dayDate < today;
             const hasAvailableTimes = availableTimes[dateStr] && availableTimes[dateStr].length > 0;
-            
+
             const dayElement = createDayElement(
-                isPast ? 'past' : 
-                isBlocked ? 'unavailable' : 
+                isPast ? 'past' :
+                isBlocked ? 'unavailable' :
                 hasAvailableTimes ? 'available' : 'unavailable',
                 i
             );
-            
+
             if (!isPast && !isBlocked && hasAvailableTimes) {
                 dayElement.addEventListener('click', () => selectDate(dayElement, dateStr));
             }
-            
+
             calendarDays.appendChild(dayElement);
         }
-        
+
         // Пустые ячейки следующего месяца
         const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
         const remainingCells = totalCells - (firstDayOfWeek + daysInMonth);
-        
+
         for (let i = 0; i < remainingCells; i++) {
             calendarDays.appendChild(createDayElement('other-month'));
         }
-        
+
         // Блокировка кнопок навигации
         const prevMonth = new Date(year, month - 1, 1);
         const isPrevMonthPast = prevMonth < new Date(today.getFullYear(), today.getMonth(), 1);
         prevMonthBtn.classList.toggle('disabled', isPrevMonthPast);
-        
+
         const maxAllowedDate = new Date();
         maxAllowedDate.setMonth(today.getMonth() + 2); // 2 месяца вперед
         const nextMonth = new Date(year, month + 1, 1);
@@ -192,11 +192,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
         element.classList.add('selected');
         selectedDate = dateStr;
-        
+
         timeSlotsContainer.style.display = 'block';
         bookingSummary.style.display = 'block';
         resetTimeBtn.style.display = 'none';
-        
+
         updateSummary();
         renderTimeSlots(dateStr);
     }
@@ -205,16 +205,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderTimeSlots(dateStr) {
         timeSlots.innerHTML = '';
         selectedTime = null;
-        
+
         const timesForDate = availableTimes[dateStr] || [];
-        
+
         timesForDate.forEach(time => {
             const timeSlot = document.createElement('div');
             timeSlot.className = 'time-slot available';
             timeSlot.textContent = time;
-            
+
             timeSlot.addEventListener('click', () => selectTime(timeSlot, time));
-            
+
             timeSlots.appendChild(timeSlot);
         });
     }
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resetTimeSelection();
             return;
         }
-        
+
         document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
         element.classList.add('selected');
         selectedTime = time;
@@ -243,10 +243,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обновление сводки
     function updateSummary() {
-        summaryDate.textContent = selectedDate 
-            ? formatSelectedDate(selectedDate) 
+        summaryDate.textContent = selectedDate
+            ? formatSelectedDate(selectedDate)
             : 'не выбрано';
-        
+
         summaryTime.textContent = selectedTime || 'не выбрано';
     }
 

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка | Музыкальный портал</title>
+    <link rel="stylesheet" href="../css/error-styles.css">
+</head>
+<body>
+    <div class="icon">🎧</div>
+    <div class="error-code">{{ model.code }}</div>
+    <div class="message">
+        {{ model.message | default("Что-то пошло не так...<br>Возможно, возникла ошибка сервера. Пожалуйста, попробуйте позже.") }}
+    </div>
+    <a href="/" class="button">Назад к музыке</a>
+</body>
+</html>

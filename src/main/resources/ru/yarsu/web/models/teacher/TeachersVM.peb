@@ -1,44 +1,22 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
-{%extends "../Layout.peb"%}
-{% block style %}general{% endblock %}
-{%block content%}
-        <div class="container mt-5">
-            <h1 class="mb-4">Наши преподаватели</h1>
+    {% extends "../Layout.peb" %}
 
-            <div class="row">
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Наши преподаватели</h1>
+        <div class="row">
+            {% for teacher in model.teachers %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
-                        <img src="https://sun9-53.userapi.com/s/v1/ig2/ZeIqzDnrib36STD8ZvkI-S0-a_bX2ItKpZhVjfN1poL8xq3rC_zhlVS48u2LyPIAFFxxLhL7Lsvt3wCvbX2F-AwD.jpg?quality=96&blur=50,20&as=32x24,48x36,72x54,108x81,160x120,240x180,360x269,480x359,540x404,640x479,720x539,806x603&from=bu&u=JQT28eFEKLcjP0hmRg2fGG5zrMfUXTKSCQY_Fo7ftKc&cs=806x603" class="card-img-top" alt="Преподаватель">
+                        <img src="{{ teacher.photoUrl[0] | default("https://via.placeholder.com/400x300") }}" class="card-img-top" alt="Преподаватель">
                         <div class="card-body">
-                            <h5 class="card-title">Иван Петров</h5>
-                            <p class="card-text">Гитара, бас-гитара, укулеле. Опыт преподавания 10 лет.</p>
-                            <a href="/teacher" class="btn btn-primary">Записаться</a>
+                            <h5 class="card-title">{{ teacher.fullName }}</h5>
+                            <p class="card-text">{{ teacher.shortDescription }}</p>
+                            <a href="/teacher/{{ teacher.id }}" class="btn btn-primary">Записаться</a>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="https://stihi.ru/pics/2023/04/01/8299.jpg" class="card-img-top" alt="Преподаватель">
-                        <div class="card-body">
-                            <h5 class="card-title">Мария Сидорова</h5>
-                            <p class="card-text">Фортепиано, синтезатор. Классическое и джазовое направление.</p>
-                            <a href="/teacher" class="btn btn-primary">Записаться</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="https://i.pinimg.com/736x/6e/99/f2/6e99f2b78d77103861e7a4ce826c888f.jpg" class="card-img-top" alt="Преподаватель">
-                        <div class="card-body">
-                            <h5 class="card-title">Алексей Иванов</h5>
-                            <p class="card-text">Ударные инструменты. Опыт игры в группах 15 лет.</p>
-                            <a href="/teacher" class="btn btn-primary">Записаться</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
-
+    </div>
 {% endblock %}

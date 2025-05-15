@@ -1,34 +1,65 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeacherVM" #}
-{% extends "../Layout.peb" %}
-{% block style %}ru.yarsu.web.domain.article.Teacher{% endblock %}
-{% block content %}
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-4">
-                <img src="https://sun9-53.userapi.com/s/v1/ig2/ZeIqzDnrib36STD8ZvkI-S0-a_bX2ItKpZhVjfN1poL8xq3rC_zhlVS48u2LyPIAFFxxLhL7Lsvt3wCvbX2F-AwD.jpg?quality=96&blur=50,20&as=32x24,48x36,72x54,108x81,160x120,240x180,360x269,480x359,540x404,640x479,720x539,806x603&from=bu&u=JQT28eFEKLcjP0hmRg2fGG5zrMfUXTKSCQY_Fo7ftKc&cs=806x603" class="img-fluid rounded mb-4" alt="Иван Петров">
-                <div class="d-grid gap-2">
-                    <a href="teachers.html" class="btn btn-outline-secondary">← Вернуться к списку</a>
-                </div>
+    {% extends "../Layout.peb" %}
+    {% block style %}general{% endblock %}
+
+    {% block content %}
+<div class="container mt-5">
+    <a href="/teachers" class="btn btn-outline-secondary mb-4">
+        ← Назад ко всем преподавателям
+    </a>
+
+    <div class="card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-5">
+                <img src="{{ model.teacher.photoUrl[0] | default("https://via.placeholder.com/600x400") }}"
+                     class="img-fluid rounded-start" alt="Фото преподавателя">
             </div>
-            <div class="col-md-8">
-                <h1>Иван Петров</h1>
-                <p class="lead">Преподаватель гитары, бас-гитары и укулеле</p>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h2 class="card-title mb-2">{{ model.teacher.fullName }}</h2>
+                    <p class="card-text text-muted mb-4">{{ model.teacher.shortDescription }}</p>
 
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">О преподавателе</h5>
-                        <p class="card-text">
-                            Опыт преподавания: 10 лет<br>
-                            Образование: Консерватория им. Чайковского<br>
-                            Стили: Рок, блюз, джаз, фанк, классика<br>
-                            Возраст учеников: от 10 лет
-                        </p>
+                    <div class="mb-3">
+                        <h5 class="text-primary">🎓 Образование</h5>
+                        <p>{{ model.teacher.experienceInfo.education }}</p>
                     </div>
-                </div>
 
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Расписание</h5>
+                    <div class="mb-3">
+                        <h5 class="text-primary">👩‍🏫 Опыт преподавания</h5>
+                        <p>{{ model.teacher.experienceInfo.experienceYears }} лет</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="text-primary">🧒 Минимальный возраст ученика</h5>
+                        <p>С {{ model.teacher.experienceInfo.minStudentAge }} лет</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="text-primary">🎵 Стили</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for style in model.teacher.experienceInfo.styles %}
+                                <li class="list-group-item">{{ style }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="text-primary">🎸 Инструменты</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for instrument in model.teacher.instruments %}
+                                <li class="list-group-item">{{ instrument }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="text-primary">📍 Адрес</h5>
+                        <p>{{ model.teacher.address.address }}</p>
+                    </div>
+
+                    {# 🕒 ВСТАВКА ВРЕМЕНИ #}
+                    <div class="mb-4">
+                        <h5 class="text-primary">🕒 Расписание</h5>
                         <div class="calendar mb-3">
                             <div class="calendar-header">
                                 <button class="calendar-nav" id="prevMonth">❮</button>
@@ -36,13 +67,7 @@
                                 <button class="calendar-nav" id="nextMonth">❯</button>
                             </div>
                             <div class="calendar-weekdays">
-                                <div>Пн</div>
-                                <div>Вт</div>
-                                <div>Ср</div>
-                                <div>Чт</div>
-                                <div>Пт</div>
-                                <div>Сб</div>
-                                <div>Вс</div>
+                                <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
                             </div>
                             <div class="calendar-days" id="calendarDays"></div>
                         </div>
@@ -51,51 +76,28 @@
                             <div class="time-slots" id="timeSlots"></div>
                             <div class="reset-time">Сбросить выбор времени</div>
                         </div>
+                        <div class="mt-3">
+                            <strong>Выбранное время:</strong>
+                            <p>Дата: <span id="summaryDate">не выбрано</span></p>
+                            <p>Время: <span id="summaryTime">не выбрано</span></p>
+                        </div>
                     </div>
-                </div>
+                    {# КОНЕЦ ВСТАВКИ #}
 
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Записаться на занятие</h5>
-                        <form id="bookingForm">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Ваше имя</label>
-                                <input type="text" class="form-control" id="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Телефон</label>
-                                <input type="tel" class="form-control" id="phone" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Выбранное время</label>
-                                <div class="booking-summary">
-                                    <p>Дата: <span id="summaryDate">не выбрано</span></p>
-                                    <p>Время: <span id="summaryTime">не выбрано</span></p>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="instrument" class="form-label">Инструмент</label>
-                                <select class="form-select" id="instrument">
-                                    <option>Гитара</option>
-                                    <option>Бас-гитара</option>
-                                    <option>Укулеле</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Отправить заявку</button>
-                        </form>
-                    </div>
+                    <a href="/enroll/{{ model.teacher.id }}" class="btn btn-success btn-lg mt-3">
+                        ✅ Записаться на занятие
+                    </a>
                 </div>
             </div>
         </div>
-
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
     <script>
         window.userId = {{ model.user | default("null") }};
     </script>
-
-    <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/ru.yarsu.web.domain.article.Teacher.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/ru.yarsu.web.domain.article.Teacher.js"></script>
 {% endblock %}
-

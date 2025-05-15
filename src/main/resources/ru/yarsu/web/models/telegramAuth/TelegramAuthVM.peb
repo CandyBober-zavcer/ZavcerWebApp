@@ -31,7 +31,7 @@
             if (response.redirected) {
                 window.location.href = response.url;
             } else {
-                if (response.ok) {
+                if (response.ok || response.status === 302) {
                     alert("Авторизация через Telegram прошла!");
                     window.location.href = "/";
                 } else {
@@ -48,5 +48,3 @@
 
 </body>
 </html>
-
-

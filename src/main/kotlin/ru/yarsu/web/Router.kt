@@ -38,12 +38,13 @@ fun router(htmlView: ContextAwareViewRender, config: AppConfig): RoutingHttpHand
             jsonLogger = JsonLogger(config.telegramConfig.userDataFile),
             botToken = config.telegramConfig.botToken
         ),
-        "/studio" bind Method.GET to StudioGetHandler(htmlView),
+        "/studio/{id}" bind Method.GET to StudioGetHandler(htmlView),
         "/studio" bind Method.POST to StudioPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/studios" bind Method.GET to StudiosGetHandler(htmlView),
         "/home" bind Method.GET to HomePageHandler(htmlView),
-        "/teacher" bind Method.GET to TeacherGetHandler(htmlView),
-        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
+//        "/teacher" bind Method.GET to TeacherGetHandler(htmlView),
+//        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView),
+        "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView)
     )
 }

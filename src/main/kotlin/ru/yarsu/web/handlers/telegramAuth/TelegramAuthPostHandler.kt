@@ -27,11 +27,11 @@ class TelegramAuthPostHandler(
 
             val telegramUser = TelegramUser(
                 id = formData["id"]!!.toLong(),
-                firstName = formData["first_name"],
-                lastName = formData["last_name"],
+                first_name = formData["first_name"],
+                last_name = formData["last_name"],
                 username = formData["username"],
-                photoUrl = formData["photo_url"],
-                authDate = formData["auth_date"]!!.toLong(),
+                photo_url = formData["photo_url"],
+                auth_date = formData["auth_date"]!!.toLong(),
                 hash = formData["hash"]!!
             )
 

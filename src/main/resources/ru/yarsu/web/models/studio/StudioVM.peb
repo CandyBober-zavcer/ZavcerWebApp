@@ -1,130 +1,66 @@
-{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.StudioVM" #}
+{# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudioVM" #}
+    {% extends "../Layout.peb" %}
+    {% block style %}general{% endblock %}
+
+    {% block content %}
+<div class="container mt-5">
+    <a href="/teachers" class="btn btn-outline-secondary mb-4">
+        ← Назад ко всем студиям
+    </a>
+
+    <div class="card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-5">
+                <img src="{{ model.studio.photoUrl[0] | default("https://via.placeholder.com/600x400") }}"
+                     class="img-fluid rounded-start" alt="Фото студии">
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h2 class="card-title mb-2">{{ model.studio.name }}</h2>
+                    <p class="card-text text-muted mb-4">{{ model.studio.description }}</p>
 
 
-{% extends "../Layout.peb" %}
-{% block style %}ru.yarsu.web.domain.article.Studio{% endblock %}
-{% block content %}
-        <div class="container mt-4">
-            <div class="row">
-                <div class="col-md-6">
-                    <div id="studioCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="https://sun9-44.userapi.com/impf/c624729/v624729015/2c0ea/KBnerY80oBU.jpg?size=1278x750&quality=96&sign=d86e1e3a5faa5d8161df15858c7948e3&c_uniq_tag=XMYLzsQKHwzGPhBk4OS_QoJ4FvA4rP20vi8wt7ELAdI&type=album" class="d-block w-100" alt="Студия">
+                    {# 🕒 ВСТАВКА ВРЕМЕНИ #}
+                    <div class="mb-4">
+                        <h5 class="text-primary">🕒 Расписание</h5>
+                        <div class="calendar mb-3">
+                            <div class="calendar-header">
+                                <button class="calendar-nav" id="prevMonth">❮</button>
+                                <div class="calendar-title" id="currentMonthYear"></div>
+                                <button class="calendar-nav" id="nextMonth">❯</button>
                             </div>
-                            <div class="carousel-item">
-                                <img src="https://sun9-44.userapi.com/impf/c624729/v624729015/2c0ea/KBnerY80oBU.jpg?size=1278x750&quality=96&sign=d86e1e3a5faa5d8161df15858c7948e3&c_uniq_tag=XMYLzsQKHwzGPhBk4OS_QoJ4FvA4rP20vi8wt7ELAdI&type=album" class="d-block w-100" alt="Студия">
+                            <div class="calendar-weekdays">
+                                <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
                             </div>
-                            <div class="carousel-item">
-                                <img src="https://sun9-44.userapi.com/impf/c624729/v624729015/2c0ea/KBnerY80oBU.jpg?size=1278x750&quality=96&sign=d86e1e3a5faa5d8161df15858c7948e3&c_uniq_tag=XMYLzsQKHwzGPhBk4OS_QoJ4FvA4rP20vi8wt7ELAdI&type=album" class="d-block w-100" alt="Студия">
-                            </div>
+                            <div class="calendar-days" id="calendarDays"></div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#studioCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#studioCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <a href="studios.html" class="btn btn-outline-secondary">← Вернуться к списку</a>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <h1>Студия "Ритм"</h1>
-                    <p class="lead">Профессиональная репетиционная точка для музыкантов</p>
-
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Описание</h5>
-                            <p class="card-text">
-                                <strong>Адрес:</strong> ул. Центральная, 15<br>
-                                <strong>Площадь:</strong> 30 кв.м<br>
-                                <strong>Вместимость:</strong> до 5 человек<br>
-                                <strong>Цена:</strong> 500 руб/час<br>
-                                <strong>Минимальное время:</strong> 2 часа
-                            </p>
+                        <div class="time-slots-container" style="display: none;">
+                            <h6>Доступное время:</h6>
+                            <div class="time-slots" id="timeSlots"></div>
+                            <div class="reset-time">Сбросить выбор времени</div>
+                        </div>
+                        <div class="mt-3">
+                            <strong>Выбранное время:</strong>
+                            <p>Дата: <span id="summaryDate">не выбрано</span></p>
+                            <p>Время: <span id="summaryTime">не выбрано</span></p>
                         </div>
                     </div>
+                    {# КОНЕЦ ВСТАВКИ #}
 
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">Оборудование</h5>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">Барабанная установка Yamaha</li>
-                                <li class="list-group-item">Гитары Fender и Gibson</li>
-                                <li class="list-group-item">Бас-гитара Ibanez</li>
-                                <li class="list-group-item">Клавишные Roland</li>
-                                <li class="list-group-item">Усилители и микрофоны</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Забронировать студию</h5>
-                            <form id="bookingForm">
-                                <div class="mb-3">
-                                    <label for="clientName" class="form-label">Ваше имя</label>
-                                    <input type="text" class="form-control" id="clientName" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="clientPhone" class="form-label">Телефон</label>
-                                    <input type="tel" class="form-control" id="clientPhone" required>
-                                </div>
-
-                                <!-- Календарь -->
-                                <div class="mb-3">
-                                    <label class="form-label">Выберите дату</label>
-                                    <div class="calendar">
-                                        <div class="calendar-header">
-                                            <button class="calendar-nav" id="prevMonth">❮</button>
-                                            <div class="calendar-title" id="currentMonthYear"></div>
-                                            <button class="calendar-nav" id="nextMonth">❯</button>
-                                        </div>
-                                        <div class="calendar-weekdays">
-                                            <div>Пн</div>
-                                            <div>Вт</div>
-                                            <div>Ср</div>
-                                            <div>Чт</div>
-                                            <div>Пт</div>
-                                            <div>Сб</div>
-                                            <div>Вс</div>
-                                        </div>
-                                        <div class="calendar-days" id="calendarDays"></div>
-                                    </div>
-                                </div>
-
-                                <!-- Таймпикер -->
-                                <div class="time-picker">
-                                    <label class="form-label">Выберите время</label>
-                                    <div class="time-slots"></div>
-                                    <div class="reset-time">Сбросить выбор времени</div>
-                                </div>
-
-                                <!-- Сводка бронирования -->
-                                <div class="booking-summary">
-                                    <h6>Ваше бронирование:</h6>
-                                    <p>Дата: <span class="summary-date"></span></p>
-                                    <p>Время: <span class="summary-time"></span></p>
-                                    <p>Стоимость: <span class="summary-price"></span> руб.</p>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Забронировать</button>
-                            </form>
-                        </div>
-                    </div>
+                    <a href="/enroll/{{ model.teacher.id }}" class="btn btn-success btn-lg mt-3">
+                        ✅ Записаться на занятие
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 {% endblock %}
+
 {% block script %}
     <script>
-        var userIdFromPebble = {{ model.user | default("null") }};
-        console.log("User ID from Pebble:", userIdFromPebble);
-        window.userId = userIdFromPebble;
+        window.userId = {{ model.user | default("null") }};
     </script>
-
-    <script src="../js/bootstrap.bundle.min.js"></script>
-    <script src="../js/ru.yarsu.web.domain.article.Studio.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/ru.yarsu.web.domain.article.Teacher.js"></script>
 {% endblock %}

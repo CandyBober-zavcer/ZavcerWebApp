@@ -1,8 +1,9 @@
 package ru.yarsu.web.models.studio
 
 import org.http4k.template.ViewModel
+import ru.yarsu.web.domain.article.Studio
 
 class StudioVM(
-    val description: String,
+    val studio: Studio,
     val user: String
 ) : ViewModel

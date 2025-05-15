@@ -6,19 +6,22 @@ import org.http4k.core.Body
 import org.http4k.format.Jackson.auto
 import java.io.File
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class TelegramUser(
     val id: Long,
     val username: String?,
-    val firstName: String? = null,
-    val lastName: String? = null,
-    val photoUrl: String? = null,
-    val authDate: Long? = null,
+    val first_name: String? = null,
+    val last_name: String? = null,
+    val photo_url: String? = null,
+    val auth_date: Long? = null,
     val hash: String? = null
 )
 
 class JsonLogger(private val filePath: String) {
     private val objectMapper = ObjectMapper().apply {
         registerKotlinModule()
+
     }
 
     fun logToJson(user: TelegramUser) {
@@ -39,16 +42,17 @@ class JsonLogger(private val filePath: String) {
             val existingIndex = users.indexOfFirst { it.id == user.id }
             if (existingIndex >= 0) {
                 users[existingIndex] = user
+
             } else {
                 users.add(user)
+
             }
 
             objectMapper.writerWithDefaultPrettyPrinter()
                 .writeValue(file, users)
         } catch (e: Exception) {
             println("Error saving user data: ${e.message}")
+
         }
     }
 }
-
-val telegramUserLens = Body.auto<TelegramUser>().toLens()

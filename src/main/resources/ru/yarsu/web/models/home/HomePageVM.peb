@@ -1,10 +1,7 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.home.HomePageVM" #}
 {% extends "../Layout.peb" %}
-{% block style %}general{% endblock %}
 
 {% block content %}
-
-
         <div class="container mt-5">
             <div class="row">
                 <div class="col-md-8 mx-auto text-center">

@@ -1,6 +1,5 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
     {% extends "../Layout.peb" %}
-    {% block style %}general{% endblock %}
 
 {% block content %}
     <div class="container mt-5">

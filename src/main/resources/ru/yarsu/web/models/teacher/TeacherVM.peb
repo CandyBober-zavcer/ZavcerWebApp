@@ -1,6 +1,5 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeacherVM" #}
     {% extends "../Layout.peb" %}
-    {% block style %}general{% endblock %}
 
     {% block content %}
 <div class="container mt-5">
@@ -20,27 +19,20 @@
                     <p class="card-text text-muted mb-4">{{ model.teacher.shortDescription }}</p>
 
                     <div class="mb-3">
-                        <h5 class="text-primary">🎓 Образование</h5>
-                        <p>{{ model.teacher.experienceInfo.education }}</p>
-                    </div>
-
-                    <div class="mb-3">
-                        <h5 class="text-primary">👩‍🏫 Опыт преподавания</h5>
-                        <p>{{ model.teacher.experienceInfo.experienceYears }} лет</p>
-                    </div>
-
-                    <div class="mb-3">
-                        <h5 class="text-primary">🧒 Минимальный возраст ученика</h5>
-                        <p>С {{ model.teacher.experienceInfo.minStudentAge }} лет</p>
-                    </div>
-
-                    <div class="mb-3">
-                        <h5 class="text-primary">🎵 Стили</h5>
+                        <h5 class="text-primary">Информация о преподавателе</h5>
+                        <p>
+                            🎓 Образование: {{ model.teacher.experienceInfo.education }}<br>
+                            👩‍🏫 Опыт преподавания: {{ model.teacher.experienceInfo.experienceYears }} лет<br>
+                            🧒 Минимальный возраст ученика: {{ model.teacher.experienceInfo.minStudentAge }}
+                        </p>
+                        {% if model.teacher.experienceInfo.styles.size > 0 %}
+                        <h6 class="mt-3">Стили:</h6>
                         <ul class="list-group list-group-flush">
                             {% for style in model.teacher.experienceInfo.styles %}
                                 <li class="list-group-item">{{ style }}</li>
                             {% endfor %}
                         </ul>
+                        {% endif %}
                     </div>
 
                     <div class="mb-3">
@@ -99,5 +91,5 @@
         window.userId = {{ model.user | default("null") }};
     </script>
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/ru.yarsu.web.domain.article.Teacher.js"></script>
+    <script src="/js/Teacher.js"></script>
 {% endblock %}

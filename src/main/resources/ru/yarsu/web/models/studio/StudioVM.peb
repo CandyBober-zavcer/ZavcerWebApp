@@ -1,10 +1,10 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudioVM" #}
+
     {% extends "../Layout.peb" %}
-    {% block style %}general{% endblock %}
 
     {% block content %}
 <div class="container mt-5">
-    <a href="/teachers" class="btn btn-outline-secondary mb-4">
+    <a href="/studios" class="btn btn-outline-secondary mb-4">
         ← Назад ко всем студиям
     </a>
 
@@ -17,8 +17,33 @@
             <div class="col-md-7">
                 <div class="card-body">
                     <h2 class="card-title mb-2">{{ model.studio.name }}</h2>
-                    <p class="card-text text-muted mb-4">{{ model.studio.description }}</p>
+                    {% if model.studio.description %}
+                        <p class="card-text text-muted mb-4">{{ model.studio.description }}</p>
+                    {% endif %}
 
+                    <div class="mb-3">
+                        <h5 class="text-primary">📍 Адрес</h5>
+                        <p>{{ model.studio.location.address }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="text-primary">📐 Характеристики</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">👥 Вместимость: {{ model.studio.capacity }} чел.</li>
+                            <li class="list-group-item">🏠 Площадь: {{ model.studio.areaSquareMeters }} м²</li>
+                            <li class="list-group-item">💰 Цена: {{ model.studio.pricePerHour }} руб/час</li>
+                            <li class="list-group-item">⏳ Мин. время бронирования: {{ model.studio.minBookingTimeHours }} ч.</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h5 class="text-primary">🎸 Оборудование</h5>
+                        <ul class="list-group list-group-flush">
+                            {% for item in model.studio.equipment %}
+                                <li class="list-group-item">{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
                     {# 🕒 ВСТАВКА ВРЕМЕНИ #}
                     <div class="mb-4">
@@ -47,8 +72,8 @@
                     </div>
                     {# КОНЕЦ ВСТАВКИ #}
 
-                    <a href="/enroll/{{ model.teacher.id }}" class="btn btn-success btn-lg mt-3">
-                        ✅ Записаться на занятие
+                    <a href="/studio/book/{{ model.studio.id }}" class="btn btn-success btn-lg mt-3">
+                        ✅ Забронировать студию
                     </a>
                 </div>
             </div>
@@ -62,5 +87,5 @@
         window.userId = {{ model.user | default("null") }};
     </script>
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/ru.yarsu.web.domain.article.Teacher.js"></script>
+    <script src="/js/Studio.js"></script>
 {% endblock %}

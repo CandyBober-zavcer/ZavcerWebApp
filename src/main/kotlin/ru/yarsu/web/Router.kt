@@ -40,6 +40,7 @@ fun router(htmlView: ContextAwareViewRender, config: AppConfig): RoutingHttpHand
 //        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView),
         "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView),
+
         "/edit/teacher/edit-{id}" bind Method.GET to EditTeacherGetHandler(htmlView),
         "/edit/teacher/add" bind Method.GET to AddTeacherGetHandler(htmlView),
         "/edit/teacher/delete" bind Method.GET to DeleteTeacherGetHandler(htmlView),

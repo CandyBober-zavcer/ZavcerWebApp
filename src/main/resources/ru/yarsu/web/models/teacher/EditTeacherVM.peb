@@ -2,4 +2,6 @@
 {% extends "../Layout.peb" %}
 
 {% block content %}
+{{ model.teacher }}
+{{ model.user }}
 {% endblock %}

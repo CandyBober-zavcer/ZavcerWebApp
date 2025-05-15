@@ -3,4 +3,5 @@
 {% extends "../Layout.peb" %}
 
 {% block content %}
+{{ model.studios }}
 {% endblock %}

@@ -1,5 +1,5 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.AddTeacherVM" #}
-{% extends "../Layout.peb" %}
 
 {% block content %}
+{{ model.teachers }}
 {% endblock %}

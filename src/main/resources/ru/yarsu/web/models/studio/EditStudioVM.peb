@@ -3,4 +3,6 @@
 {% extends "../Layout.peb" %}
 
 {% block content %}
+{{ model.studio }}
+{{ model.user }}
 {% endblock %}

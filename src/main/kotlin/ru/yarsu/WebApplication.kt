@@ -11,6 +11,8 @@ import ru.yarsu.config.AppConfig
 import ru.yarsu.web.filters.NotFoundFilter
 import ru.yarsu.web.filters.ServerErrorFilter
 import ru.yarsu.web.rendererProvider
+import org.jetbrains.exposed.sql.Database
+import ru.yarsu.db.DataBaseController
 import ru.yarsu.web.router
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -28,6 +30,13 @@ fun main() {
             )
         )
     )
+//    Database.connect("jdbc:mysql://localhost/test", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
+//    DataBaseController().init()
+//    val appWithStaticResources =
+//        routes(
+//            router,
+//            static(ResourceLoader.Classpath("/ru/yarsu/public")),
+//        )
 
     val server = app.asServer(Netty(appConfig.webConfig.port)).start()
 

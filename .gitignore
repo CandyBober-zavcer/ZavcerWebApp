@@ -1,7 +1,9 @@
+<<<<<<< HEAD
 .idea/
 logs/
 
 build/
 .gradle/
+.kotlin
 
 data/telegram_users.json

@@ -1,15 +1,102 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.studio.EditStudioVM" #}
 
+{% extends "../Layout.peb" %}
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>Моя первая страница</title>
-</head>
-<body>
-  <h1>Привет, мир!</h1>
-  {{ model.studio }}
-  {{ model.user }}
-</body>
-</html>
+{% block content %}
+<div class="container mt-5">
+    <h2>Добавление новой студии</h2>
+    <form method="post" enctype="multipart/form-data">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Название студии</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="photos" class="form-label">Фотографии студии</label>
+            <input type="file" class="form-control" id="photos" name="photos" multiple>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Адрес</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="capacity" class="form-label">Вместимость (человек)</label>
+                <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
+            </div>
+            <div class="col-md-4">
+                <label for="area" class="form-label">Площадь (м²)</label>
+                <input type="number" step="0.1" class="form-control" id="area" name="areaSquareMeters" min="1" required>
+            </div>
+            <div class="col-md-4">
+                <label for="price" class="form-label">Цена за час (руб)</label>
+                <input type="number" step="0.01" class="form-control" id="price" name="pricePerHour" min="0" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="minBookingTime" class="form-label">Минимальное время бронирования (часы)</label>
+            <input type="number" step="0.5" class="form-control" id="minBookingTime" name="minBookingTimeHours" min="0.5" required>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Оборудование</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="guitar" name="equipment" value="GUITAR">
+                <label class="form-check-label" for="guitar">Гитара</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="piano" name="equipment" value="PIANO">
+                <label class="form-check-label" for="piano">Пианино</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="drums" name="equipment" value="DRUMS">
+                <label class="form-check-label" for="drums">Барабаны</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="microphone" name="equipment" value="MICROPHONE">
+                <label class="form-check-label" for="microphone">Микрофон</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="amplifier" name="equipment" value="AMPLIFIER">
+                <label class="form-check-label" for="amplifier">Усилитель</label>
+            </div>
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Дни работы</label>
+            {% for day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="{{ day }}" name="workingDays" value="{{ day }}">
+                <label class="form-check-label" for="{{ day }}">{{ day|capitalize }}</label>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="startTime" class="form-label">Время открытия</label>
+                <input type="time" class="form-control" id="startTime" name="startTime" required>
+            </div>
+            <div class="col-md-6">
+                <label for="endTime" class="form-label">Время закрытия</label>
+                <input type="time" class="form-control" id="endTime" name="endTime" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

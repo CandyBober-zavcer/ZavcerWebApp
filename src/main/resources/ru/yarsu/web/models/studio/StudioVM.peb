@@ -1,12 +1,14 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudioVM" #}
 
     {% extends "../Layout.peb" %}
-
+    {% block style %}../css/Studio.css{% endblock %}
     {% block content %}
 <div class="container mt-5">
     <a href="/studios" class="btn btn-outline-secondary mb-4">
         ← Назад ко всем студиям
     </a>
+    <a href="/edit/studio/edit-{{model.studio.id}}" class="btn btn-outline-warning mb-4">Редактировать</a>
+    <a href="/edit/studio/delete" class="btn btn-outline-danger mb-4">Удалить</a>
 
     <div class="card shadow-lg">
         <div class="row g-0">

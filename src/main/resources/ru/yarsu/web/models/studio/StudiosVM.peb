@@ -5,8 +5,9 @@
 {% block content %}
 <div class="container mt-5 mb-5">
     <h1 class="mb-4">Репетиционные точки</h1>
-
+    <a href="/edit/studio/add" class="btn btn-outline-primary">Добавить</a>
     <div class="row">
+
         {% for studio in model.studios %}
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
@@ -22,6 +23,8 @@
                             <strong>Цена:</strong> {{ studio.pricePerHour }} руб/час
                         </p>
                         <a href="/studio/{{ studio.id }}" class="btn btn-primary">Забронировать</a>
+                        <a href="/edit/studio/edit-{{studio.id}}" class="btn btn-primary">Редактировать</a>
+                        <a href="/edit/studio/delete" class="btn btn-primary">Удалить</a>
                     </div>
                 </div>
             </div>

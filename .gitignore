@@ -1,7 +1,7 @@
 <<<<<<< HEAD
 .idea/
 logs/
-
+.dist/
 build/
 .gradle/
 .kotlin

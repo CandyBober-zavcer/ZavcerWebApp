@@ -1,0 +1,21 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.profile.ProfileVM" #}
+
+{% extends "../Layout.peb" %}
+
+    {% block content %}
+    <h1>Профиль пользователя</h1>
+
+    <div style="display: flex; align-items: center; gap: 20px;">
+        <img src="{{ model.profile.avatarUrl }}" alt="Аватар пользователя" style="width: 150px; height: 150px; border-radius: 50%;">
+        <div>
+            <h2>{{ model.profile.name }}</h2>
+            <p><strong>Описание:</strong> {{ model.profile.description }}</p>
+            <p><strong>Инструменты:</strong> {{ model.profile.instruments | join(", ") }}</p>
+            <p><strong>Музыкальные стили:</strong> {{ model.profile.styles | join(", ") }}</p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

@@ -8,7 +8,7 @@ import ru.yarsu.web.templates.ContextAwareViewRender
 class DeleteStudioGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val studios = StudiosData().fillStudios()
+        val studios = StudiosData().getAllStudios()
         val viewModel = DeleteStudioVM(studios)
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }

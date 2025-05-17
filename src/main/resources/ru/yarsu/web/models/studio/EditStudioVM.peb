@@ -9,69 +9,75 @@
 
         <div class="mb-3">
             <label for="name" class="form-label">Название студии</label>
-            <input type="text" class="form-control" id="name" name="name" required>
+            <input type="text" value="{{ model.studio.name }}" class="form-control" id="name" name="name" required>
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            <textarea class="form-control" id="description" name="description" rows="3" required>{{ model.studio.description | raw }}</textarea>
         </div>
 
         <div class="mb-3">
-            <label for="photos" class="form-label">Фотографии студии</label>
-            <input type="file" class="form-control" id="photos" name="photos" multiple>
+            <label for="photo" class="form-label">Фотография студии</label>
+
+            {% if model.studio.photoUrl[0] %}
+            <div class="mb-2">
+                <img id="studio-photo-preview" src="{{ model.studio.photoUrl[0] }}" alt="Фото студии"
+                     class="img-thumbnail" style="max-width: 200px;">
+            </div>
+            {% else %}
+            <div class="mb-2">
+                <img id="studio-photo-preview" src="#" alt="Фото студии"
+                     class="img-thumbnail d-none" style="max-width: 200px;">
+            </div>
+            {% endif %}
+
+            <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="previewPhoto(event)">
         </div>
 
 
         <div class="mb-3">
             <label for="address" class="form-label">Адрес</label>
-            <input type="text" class="form-control" id="address" name="address" required>
+            <input type="text" value="{{ model.studio.location.address }}" class="form-control" id="address" name="address" required>
         </div>
 
 
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="capacity" class="form-label">Вместимость (человек)</label>
-                <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
+                <input type="number" value="{{ model.studio.capacity }}" class="form-control" id="capacity" name="capacity" min="1" required>
             </div>
             <div class="col-md-4">
                 <label for="area" class="form-label">Площадь (м²)</label>
-                <input type="number" step="0.1" class="form-control" id="area" name="areaSquareMeters" min="1" required>
+                <input type="number" value="{{ model.studio.areaSquareMeters }}" step="0.1" class="form-control" id="area" name="areaSquareMeters" min="1" required>
             </div>
             <div class="col-md-4">
                 <label for="price" class="form-label">Цена за час (руб)</label>
-                <input type="number" step="0.01" class="form-control" id="price" name="pricePerHour" min="0" required>
+                <input type="number" value="{{ model.studio.pricePerHour }}" step="0.01" class="form-control" id="price" name="pricePerHour" min="0" required>
             </div>
         </div>
 
         <div class="mb-3">
             <label for="minBookingTime" class="form-label">Минимальное время бронирования (часы)</label>
-            <input type="number" step="0.5" class="form-control" id="minBookingTime" name="minBookingTimeHours" min="0.5" required>
+            <input type="number" value="{{ model.studio.minBookingTimeHours }}" step="0.5" class="form-control" id="minBookingTime" name="minBookingTimeHours" min="0.5" required>
         </div>
 
 
         <div class="mb-3">
             <label class="form-label">Оборудование</label>
+            {% for instrument in model.allInstruments %}
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="guitar" name="equipment" value="GUITAR">
-                <label class="form-check-label" for="guitar">Гитара</label>
+                <input class="form-check-input"
+                   type="checkbox"
+                   id="instrument_{{ instrument.name }}"
+                   name="instruments"
+                   value="{{ instrument.name }}"
+                   {% if model.instrumentSelected[instrument.name] %}checked{% endif %}>
+                <label class="form-check-label" for="instrument_{{ instrument.name }}">
+                    {{ instrument }}
+                </label>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="piano" name="equipment" value="PIANO">
-                <label class="form-check-label" for="piano">Пианино</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="drums" name="equipment" value="DRUMS">
-                <label class="form-check-label" for="drums">Барабаны</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="microphone" name="equipment" value="MICROPHONE">
-                <label class="form-check-label" for="microphone">Микрофон</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="amplifier" name="equipment" value="AMPLIFIER">
-                <label class="form-check-label" for="amplifier">Усилитель</label>
-            </div>
+            {% endfor %}
         </div>
 
 

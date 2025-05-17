@@ -1,9 +1,35 @@
-package ru.yarsu.db.tables
+package ru.yarsu.db
 
 import ru.yarsu.web.domain.article.*
 
 class ProfilesData {
-    fun fillProfiles(): List<Profile> {
+    private val profiles: MutableList<Profile> = fillProfiles().toMutableList()
+
+    fun getAllProfiles(): List<Profile> = profiles
+
+    fun getProfileById(id: Long): Profile? = profiles.find { it.id == id }
+
+    fun addProfile(profile: Profile): Boolean {
+        if (profiles.any { it.id == profile.id }) return false
+        profiles.add(profile)
+        return true
+    }
+
+    fun removeProfile(id: Long): Boolean {
+        return profiles.removeIf { it.id == id }
+    }
+
+    fun updateProfile(updatedProfile: Profile): Boolean {
+        val index = profiles.indexOfFirst { it.id == updatedProfile.id }
+        return if (index != -1) {
+            profiles[index] = updatedProfile
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun fillProfiles(): List<Profile> {
         return listOf(
             Profile(
                 id = 1001L,

@@ -8,7 +8,7 @@ import ru.yarsu.web.templates.ContextAwareViewRender
 class AddTeacherGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val teachers = TeachersData().fillTeachers()
+        val teachers = TeachersData().getAllTeachers()
         val viewModel = AddTeacherVM(teachers)
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }

@@ -1,21 +1,92 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.EditProfileVM" #}
 
-    {% extends "../Layout.peb" %}
+{% extends "../Layout.peb" %}
 
-    {% block content %}
-    <h1>Профиль пользователя</h1>
+{% block content %}
 
-    <div style="display: flex; align-items: center; gap: 20px;">
-        <img src="{{ model.profile.avatarUrl }}" alt="Аватар пользователя" style="width: 150px; height: 150px; border-radius: 50%;">
-        <div>
-            <h2>{{ model.profile.name }}</h2>
-            <p><strong>Описание:</strong> {{ model.profile.description }}</p>
-            <p><strong>Инструменты:</strong> {{ model.profile.instruments | join(", ") }}</p>
-            <p><strong>Музыкальные стили:</strong> {{ model.profile.styles | join(", ") }}</p>
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Редактирование профиля</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="row mb-4">
+                                <div class="col-md-4 text-center">
+                                    <img src="{{ model.profile.avatarUrl }}" alt="Аватар пользователя"
+                                         class="rounded-circle img-fluid mb-3" style="width: 150px;">
+                                    <div class="d-flex justify-content-center">
+                                        <input type="file" class="form-control" id="avatar" name="avatar"
+                                               accept="image/*" style="width: 200px;">
+                                    </div>
+                                    <small class="text-muted">Загрузите новое изображение</small>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group mb-3">
+                                        <label for="name" class="form-label">Имя</label>
+                                        <input type="text" class="form-control" id="name" name="name"
+                                               value="{{ model.profile.name }}" required>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="description" class="form-label">Описание</label>
+                                        <textarea class="form-control" id="description" name="description" rows="3">{{ model.profile.description }}</textarea>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Инструменты</label>
+                                        <div class="d-flex flex-wrap">
+                                            <!--                                            Тут нужно пройтись по всем инструментам, которые можно выбрать-->
+                                            {% for instrument in model.profile.instruments %}
+                                            <div class="form-check me-3 mb-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="instrument-{{ instrument }}"
+                                                       name="instruments"
+                                                       value="{{ instrument }}"
+                                                <!--Тут будет проверка на наличие инструмента у юзера-->
+
+                                                <label class="form-check-label" for="instrument-{{ instrument }}">
+                                                    {{ instrument }}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <!--                                    Тут аналогично-->
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Музыкальные стили</label>
+                                        <div class="d-flex flex-wrap">
+                                            {% for style in model.profile.styles %}
+                                            <div class="form-check me-3 mb-2">
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="style-{{ style }}"
+                                                       name="styles"
+                                                       value="{{ style }}">
+                                                <label class="form-check-label" for="style-{{ style }}">
+                                                    {{ style }}
+                                                </label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <a href="/profile/{{model.profile.id}}" class="btn btn-secondary me-2">Отмена</a>
+                                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</section>
 {% endblock %}
 
 {% block script %}
-    <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

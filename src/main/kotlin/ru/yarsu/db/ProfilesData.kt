@@ -70,6 +70,22 @@ class ProfilesData {
                 instruments = listOf(Instrument.KEYBOARD, Instrument.DJEMBE, Instrument.ACOUSTIC_GUITAR),
                 styles = listOf(MusicStyle.ELECTRONIC, MusicStyle.METAL),
                 avatarUrl = "https://example.com/avatars/nikita.jpg"
+            ),
+            Profile(
+                id = 1831874252,
+                name = "Смирнов Александр",
+                description = "Опытный клавишник с тонким чувством ритма. Увлекается живыми акустическими сетами и джазовыми импровизациями на саксофоне. Работал с коллективами в стиле RnB и кантри.",
+                instruments = listOf(Instrument.KEYBOARD, Instrument.CAJON, Instrument.SAXOPHONE),
+                styles = listOf(MusicStyle.RNB, MusicStyle.COUNTRY),
+                avatarUrl = "https://avatars.yandex.net/get-music-content/4716681/3ac31825.a.15129028-1/m1000x1000?webp=false"
+            ),
+            Profile(
+                id = 777990904,
+                name = "Казаков Пётр",
+                description = "Гитарист с 10-летним стажем, специализирующийся на роке и металле. Играет как на акустике, так и на электрогитаре. Выступал на даче у Егора, дома у Кирилла, подвалах и переходах Ярославля.",
+                instruments = listOf(Instrument.GUITAR, Instrument.ELECTRIC_GUITAR),
+                styles = listOf(MusicStyle.METAL, MusicStyle.ROCK),
+                avatarUrl = "https://steamuserimages-a.akamaihd.net/ugc/55829769501469083/D83ED851B2DB78DFA12514FE48E0355647C6A38C/?imw=512&amp;imh=357&amp;ima=fit&amp;impolicy=Letterbox&amp;imcolor=%23000000&amp;letterbox=true"
             )
         )
     }

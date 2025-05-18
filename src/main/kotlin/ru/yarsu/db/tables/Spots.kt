@@ -9,7 +9,13 @@ import ru.yarsu.db.tables.manyToMany.UsersSpots
 
 object Spots : IntIdTable() {
     val name = varchar("name", 50)
+    val price = integer("price")
+    val hasDrums = bool("hasDrums")
+    val guitarAmps = integer("guitarAmps")
+    val bassAmps = integer("bassAmps")
     val description = varchar("description", 50)
+    val address = varchar("address", 50)
+    val district = integer("district")
     val images = text("images")
 }
 
@@ -21,7 +27,13 @@ class SpotLine(
     }
 
     var name by Spots.name
+    var price by Spots.price
+    var hasDrums by Spots.hasDrums
+    var guitarAmps by Spots.guitarAmps
+    var bassAmps by Spots.bassAmps
     var description by Spots.description
+    var address by Spots.address
+    var district by Spots.district
     var twoWeekOccupation by DayOccupationLine via SpotsDays
     var owners by UserLine via UsersSpots
 

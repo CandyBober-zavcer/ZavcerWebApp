@@ -1,4 +1,4 @@
-package ru.yarsu.web.domain
+package ru.yarsu.web.domain.enums
 
 enum class RoleEnums(
     val id: Int,
@@ -12,10 +12,4 @@ enum class RoleEnums(
     ;
 
     companion object : EnumFinder<Int, RoleEnums>(entries.associateBy { it.id })
-}
-
-abstract class EnumFinder<V, E>(
-    private val valueMap: Map<V, E>,
-) {
-    fun from(value: V) = valueMap[value]
 }

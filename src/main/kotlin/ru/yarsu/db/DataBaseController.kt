@@ -27,6 +27,15 @@ class DataBaseController {
         }
     }
 
+    /**
+     * Сносит БД к чертям.
+     */
+    fun dropTables() {
+        transaction {
+            SchemaUtils.drop(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
+        }
+    }
+
     // Работа с Users
     fun getUserById(id: Int): User = UsersController().getUserById(id)
 
@@ -50,7 +59,7 @@ class DataBaseController {
     fun userRemoveSpot(
         userId: Int,
         spotId: Int,
-    ): Boolean = UsersController().addSpot(userId, spotId)
+    ): Boolean = UsersController().removeSpot(userId, spotId)
 
     fun userRemoveSpot(
         userId: Int,

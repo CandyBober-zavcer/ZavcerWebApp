@@ -8,6 +8,7 @@ import ru.yarsu.db.tables.SpotLine
 import ru.yarsu.db.tables.UserLine
 import ru.yarsu.db.tables.Users
 import ru.yarsu.web.domain.classes.Spot
+import ru.yarsu.web.domain.enums.DistrictEnums
 
 class SpotsController {
     /**
@@ -22,7 +23,13 @@ class SpotsController {
             spotLine?.let {
                 spot.id = it.id.value
                 spot.name = it.name
+                spot.price = it.price
+                spot.hasDrums = it.hasDrums
+                spot.guitarAmps = it.guitarAmps
+                spot.bassAmps = it.bassAmps
                 spot.description = it.description
+                spot.address = it.address
+                spot.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
                 spot.images = it.images.toList()
                 spot.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
                 spot.owners = it.owners.map { user -> user.id.value }.toMutableList()
@@ -43,7 +50,13 @@ class SpotsController {
             val spotLine =
                 SpotLine.new {
                     name = spot.name
+                    price = spot.price
+                    hasDrums = spot.hasDrums
+                    guitarAmps = spot.guitarAmps
+                    bassAmps = spot.bassAmps
                     description = spot.description
+                    address = spot.address
+                    district = spot.district.id
                     images = spot.images.toTypedArray()
                 }
             id = spotLine.id.value
@@ -66,7 +79,13 @@ class SpotsController {
             val spot = SpotLine.findById(id)
             spot?.let {
                 it.name = data.name
+                it.price = data.price
+                it.hasDrums = data.hasDrums
+                it.guitarAmps = data.guitarAmps
+                it.bassAmps = data.bassAmps
                 it.description = data.description
+                it.address = data.address
+                it.district = data.district.id
                 it.images = data.images.toTypedArray()
                 result = true
             }

@@ -5,11 +5,10 @@ import ru.yarsu.db.StudiosData
 import ru.yarsu.web.models.studio.AddStudioVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class AddStudioGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
+class AddStudioGetHandler(private val htmlView: ContextAwareViewRender, private val studios: StudiosData): HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val studios = StudiosData().getAllStudios()
-        val viewModel = AddStudioVM(studios)
+        val viewModel = AddStudioVM(studios.getAllStudios())
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 

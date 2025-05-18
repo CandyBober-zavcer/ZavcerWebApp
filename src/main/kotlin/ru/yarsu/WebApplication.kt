@@ -19,6 +19,9 @@ import ru.yarsu.web.router
 import ru.yarsu.web.templates.ContextAwareViewRender
 import org.jetbrains.exposed.sql.Database
 import ru.yarsu.db.DataBaseController
+import ru.yarsu.db.ProfilesData
+import ru.yarsu.db.StudiosData
+import ru.yarsu.db.TeachersData
 import ru.yarsu.web.filters.telegramUserFilter
 
 fun main() {
@@ -30,6 +33,9 @@ fun main() {
         .withContentType(renderer, ContentType.TEXT_HTML)
         .associateContextLens("user", TelegramUserLens)
 
+    val teachers = TeachersData()
+    val studio = StudiosData()
+    val profiles = ProfilesData()
 
 
     val app = requestContextFilter
@@ -38,7 +44,7 @@ fun main() {
         .then(ServerErrorFilter(htmlView))
         .then(
             routes(
-                router(htmlView, appConfig),
+                router(htmlView, appConfig, teachers, studio, profiles),
                 static(ResourceLoader.Classpath("/ru/yarsu/public"))
             )
         )

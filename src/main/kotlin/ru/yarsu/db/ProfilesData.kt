@@ -19,10 +19,10 @@ class ProfilesData {
         return profiles.removeIf { it.id == id }
     }
 
-    fun updateProfile(updatedProfile: Profile): Boolean {
-        val index = profiles.indexOfFirst { it.id == updatedProfile.id }
+    fun updateProfile(id: Long, newProfile: Profile): Boolean {
+        val index = profiles.indexOfFirst { it.id == id }
         return if (index != -1) {
-            profiles[index] = updatedProfile
+            profiles[index] = newProfile.copy(id = id)
             true
         } else {
             false

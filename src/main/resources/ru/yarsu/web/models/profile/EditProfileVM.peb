@@ -38,15 +38,15 @@
                                         <label class="form-label">Инструменты</label>
                                         <div class="d-flex flex-wrap">
                                             <!--                                            Тут нужно пройтись по всем инструментам, которые можно выбрать-->
-                                            {% for instrument in model.profile.instruments %}
+                                            {% for instrument in model.allInstruments %}
                                             <div class="form-check me-3 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="instrument-{{ instrument }}"
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       id="instrument-{{ instrument.name }}"
                                                        name="instruments"
-                                                       value="{{ instrument }}"
-                                                <!--Тут будет проверка на наличие инструмента у юзера-->
-
-                                                <label class="form-check-label" for="instrument-{{ instrument }}">
+                                                       value="{{ instrument.name }}"
+                                                       {% if model.instrumentSelected[instrument.name] %}checked{% endif %}>
+                                                <label class="form-check-label" for="instrument-{{ instrument.name }}">
                                                     {{ instrument }}
                                                 </label>
                                             </div>
@@ -57,13 +57,15 @@
                                     <div class="form-group mb-3">
                                         <label class="form-label">Музыкальные стили</label>
                                         <div class="d-flex flex-wrap">
-                                            {% for style in model.profile.styles %}
+                                            {% for style in model.allStyles %}
                                             <div class="form-check me-3 mb-2">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="style-{{ style }}"
+                                                <input class="form-check-input"
+                                                       type="checkbox"
+                                                       id="style-{{ style.name }}"
                                                        name="styles"
-                                                       value="{{ style }}">
-                                                <label class="form-check-label" for="style-{{ style }}">
+                                                       value="{{ style.name }}"
+                                                       {% if model.styleSelected[style.name] %}checked{% endif %}>
+                                                <label class="form-check-label" for="style-{{ style.name }}">
                                                     {{ style }}
                                                 </label>
                                             </div>

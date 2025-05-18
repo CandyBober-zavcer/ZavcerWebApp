@@ -6,15 +6,13 @@ import ru.yarsu.db.ProfilesData
 import ru.yarsu.web.models.profile.ProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class ProfileGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
+class ProfileGetHandler(private val htmlView: ContextAwareViewRender, private val profiles: ProfilesData): HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val profileId = request.path("id")?.toIntOrNull()
+        val profileId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID профиля")
-        val profile = ProfilesData().getAllProfiles().find { it.id.toInt() == profileId }
-        if (profile == null) {
-            return Response(Status.NOT_FOUND).body("Профиль не найден")
-        }
+        val profile = profiles.getProfileById(profileId)
+            ?: return Response(Status.NOT_FOUND).body("Профиль не найден")
         val viewModel = ProfileVM(profile)
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }

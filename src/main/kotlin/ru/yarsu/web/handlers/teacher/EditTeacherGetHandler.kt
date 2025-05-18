@@ -9,14 +9,14 @@ import ru.yarsu.web.domain.models.telegram.AuthUtils
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
+class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender, private val teachers: TeachersData): HttpHandler {
 
     override fun invoke(request: Request): Response {
         val user = AuthUtils.getUserFromCookie(request)
         val teacherId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
-        val teacher = TeachersData().getTeacherById(teacherId)
+        val teacher = teachers.getTeacherById(teacherId)
             ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
         val allStyles = MusicStyle.entries
         val allInstruments = Instrument.entries

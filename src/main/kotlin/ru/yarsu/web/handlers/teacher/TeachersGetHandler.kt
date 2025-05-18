@@ -5,11 +5,10 @@ import ru.yarsu.db.TeachersData
 import ru.yarsu.web.models.teacher.TeachersVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class TeachersGetHandler(private val htmlView: ContextAwareViewRender) : HttpHandler {
+class TeachersGetHandler(private val htmlView: ContextAwareViewRender, private val teachers: TeachersData) : HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val teachers = TeachersData().getAllTeachers()
-        val viewModel = TeachersVM(teachers)
+        val viewModel = TeachersVM(teachers.getAllTeachers())
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 }

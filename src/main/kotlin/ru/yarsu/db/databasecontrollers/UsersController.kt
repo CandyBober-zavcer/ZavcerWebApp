@@ -14,30 +14,55 @@ import ru.yarsu.web.domain.enums.RoleEnums
 
 class UsersController {
     /**
-     * Собирает класс User из строчки базы данных по выбранному ID.
+     * Собирает список объектов класса User по заданному номеру страницы.
+     * @return список User`ов. При неудаче список будет пустым.
+     */
+    fun getUsersByPage(
+        page: Int,
+        limit: Int,
+    ): List<User> {
+        val result = mutableListOf<User>()
+
+        transaction {
+            val users =
+                UserLine
+                    .all()
+                    .offset((limit * page).toLong())
+                    .limit(limit)
+                    .toList()
+            for (user in users) {
+                result.add(packUser(user))
+            }
+        }
+        return result
+    }
+
+    /**
+     * Собирает объект класса User из строчки базы данных по выбранному ID.
      * @return класс User (duh). При неудаче класс будет с ID, равным -1.
      */
     fun getUserById(id: Int): User {
-        val user = User()
+        var user = User()
 
         transaction {
             val userLine = UserLine.findById(id)
             userLine?.let {
-                user.id = id
-                user.name = it.name
-                user.tg_name = it.tg_name
-                user.password = it.password
-                user.phone = it.phone
-                user.experience = it.experience
-                user.abilities = stringToAbilities(it.abilities)
-                user.price = it.price
-                user.description = it.description
-                user.address = it.address
-                user.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
-                user.images = it.images.toMutableList()
-                user.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
-                user.spots = it.spots.map { spot -> spot.id.value }.toMutableList()
-                user.roles = stringToRoles(it.roles)
+                user = packUser(it)
+//                user.id = id
+//                user.name = it.name
+//                user.tg_name = it.tg_name
+//                user.password = it.password
+//                user.phone = it.phone
+//                user.experience = it.experience
+//                user.abilities = stringToAbilities(it.abilities)
+//                user.price = it.price
+//                user.description = it.description
+//                user.address = it.address
+//                user.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
+//                user.images = it.images.toMutableList()
+//                user.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
+//                user.spots = it.spots.map { spot -> spot.id.value }.toMutableList()
+//                user.roles = stringToRoles(it.roles)
             }
         }
         return user
@@ -368,5 +393,27 @@ class UsersController {
             }
         }
         return result
+    }
+
+    private fun packUser(line: UserLine): User {
+        val user = User()
+
+        user.id = line.id.value
+        user.name = line.name
+        user.tg_name = line.tg_name
+        user.password = line.password
+        user.phone = line.phone
+        user.experience = line.experience
+        user.abilities = stringToAbilities(line.abilities)
+        user.price = line.price
+        user.description = line.description
+        user.address = line.address
+        user.district = DistrictEnums.from(line.district) ?: DistrictEnums.UNKNOWN
+        user.images = line.images.toMutableList()
+        user.twoWeekOccupation = line.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
+        user.spots = line.spots.map { spot -> spot.id.value }.toMutableList()
+        user.roles = stringToRoles(line.roles)
+
+        return user
     }
 }

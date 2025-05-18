@@ -12,27 +12,52 @@ import ru.yarsu.web.domain.enums.DistrictEnums
 
 class SpotsController {
     /**
+     * Собирает список объектов класса Spot по заданному номеру страницы.
+     * @return список Spot`ов. При неудаче список будет пустым.
+     */
+    fun getSpotsByPage(
+        page: Int,
+        limit: Int,
+    ): List<Spot> {
+        val result = mutableListOf<Spot>()
+
+        transaction {
+            val spots =
+                SpotLine
+                    .all()
+                    .offset((limit * page).toLong())
+                    .limit(limit)
+                    .toList()
+            for (spot in spots) {
+                result.add(packSpot(spot))
+            }
+        }
+        return result
+    }
+
+    /**
      * Собирает класс Spot из строчки базы данных по выбранному ID.
      * @return класс Spot (duh). При неудаче класс будет с ID, равным -1.
      */
     fun getSpotById(id: Int): Spot {
-        val spot = Spot()
+        var spot = Spot()
 
         transaction {
             val spotLine = SpotLine.findById(id)
             spotLine?.let {
-                spot.id = it.id.value
-                spot.name = it.name
-                spot.price = it.price
-                spot.hasDrums = it.hasDrums
-                spot.guitarAmps = it.guitarAmps
-                spot.bassAmps = it.bassAmps
-                spot.description = it.description
-                spot.address = it.address
-                spot.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
-                spot.images = it.images.toList()
-                spot.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
-                spot.owners = it.owners.map { user -> user.id.value }.toMutableList()
+                spot = packSpot(it)
+//                spot.id = it.id.value
+//                spot.name = it.name
+//                spot.price = it.price
+//                spot.hasDrums = it.hasDrums
+//                spot.guitarAmps = it.guitarAmps
+//                spot.bassAmps = it.bassAmps
+//                spot.description = it.description
+//                spot.address = it.address
+//                spot.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
+//                spot.images = it.images.toList()
+//                spot.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
+//                spot.owners = it.owners.map { user -> user.id.value }.toMutableList()
             }
         }
         return spot
@@ -275,5 +300,24 @@ class SpotsController {
             }
         }
         return result
+    }
+
+    private fun packSpot(line: SpotLine): Spot {
+        val spot = Spot()
+
+        spot.id = line.id.value
+        spot.name = line.name
+        spot.price = line.price
+        spot.hasDrums = line.hasDrums
+        spot.guitarAmps = line.guitarAmps
+        spot.bassAmps = line.bassAmps
+        spot.description = line.description
+        spot.address = line.address
+        spot.district = DistrictEnums.from(line.district) ?: DistrictEnums.UNKNOWN
+        spot.images = line.images.toList()
+        spot.twoWeekOccupation = line.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
+        spot.owners = line.owners.map { user -> user.id.value }.toMutableList()
+
+        return spot
     }
 }

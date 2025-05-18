@@ -37,6 +37,11 @@ class DataBaseController {
     }
 
     // Работа с Users
+    fun getUserByPage(
+        page: Int,
+        limit: Int,
+    ): List<User> = UsersController().getUsersByPage(page, limit)
+
     fun getUserById(id: Int): User = UsersController().getUserById(id)
 
     fun insertUser(user: User): Int = UsersController().insertUser(user)
@@ -87,6 +92,11 @@ class DataBaseController {
     ): Boolean = UsersController().removeDayOccupation(userId, daysId)
 
     // Работа со Spots
+    fun getSpotsByPage(
+        page: Int,
+        limit: Int,
+    ): List<Spot> = SpotsController().getSpotsByPage(page, limit)
+
     fun getSpotById(id: Int): Spot = SpotsController().getSpotById(id)
 
     fun insertSpot(spot: Spot): Int = SpotsController().insertSpot(spot)

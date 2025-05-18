@@ -7,12 +7,12 @@
         ← Назад ко всем преподавателям
     </a>
     <a href="/edit/teacher/edit-{{model.teacher.id}}" class="btn btn-outline-warning mb-4">Редактировать</a>
-    <a href="/edit/teacher/delete" class="btn btn-outline-danger mb-4">Удалить</a>
+    <a href="/edit/teacher/delete-{{ model.teacher.id }}" class="btn btn-outline-danger mb-4">Удалить</a>
 
     <div class="card shadow-lg">
         <div class="row g-0">
             <div class="col-md-5">
-                <img src="{{ model.teacher.photoUrl[0] | default("https://via.placeholder.com/600x400") }}"
+                <img src="/img/{{ model.teacher.avatarFileName[0] | default('defaultTeacher.webp') }}"
                      class="img-fluid rounded-start" alt="Фото преподавателя">
             </div>
             <div class="col-md-7">

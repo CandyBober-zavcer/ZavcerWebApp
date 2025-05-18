@@ -1,5 +1,6 @@
 package ru.yarsu.web.funs
 
-abstract class EnumFinder<V, E>(private val valueMap: Map<V, E>) {
-    fun from(value: V) = valueMap[value]
+open class EnumFinder<K, E : WithId<K>>(private val map: Map<K, E>) {
+    operator fun get(key: K): E? = map[key]
 }
+

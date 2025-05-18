@@ -14,13 +14,14 @@ fun <IN : Any, OUT> lensOrNull(
     }
 
 fun <IN : Any, OUT> lensOrDefault(
-    lens: Lens<IN, OUT?>,
+    lens: Lens<IN, OUT>,
     value: IN,
     default: () -> OUT,
 ): OUT =
     try {
-        lens.invoke(value) ?: default()
+        lens.invoke(value)
     } catch (_: LensFailure) {
         default()
     }
+
 

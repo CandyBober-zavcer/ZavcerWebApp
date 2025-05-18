@@ -1,5 +1,6 @@
 package ru.yarsu.web.models.teacher
 
+import org.http4k.lens.MultipartForm
 import org.http4k.template.ViewModel
 import ru.yarsu.web.domain.article.Instrument
 import ru.yarsu.web.domain.article.MusicStyle
@@ -10,7 +11,8 @@ class EditTeacherVM(
     val teacher: Teacher,
     val user: String,
     val allStyles: EnumEntries<MusicStyle>,
-    val allInstruments: EnumEntries<Instrument>
+    val allInstruments: EnumEntries<Instrument>,
+    val form: MultipartForm,
 ) : ViewModel {
     private val selectedStyleNames = teacher.experienceInfo.styles.map { it.name }.toSet()
     private val selectedInstrumentNames = teacher.instruments.map { it.name }.toSet()

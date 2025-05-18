@@ -4,6 +4,7 @@ package ru.yarsu.web.domain.article
  * Класс, представляющий преподавателя, его специализацию и доступность.
  *
  * @property fullName Полное имя преподавателя.
+ * @property avatarFileName Путь до фотографии.
  * @property shortDescription Краткое описание (например, специализация или должность).
  * @property experienceInfo Информация об опыте преподавателя.
  * @property roles Роли пользователей (владельцы и администраторы).
@@ -14,7 +15,7 @@ package ru.yarsu.web.domain.article
 data class Teacher(
     val id: Long,
     val fullName: String,
-    val photoUrl: List<String>?,
+    val avatarFileName: List<String>?,
     val shortDescription: String,
     val experienceInfo: ExperienceInfo,
     val roles: PersonRole,

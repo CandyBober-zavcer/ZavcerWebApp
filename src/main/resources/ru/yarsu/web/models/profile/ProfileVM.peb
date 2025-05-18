@@ -11,7 +11,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="{{ model.profile.avatarUrl }}" alt="Аватар пользователя"
+                        <img src="/img/{{ model.profile.avatarFileName | default('defaultProfile.webp') }}" alt="Аватар пользователя"
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">{{ model.profile.name }}</h5>
                         <div class="d-flex justify-content-center mb-2">

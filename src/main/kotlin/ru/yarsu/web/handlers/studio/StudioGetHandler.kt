@@ -1,6 +1,7 @@
 package ru.yarsu.web.handlers.studio
 
 import org.http4k.core.*
+import org.http4k.lens.*
 import org.http4k.routing.path
 import ru.yarsu.db.StudiosData
 import ru.yarsu.db.TeachersData

@@ -1,5 +1,7 @@
 package ru.yarsu.web.domain.article
 
+import ru.yarsu.web.domain.EnumFinder
+
 enum class Instrument(val id: Int, private val displayName: String) {
     GUITAR(1, "Гитара"),
     ACOUSTIC_GUITAR(2, "Акустическая гитара"),
@@ -35,9 +37,8 @@ enum class Instrument(val id: Int, private val displayName: String) {
     OTHER(32, "Другое");
 
     companion object {
-        fun fromId(id: Int): Instrument? {
-            return entries.find { it.id == id }
-        }
+        private val idMap = entries.associateBy { it.id }
+        fun get(id: Int): Instrument? = idMap[id]
     }
 
     override fun toString(): String = displayName

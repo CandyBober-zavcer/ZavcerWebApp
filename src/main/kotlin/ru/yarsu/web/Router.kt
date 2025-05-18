@@ -15,6 +15,7 @@ import ru.yarsu.web.domain.models.telegram.JsonLogger
 import ru.yarsu.web.handlers.PingHandler
 import ru.yarsu.web.handlers.home.HomePageHandler
 import ru.yarsu.web.handlers.profile.EditProfileGetHandler
+import ru.yarsu.web.handlers.profile.EditProfilePostHandler
 import ru.yarsu.web.handlers.profile.ProfileGetHandler
 import ru.yarsu.web.handlers.studio.*
 import ru.yarsu.web.handlers.teacher.*
@@ -46,7 +47,7 @@ fun router(
         ),
         "/profile/{id}" bind Method.GET to ProfileGetHandler(htmlView, profiles),
         "/edit/profile/edit-{id}" bind Method.GET to EditProfileGetHandler(htmlView, profiles),
-//        "/edit/profile/edit-{id}" bind Method.POST to EditProfilePostHandler(htmlView, profiles),
+        "/edit/profile/edit-{id}" bind Method.POST to EditProfilePostHandler(htmlView, profiles),
 
         "/studio/{id}" bind Method.GET to StudioGetHandler(htmlView, studios),
 //        "/studio" bind Method.POST to StudioPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
@@ -57,20 +58,20 @@ fun router(
 
 
         "/edit/teacher/add" bind Method.GET to AddTeacherGetHandler(htmlView, teachers),
-//        "/edit/teacher/add" bind Method.GET to AddTeacherGetHandler(htmlView),
+        "/edit/teacher/add" bind Method.POST to AddTeacherPostHandler(htmlView, teachers),
 
         "/edit/teacher/edit-{id}" bind Method.GET to EditTeacherGetHandler(htmlView, teachers),
-//        "/edit/teacher/edit-{id}" bind Method.POST to EditTeacherPostHandler(htmlView),
+        "/edit/teacher/edit-{id}" bind Method.POST to EditTeacherPostHandler(htmlView, teachers),
 
         "/edit/teacher/delete-{id}" bind Method.GET to DeleteTeacherGetHandler(htmlView, teachers),
         "/edit/teacher/delete-{id}" bind Method.POST to DeleteTeacherPostHandler(htmlView, teachers),
 
 
         "/edit/studio/edit-{id}" bind Method.GET to EditStudioGetHandler(htmlView, studios),
-//        "/edit/studio/edit-{id}" bind Method.POST to EditStudioPostHandler(htmlView),
+        "/edit/studio/edit-{id}" bind Method.POST to EditStudioPostHandler(htmlView, studios),
 
-        "/edit/studio/add" bind Method.GET to AddStudioGetHandler(htmlView, studios),
-//        "/edit/studio/add" bind Method.POST to AddStudioPostHandler(htmlView),
+        "/edit/studio/add" bind Method.GET to AddStudioGetHandler(htmlView),
+        "/edit/studio/add" bind Method.POST to AddStudioPostHandler(htmlView, studios),
 
         "/edit/studio/delete-{id}" bind Method.GET to DeleteStudioGetHandler(htmlView, studios),
         "/edit/studio/delete-{id}" bind Method.POST to DeleteStudioPostHandler(htmlView, studios),

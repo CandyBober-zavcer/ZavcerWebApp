@@ -20,9 +20,9 @@
         <div class="mb-3">
             <label for="photo" class="form-label">Фотография студии</label>
 
-            {% if model.studio.photoUrl[0] %}
+            {% if model.studio.avatarFileName[0] %}
             <div class="mb-2">
-                <img id="studio-photo-preview" src="{{ model.studio.photoUrl[0] }}" alt="Фото студии"
+                <img id="studio-photo-preview" src="/img/{{ model.studio.avatarFileName[0] | default('defaultStudio.jpg') }}" alt="Фото студии"
                      class="img-thumbnail" style="max-width: 200px;">
             </div>
             {% else %}

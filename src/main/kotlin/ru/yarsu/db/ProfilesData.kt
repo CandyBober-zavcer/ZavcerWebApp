@@ -37,7 +37,7 @@ class ProfilesData {
                 description = "Гитарист с опытом более 10 лет, участник рок-группы.",
                 instruments = listOf(Instrument.ELECTRIC_GUITAR, Instrument.BASS),
                 styles = listOf(MusicStyle.ROCK, MusicStyle.METAL),
-                avatarUrl = "https://example.com/avatars/alexey.jpg"
+                avatarFileName = "profile3.png"
             ),
             Profile(
                 id = 1002L,
@@ -45,7 +45,7 @@ class ProfilesData {
                 description = "Вокалистка и автор песен в жанре поп и джаз.",
                 instruments = listOf(Instrument.KEYBOARD),
                 styles = listOf(MusicStyle.POP, MusicStyle.JAZZ),
-                avatarUrl = "https://example.com/avatars/maria.jpg"
+                avatarFileName = "profile4.webp"
             ),
             Profile(
                 id = 1003L,
@@ -53,7 +53,7 @@ class ProfilesData {
                 description = "Барабанщик, специализирующийся на живых выступлениях.",
                 instruments = listOf(Instrument.DRUMS),
                 styles = listOf(MusicStyle.ROCK, MusicStyle.FUNK),
-                avatarUrl = "https://example.com/avatars/igor.jpg"
+                avatarFileName = "profile5.webp"
             ),
             Profile(
                 id = 1004L,
@@ -61,7 +61,7 @@ class ProfilesData {
                 description = "Саксофонистка и преподаватель музыки.",
                 instruments = listOf(Instrument.SAXOPHONE),
                 styles = listOf(MusicStyle.JAZZ, MusicStyle.BLUES),
-                avatarUrl = "https://example.com/avatars/elena.jpg"
+                avatarFileName = ""
             ),
             Profile(
                 id = 1005L,
@@ -69,7 +69,7 @@ class ProfilesData {
                 description = "Мультиинструменталист и саунд-продюсер.",
                 instruments = listOf(Instrument.KEYBOARD, Instrument.DJEMBE, Instrument.ACOUSTIC_GUITAR),
                 styles = listOf(MusicStyle.ELECTRONIC, MusicStyle.METAL),
-                avatarUrl = "https://example.com/avatars/nikita.jpg"
+                avatarFileName = ""
             ),
             Profile(
                 id = 1831874252,
@@ -77,7 +77,7 @@ class ProfilesData {
                 description = "Опытный клавишник с тонким чувством ритма. Увлекается живыми акустическими сетами и джазовыми импровизациями на саксофоне. Работал с коллективами в стиле RnB и кантри.",
                 instruments = listOf(Instrument.KEYBOARD, Instrument.CAJON, Instrument.SAXOPHONE),
                 styles = listOf(MusicStyle.RNB, MusicStyle.COUNTRY),
-                avatarUrl = "https://avatars.yandex.net/get-music-content/4716681/3ac31825.a.15129028-1/m1000x1000?webp=false"
+                avatarFileName = "profile1.jpg"
             ),
             Profile(
                 id = 777990904,
@@ -85,7 +85,7 @@ class ProfilesData {
                 description = "Гитарист с 10-летним стажем, специализирующийся на роке и металле. Играет как на акустике, так и на электрогитаре. Выступал на даче у Егора, дома у Кирилла, подвалах и переходах Ярославля.",
                 instruments = listOf(Instrument.GUITAR, Instrument.ELECTRIC_GUITAR),
                 styles = listOf(MusicStyle.METAL, MusicStyle.ROCK),
-                avatarUrl = "https://steamuserimages-a.akamaihd.net/ugc/55829769501469083/D83ED851B2DB78DFA12514FE48E0355647C6A38C/?imw=512&amp;imh=357&amp;ima=fit&amp;impolicy=Letterbox&amp;imcolor=%23000000&amp;letterbox=true"
+                avatarFileName = "profile2.jpg"
             )
         )
     }

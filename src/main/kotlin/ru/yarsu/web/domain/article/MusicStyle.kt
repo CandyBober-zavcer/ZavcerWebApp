@@ -1,5 +1,8 @@
 package ru.yarsu.web.domain.article
 
+import ru.yarsu.web.domain.EnumFinder
+import ru.yarsu.web.domain.RoleEnums
+
 /**
  * Стили музыки, используемые для описания предпочтений преподавателя или студии.
  *
@@ -26,7 +29,8 @@ enum class MusicStyle(val id: Int, private val displayName: String) {
     OTHER(16, "Другое");
 
     companion object {
-        fun fromId(id: Int): MusicStyle? = entries.find { it.id == id }
+        private val idMap = entries.associateBy { it.id }
+        fun get(id: Int): MusicStyle? = idMap[id]
     }
 
     override fun toString(): String = displayName

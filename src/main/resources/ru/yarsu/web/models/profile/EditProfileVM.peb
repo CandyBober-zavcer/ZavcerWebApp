@@ -16,7 +16,7 @@
                         <form method="post" enctype="multipart/form-data">
                             <div class="row mb-4">
                                 <div class="col-md-4 text-center">
-                                    <img src="{{ model.profile.avatarUrl }}" alt="Аватар пользователя"
+                                    <img src="/img/{{ model.profile.avatarFileName | default('defaultProfile.webp') }}" alt="Аватар пользователя"
                                          class="rounded-circle img-fluid mb-3" style="width: 150px;">
                                     <div class="d-flex justify-content-center">
                                         <input type="file" class="form-control" id="avatar" name="avatar"

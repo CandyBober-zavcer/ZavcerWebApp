@@ -8,12 +8,12 @@
         ← Назад ко всем студиям
     </a>
     <a href="/edit/studio/edit-{{model.studio.id}}" class="btn btn-outline-warning mb-4">Редактировать</a>
-    <a href="/edit/studio/delete" class="btn btn-outline-danger mb-4">Удалить</a>
+    <a href="/edit/studio/delete-{{ model.studio.id }}" class="btn btn-outline-danger mb-4">Удалить</a>
 
     <div class="card shadow-lg">
         <div class="row g-0">
             <div class="col-md-5">
-                <img src="{{ model.studio.photoUrl[0] | default("https://via.placeholder.com/600x400") }}"
+                <img src="/img/{{ model.studio.avatarFileName[0] | default('defaultStudio.jpg') }}"
                      class="img-fluid rounded-start" alt="Фото студии">
             </div>
             <div class="col-md-7">

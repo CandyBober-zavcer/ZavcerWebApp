@@ -37,7 +37,6 @@ fun main() {
     val studio = StudiosData()
     val profiles = ProfilesData()
 
-
     val app = requestContextFilter
         .then(telegramUserFilter)
         .then(NotFoundFilter(htmlView))

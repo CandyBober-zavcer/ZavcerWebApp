@@ -1,7 +1,5 @@
 package ru.yarsu.web.domain.article
 
-import ru.yarsu.web.domain.EnumFinder
-
 enum class Instrument(val id: Int, private val displayName: String) {
     GUITAR(1, "Гитара"),
     ACOUSTIC_GUITAR(2, "Акустическая гитара"),

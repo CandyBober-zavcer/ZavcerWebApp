@@ -1,8 +1,5 @@
 package ru.yarsu.web.domain.article
 
-import ru.yarsu.web.domain.EnumFinder
-import ru.yarsu.web.domain.RoleEnums
-
 /**
  * Стили музыки, используемые для описания предпочтений преподавателя или студии.
  *

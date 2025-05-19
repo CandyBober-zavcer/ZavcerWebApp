@@ -23,7 +23,7 @@ class OccupationsController {
             val day = DayOccupationLine.findById(id)
             day?.let { line ->
                 dayOccupation.id = id
-                dayOccupation.occupation = line.hours.associateBy({ it.id.value }, { it.occupation?.id?.value ?: -1 }).toMutableMap()
+                dayOccupation.occupation = line.hours.associateBy({ it.hour }, { it.occupation?.id?.value }).toMutableMap()
             }
         }
         return dayOccupation

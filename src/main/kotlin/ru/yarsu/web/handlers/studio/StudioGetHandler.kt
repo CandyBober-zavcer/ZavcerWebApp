@@ -13,13 +13,11 @@ class StudioGetHandler(private val htmlView: ContextAwareViewRender) : HttpHandl
 
     override fun invoke(request: Request): Response {
         val user = AuthUtils.getUserFromCookie(request)
-        val studioId = request.path("id")?.toIntOrNull()
+        val studioId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID студии")
 
-        val studio = StudiosData().fillStudios().find { it.id.toInt() == studioId }
-
-        if (studio == null) {            return Response(Status.NOT_FOUND).body("Студия не найдена")
-        }
+        val studio = StudiosData().getStudioById(studioId)
+            ?: return Response(Status.NOT_FOUND).body("Студия не найдена")
 
         val viewModel = StudioVM(
             studio,

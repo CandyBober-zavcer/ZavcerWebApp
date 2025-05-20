@@ -12,6 +12,8 @@ import ru.yarsu.web.domain.models.telegram.JsonLogger
 import ru.yarsu.web.handlers.PebbleHandler
 import ru.yarsu.web.handlers.PingHandler
 import ru.yarsu.web.handlers.home.HomePageHandler
+import ru.yarsu.web.handlers.profile.EditProfileGetHandler
+import ru.yarsu.web.handlers.profile.ProfileGetHandler
 import ru.yarsu.web.handlers.studio.*
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.telegramAuth.TelegramAuthGetHandler
@@ -27,13 +29,15 @@ class TestErrorHandler : HttpHandler {
 fun router(htmlView: ContextAwareViewRender, config: AppConfig): RoutingHttpHandler {
     return routes(
         "/" bind Method.GET to HomePageHandler(htmlView),
-        "/test-error" bind Method.GET to TestErrorHandler(), // Такого Хендлера нет
+        "/test-error" bind Method.GET to TestErrorHandler(),
         "/ping" bind Method.GET to PingHandler(),
         "/auth/telegram" bind Method.GET to TelegramAuthGetHandler(htmlView),
         "/auth/telegram" bind Method.POST to TelegramAuthPostHandler(
             jsonLogger = JsonLogger(config.telegramConfig.userDataFile),
             botToken = config.telegramConfig.botToken
         ),
+        "/profile/{id}" bind Method.GET to ProfileGetHandler(htmlView),
+        "/edit/profile/edit-{id}" bind Method.GET to EditProfileGetHandler(htmlView),
         "/studio/{id}" bind Method.GET to StudioGetHandler(htmlView),
 //        "/studio" bind Method.POST to StudioPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/studios" bind Method.GET to StudiosGetHandler(htmlView),

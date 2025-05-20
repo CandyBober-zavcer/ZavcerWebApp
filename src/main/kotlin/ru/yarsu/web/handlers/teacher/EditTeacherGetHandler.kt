@@ -3,6 +3,8 @@ package ru.yarsu.web.handlers.teacher
 import org.http4k.core.*
 import org.http4k.routing.path
 import ru.yarsu.db.TeachersData
+import ru.yarsu.web.domain.article.Instrument
+import ru.yarsu.web.domain.article.MusicStyle
 import ru.yarsu.web.domain.models.telegram.AuthUtils
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
@@ -11,18 +13,19 @@ class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender): HttpH
 
     override fun invoke(request: Request): Response {
         val user = AuthUtils.getUserFromCookie(request)
-        val teacherId = request.path("id")?.toIntOrNull()
+        val teacherId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
-        val teacher = TeachersData().fillTeachers().find { it.id.toInt() == teacherId }
-
-        if (teacher == null) {
-            return Response(Status.NOT_FOUND).body("Преподаватель не найден")
-        }
+        val teacher = TeachersData().getTeacherById(teacherId)
+            ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
+        val allStyles = MusicStyle.entries
+        val allInstruments = Instrument.entries
 
         val viewModel = EditTeacherVM(
             teacher,
-            user?.id?.toString() ?: "null"
+            user?.id?.toString() ?: "null",
+            allStyles,
+            allInstruments
         )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)

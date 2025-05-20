@@ -8,7 +8,7 @@ import ru.yarsu.web.templates.ContextAwareViewRender
 class DeleteTeacherGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val teachers = TeachersData().fillTeachers()
+        val teachers = TeachersData().getAllTeachers()
         val viewModel = DeleteTeacherVM(teachers)
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }

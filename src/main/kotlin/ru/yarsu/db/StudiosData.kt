@@ -5,7 +5,33 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 class StudiosData {
-    fun fillStudios(): List<Studio> {
+    private val studios: MutableList<Studio> = fillStudios().toMutableList()
+
+    fun getAllStudios(): List<Studio> = studios
+
+    fun getStudioById(id: Long): Studio? = studios.find { it.id == id }
+
+    fun addStudio(studio: Studio): Boolean {
+        if (studios.any { it.id == studio.id }) return false
+        studios.add(studio)
+        return true
+    }
+
+    fun removeStudio(id: Long): Boolean {
+        return studios.removeIf { it.id == id }
+    }
+
+    fun updateStudio(updatedStudio: Studio): Boolean {
+        val index = studios.indexOfFirst { it.id == updatedStudio.id }
+        return if (index != -1) {
+            studios[index] = updatedStudio
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun fillStudios(): List<Studio> {
         return listOf(
             Studio(
                 id = 1L,
@@ -45,7 +71,9 @@ class StudiosData {
                 id = 2L,
                 name = "Акустика+",
                 description = "Студия для сольных исполнений и вокала.",
-                photoUrl = listOf("https://yandex-images.clstorage.net/5Ohv12B14/43509b3HrQ9/PaYSGRP-VZKqw8MbHiMUPS6I2O5PKzaYvRPrIM3lKBkomZoXutd3QJO-hipIDtAGIBBI01bXRnSnm-GdsEwgrCkiAQiDOcDG-AQWGR7iVLp52BypWaoh3i2E6eWaJ-oNKgIVCnIL-MuedVq1VckGBCCQmkBHRwl6YcYiF-FIcDv7aBocFifamGPWRxYdJxn1cELa6t_vIhcwz6ZlxWAzELMFUQs_ifrM2nGVNBAGSkHo0l8eTwAPN_-CoNnnSb0wdiARmZ0rU1NsUQSQ1CMUf7cIUive7apfuI_j4AhpPFDywZeDsEk8SVq-X3eQBgOPZxdfG4EGxzFyCm4SL828OH0oG9kRYZJX55oF0FcvX_O8hlihEWnonj-Hq6wOIj4d-IPbyn5CeUIRt1H3lI0LySBbXBfLBM15ekKoWeEJfXO-KJAd3mQWFiuTDp5QZl-_sIgZZhSqZ9c-xGehTS5-3fDPW092yPFAmzzYuV_KzgGh35SfSo7Cdv_La19qRD19Oa_SHtWvHdJjmUldG6hZNzGF2qFdLapasgnm5ERv-R_3SJiOv0i0yN75nvOehEYGJRMd2YaBxbR8h6Vd4Qm58vToW5mcYV2RpRAPEt1un3E5yJihnWSs0XeOZCHOJz6ces_fRjbAdAQYflb3Xg4Dxe3dkJiHA8iztE7iXOyEPn03q1KQlqdcXihaAJ6b4JP2tw0Yr5yl4NCyR-goCGo_X3_FXowxSb4F0ntaNBqMisqt2t2TB47GfTPOItEphP41OCURGdrv2lFimYGZkysTdzzD02MRrC0ed0xu7QFpfBI0iVJC-Y32A5M-F3STBoICYFLXGcGCzjz6BGLX7ka3sfminx4f7F0Wr1lDGxYj1bYxAxphF-IhErEOZKeGb7RfOotQR3eB-YwfsxK7ns1ERWwd2dODSUJ-N40i1uKFMDp565Id3uVVGGPTR5eWa9Zz-0nS714polD1zmdtxQ"),
+                photoUrl = listOf(
+                    "https://yandex-images.clstorage.net/5Ohv12B14/43509b3HrQ9/PaYSGRP-VZKqw8MbHiMUPS6I2O5PKzaYvRPrIM3lKBkomZoXutd3QJO-hipIDtAGIBBI01bXRnSnm-GdsEwgrCkiAQiDOcDG-AQWGR7iVLp52BypWaoh3i2E6eWaJ-oNKgIVCnIL-MuedVq1VckGBCCQmkBHRwl6YcYiF-FIcDv7aBocFifamGPWRxYdJxn1cELa6t_vIhcwz6ZlxWAzELMFUQs_ifrM2nGVNBAGSkHo0l8eTwAPN_-CoNnnSb0wdiARmZ0rU1NsUQSQ1CMUf7cIUive7apfuI_j4AhpPFDywZeDsEk8SVq-X3eQBgOPZxdfG4EGxzFyCm4SL828OH0oG9kRYZJX55oF0FcvX_O8hlihEWnonj-Hq6wOIj4d-IPbyn5CeUIRt1H3lI0LySBbXBfLBM15ekKoWeEJfXO-KJAd3mQWFiuTDp5QZl-_sIgZZhSqZ9c-xGehTS5-3fDPW092yPFAmzzYuV_KzgGh35SfSo7Cdv_La19qRD19Oa_SHtWvHdJjmUldG6hZNzGF2qFdLapasgnm5ERv-R_3SJiOv0i0yN75nvOehEYGJRMd2YaBxbR8h6Vd4Qm58vToW5mcYV2RpRAPEt1un3E5yJihnWSs0XeOZCHOJz6ces_fRjbAdAQYflb3Xg4Dxe3dkJiHA8iztE7iXOyEPn03q1KQlqdcXihaAJ6b4JP2tw0Yr5yl4NCyR-goCGo_X3_FXowxSb4F0ntaNBqMisqt2t2TB47GfTPOItEphP41OCURGdrv2lFimYGZkysTdzzD02MRrC0ed0xu7QFpfBI0iVJC-Y32A5M-F3STBoICYFLXGcGCzjz6BGLX7ka3sfminx4f7F0Wr1lDGxYj1bYxAxphF-IhErEOZKeGb7RfOotQR3eB-YwfsxK7ns1ERWwd2dODSUJ-N40i1uKFMDp565Id3uVVGGPTR5eWa9Zz-0nS714polD1zmdtxQ"
+                ),
                 roles = PersonRole(
                     owners = listOf(1010L),
                     administrators = listOf(1011L)

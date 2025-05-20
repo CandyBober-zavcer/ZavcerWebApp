@@ -11,14 +11,11 @@ class TeacherGetHandler(private val htmlView: ContextAwareViewRender) : HttpHand
 
     override fun invoke(request: Request): Response {
         val user = AuthUtils.getUserFromCookie(request)
-        val teacherId = request.path("id")?.toIntOrNull()
+        val teacherId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
-        val teacher = TeachersData().fillTeachers().find { it.id.toInt() == teacherId }
-
-        if (teacher == null) {
-            return Response(Status.NOT_FOUND).body("Преподаватель не найден")
-        }
+        val teacher = TeachersData().getTeacherById(teacherId)
+            ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
 
         val viewModel = TeacherVM(
             teacher,

@@ -5,7 +5,33 @@ import java.time.LocalDate
 import java.time.LocalTime
 
 class TeachersData {
-    fun fillTeachers(): List<Teacher> {
+    private val teachers: MutableList<Teacher> = fillTeachers().toMutableList()
+
+    fun getAllTeachers(): List<Teacher> = teachers
+
+    fun getTeacherById(id: Long): Teacher? = teachers.find { it.id == id }
+
+    fun addTeacher(teacher: Teacher): Boolean {
+        if (teachers.any { it.id == teacher.id }) return false
+        teachers.add(teacher)
+        return true
+    }
+
+    fun removeTeacher(id: Long): Boolean {
+        return teachers.removeIf { it.id == id }
+    }
+
+    fun updateTeacher(updatedTeacher: Teacher): Boolean {
+        val index = teachers.indexOfFirst { it.id == updatedTeacher.id }
+        return if (index != -1) {
+            teachers[index] = updatedTeacher
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun fillTeachers(): List<Teacher> {
         return listOf(
             Teacher(
                 id = 1L,

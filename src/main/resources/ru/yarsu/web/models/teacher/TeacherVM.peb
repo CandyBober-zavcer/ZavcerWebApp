@@ -72,8 +72,10 @@
                         </div>
                         <div class="mt-3">
                             <strong>Выбранное время:</strong>
-                            <p>Дата: <span id="summaryDate">не выбрано</span></p>
-                            <p>Время: <span id="summaryTime">не выбрано</span></p>
+                            <div class="booking-summary">
+                                <p>Дата: <span id="summaryDate">не выбрано</span></p>
+                                <p>Время: <span id="summaryTime">не выбрано</span></p>
+                            </div>
                         </div>
                     </div>
                     {# КОНЕЦ ВСТАВКИ #}
@@ -93,6 +95,6 @@
     <script>
         window.userId = {{ model.user | default("null") }};
     </script>
-    <script src="../js/bootstrap.bundle.min.js"></script>
     <script src="../js/Teacher.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
 {% endblock %}

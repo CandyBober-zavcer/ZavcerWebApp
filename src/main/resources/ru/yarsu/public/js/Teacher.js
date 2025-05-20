@@ -1,6 +1,5 @@
 // teacher-calendar.js
 document.addEventListener('DOMContentLoaded', function() {
-
     // 1. Настройка данных
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -303,12 +302,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-
-
     // 5. Инициализация
     resetTimeBtn.addEventListener('click', resetTimeSelection);
-    bookingForm.addEventListener('submit', handleFormSubmit);
+//    bookingForm.addEventListener('submit', handleFormSubmit);
     initCalendar();
+
 
     console.log('Teacher calendar initialized');
 });

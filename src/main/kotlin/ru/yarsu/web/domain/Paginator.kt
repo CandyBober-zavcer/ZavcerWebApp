@@ -13,7 +13,6 @@ class Paginator(
     private val nearStart = viewPage - RANGE - 2 < 0
     private val nearEnd = viewPage + RANGE + 3 > allPages
 
-    // Возвращает ссылки на предыдущие страницы
     fun getPrevPageLinks(): Map<Int, Uri> {
         val prevPages: MutableMap<Int, Uri> = mutableMapOf()
         val start = if (!nearStart) viewPage - RANGE else 0
@@ -23,7 +22,6 @@ class Paginator(
         return prevPages
     }
 
-    // Возвращает ссылки на следующие страницы
     fun getNextPageLinks(): Map<Int, Uri> {
         val nextPages: MutableMap<Int, Uri> = mutableMapOf()
         val end = if (!nearEnd) viewPage + RANGE + 1 else allPages
@@ -33,28 +31,23 @@ class Paginator(
         return nextPages
     }
 
-    // Получаем номер текущей страницы
     fun getStartPage(): Int {
         return viewPage
     }
 
-    // Получаем общее количество страниц
     fun getAllPages(): Int {
         return allPages
     }
 
-    // Возвращает ссылку на указанную страницу
     fun getPageUri(pageNumber: Int = 0): Uri {
         val page = if (pageNumber == allPages) (pageNumber - 1) else pageNumber
         return uri.query("page", page.toString())
     }
 
-    // Проверка, что мы близки к началу списка страниц
     fun isNearStart(): Boolean {
         return nearStart
     }
 
-    // Проверка, что мы близки к концу списка страниц
     fun isNearEnd(): Boolean {
         return nearEnd
     }

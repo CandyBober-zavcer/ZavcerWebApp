@@ -10,19 +10,17 @@ import org.http4k.routing.static
 import org.http4k.server.Netty
 import org.http4k.server.asServer
 import ru.yarsu.config.AppConfig
-import ru.yarsu.web.filters.NotFoundFilter
-import ru.yarsu.web.filters.ServerErrorFilter
 import ru.yarsu.web.rendererProvider
 import ru.yarsu.web.context.contexts
 import ru.yarsu.web.context.TelegramUserLens
 import ru.yarsu.web.router
 import ru.yarsu.web.templates.ContextAwareViewRender
 import org.jetbrains.exposed.sql.Database
-import ru.yarsu.db.DataBaseController
-import ru.yarsu.db.ProfilesData
-import ru.yarsu.db.StudiosData
-import ru.yarsu.db.TeachersData
-import ru.yarsu.web.filters.telegramUserFilter
+import ru.yarsu.db.*
+import ru.yarsu.web.context.UserModelLens
+import ru.yarsu.web.domain.article.SessionStorage
+import ru.yarsu.web.domain.models.email.EmailService
+import ru.yarsu.web.filters.*
 
 fun main() {
     val requestContextFilter = ServerFilters.InitialiseRequestContext(contexts)
@@ -31,19 +29,20 @@ fun main() {
     val renderer = rendererProvider(true)
     val htmlView = ContextAwareViewRender
         .withContentType(renderer, ContentType.TEXT_HTML)
-        .associateContextLens("user", TelegramUserLens)
+        .associateContextLens("user", UserModelLens)
 
     val teachers = TeachersData()
     val studio = StudiosData()
-    val profiles = ProfilesData()
+    val users = UserData()
+    val sessionStorage = SessionStorage()
 
     val app = requestContextFilter
-        .then(telegramUserFilter)
+        .then(combinedUserFilter(appConfig.webConfig.authSalt, users, sessionStorage))
         .then(NotFoundFilter(htmlView))
         .then(ServerErrorFilter(htmlView))
         .then(
             routes(
-                router(htmlView, appConfig, teachers, studio, profiles),
+                router(renderer, htmlView, appConfig, teachers, studio, users, sessionStorage),
                 static(ResourceLoader.Classpath("/ru/yarsu/public"))
             )
         )

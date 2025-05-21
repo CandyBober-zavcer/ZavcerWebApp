@@ -2,21 +2,27 @@ package ru.yarsu.web.models.teacher
 
 import org.http4k.lens.MultipartForm
 import org.http4k.template.ViewModel
-import ru.yarsu.web.domain.article.Instrument
-import ru.yarsu.web.domain.article.MusicStyle
-import ru.yarsu.web.domain.article.Teacher
+import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.web.domain.enums.AbilityEnums
+import ru.yarsu.web.domain.enums.DistrictEnums
 import kotlin.enums.EnumEntries
 
 class EditTeacherVM(
-    val teacher: Teacher,
-    val user: String,
-    val allStyles: EnumEntries<MusicStyle>,
-    val allInstruments: EnumEntries<Instrument>,
+    val teacher: UserModel,
+    private val ability: EnumEntries<AbilityEnums>,
     val form: MultipartForm,
 ) : ViewModel {
-    private val selectedStyleNames = teacher.experienceInfo.styles.map { it.name }.toSet()
-    private val selectedInstrumentNames = teacher.instruments.map { it.name }.toSet()
-    val styleSelected: Map<String, Boolean> = allStyles.associate { it.name to selectedStyleNames.contains(it.name) }
-    val instrumentSelected: Map<String, Boolean> =
-        allInstruments.associate { it.name to selectedInstrumentNames.contains(it.name) }
+
+    private val selectedAbilityNames: Set<String> = teacher.abilities.map { it.name }.toSet()
+
+    val abilitySelected: Map<String, Boolean> = ability.associate { abilityEnum ->
+        abilityEnum.name to selectedAbilityNames.contains(abilityEnum.name)
+    }
+
+    val allAbilityWithNames: List<Pair<String, String>> = ability.map {
+        it.name to it.instrument.replaceFirstChar { ch -> ch.uppercaseChar() }
+    }
+
+    val allDistricts = DistrictEnums.entries
+
 }

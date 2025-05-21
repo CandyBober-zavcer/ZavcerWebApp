@@ -13,7 +13,6 @@ import ru.yarsu.web.templates.ContextAwareViewRender
 class StudioGetHandler(private val htmlView: ContextAwareViewRender, private val studios: StudiosData) : HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val user = AuthUtils.getUserFromCookie(request)
         val studioId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID студии")
 
@@ -22,7 +21,6 @@ class StudioGetHandler(private val htmlView: ContextAwareViewRender, private val
 
         val viewModel = StudioVM(
             studio,
-            user?.id?.toString() ?: "null"
         )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)

@@ -6,46 +6,44 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.TeachersData
-import ru.yarsu.web.domain.article.*
-import ru.yarsu.web.domain.models.telegram.AuthUtils
+import ru.yarsu.db.UserData
+import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
-import ru.yarsu.web.models.studio.EditStudioVM
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
+import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
+import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
+
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 
 class EditTeacherPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val teachers: TeachersData
+    private val teachers: UserData
 ) : HttpHandler {
 
     private val pathLens = Path.long().of("id")
-
-    private val nameLens = MultipartFormField.string().required("fullName")
-    private val descriptionLens = MultipartFormField.string().required("shortDescription")
+    private val nameLens = MultipartFormField.string().required("name")
+    private val descriptionLens = MultipartFormField.string().required("description")
     private val imageLens = MultipartFormFile.optional("photo")
-    private val experienceYearsLens = MultipartFormField.string().required("experienceYears")
-    private val educationLens = MultipartFormField.string().required("education")
-    private val minStudentAgeLens = MultipartFormField.string().required("minStudentAge")
     private val addressLens = MultipartFormField.string().required("address")
+    private val experienceLens = MultipartFormField.string().required("experience")
+    private val phoneLens = MultipartFormField.string().required("phone")
+    private val priceLens = MultipartFormField.string().required("price")
 
     private val formLens = Body.multipartForm(
         Validator.Feedback,
         nameLens,
         descriptionLens,
         imageLens,
-        experienceYearsLens,
-        educationLens,
-        minStudentAgeLens,
         addressLens,
+        experienceLens,
+        phoneLens,
+        priceLens
     ).toLens()
 
     override fun invoke(request: Request): Response {
-        val user = AuthUtils.getUserFromCookie(request)
-        val teacherId = request.path("id")?.toLongOrNull()
+        val teacherId = request.path("id")?.toIntOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Неверный ID преподавателя")
 
         val existingTeacher = teachers.getTeacherById(teacherId)
@@ -53,72 +51,56 @@ class EditTeacherPostHandler(
 
         val form = formLens(request)
         val errors = form.errors.map { it.meta.name }
-        val allInstruments = Instrument.entries
-        val allStyles = MusicStyle.entries
+        val allAbility = AbilityEnums.entries
 
         if (errors.isNotEmpty()) {
             val viewModel = EditTeacherVM(
                 teacher = existingTeacher,
-                user = user?.id?.toString() ?: "null",
-                allStyles = allStyles,
-                allInstruments = allInstruments,
+                ability = allAbility,
                 form = form,
             )
             return Response(OK).with(htmlView(request) of viewModel)
         }
 
-        val name = lensOrDefault(nameLens, form) { existingTeacher.fullName }
-        val description = lensOrDefault(descriptionLens, form) { existingTeacher.shortDescription }
-        val address = lensOrDefault(addressLens, form) { existingTeacher.address.address }
-        val experienceYears = lensOrDefault(experienceYearsLens, form) { existingTeacher.experienceInfo.experienceYears.toString() }.toInt()
-        val education = lensOrDefault(educationLens, form) { existingTeacher.experienceInfo.education }
-        val minStudentAge = lensOrDefault(minStudentAgeLens, form) { existingTeacher.experienceInfo.minStudentAge.toString() }.toInt()
+        val name = lensOrDefault(nameLens, form) { existingTeacher.name }
+        val description = lensOrDefault(descriptionLens, form) { existingTeacher.description }
+        val address = lensOrDefault(addressLens, form) { existingTeacher.address }
+        val experience = lensOrDefault(experienceLens, form) { existingTeacher.experience.toString() }.toInt()
+        val phone = lensOrDefault(phoneLens, form) { existingTeacher.phone }
+        val price = lensOrDefault(priceLens, form) { existingTeacher.price.toString() }.toInt()
 
-        println("Имя: $name")
-        println("Описание: $description")
+        val updatedImages = existingTeacher.images.toMutableList()
 
-        var avatarFileName = existingTeacher.avatarFileName
+        val newPhoto = imageLens(form)
+        if (newPhoto != null && newPhoto.content.available() > 0) {
+            val safeFilename = generateSafeWebpFilename("teacher", teacherId)
+            val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
 
-        form.use {
-            val file = imageLens(it)
-            if (file != null && file.content.available() > 0) {
-                val originalName = file.filename ?: "teacher_${teacherId}.png"
-                val extension = originalName.substringAfterLast('.', "png")
-                val filename = "teacher_${teacherId}.$extension"
-                val safeFilename = filename.replace(Regex("[^a-zA-Z0-9._-]"), "_")
-                val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
 
-                Files.createDirectories(avatarPath.parent)
-                Files.copy(file.content, avatarPath, StandardCopyOption.REPLACE_EXISTING)
-
-                println("Файл обновлён как: $safeFilename")
-                println("Путь до файла: ${avatarPath.toAbsolutePath()}")
-
-                avatarFileName = listOf(safeFilename)
-            } else {
-                println("Файл не был загружен или пуст.")
+            Files.createDirectories(avatarPath.parent)
+            try {
+                saveImageAsWebP(newPhoto.content, avatarPath.toString())
+                updatedImages.add(safeFilename)
+                println("Изображение сохранено как WebP: $safeFilename")
+            } catch (e: Exception) {
+                println("Ошибка при сохранении WebP: ${e.message}")
             }
         }
 
-
-        val updateTeacher = Teacher(
-            id = teacherId,
-            fullName = name,
-            shortDescription = description,
-            avatarFileName = avatarFileName,
-            roles = existingTeacher.roles,
-            address = Location(address),
-            experienceInfo = ExperienceInfo(
-                experienceYears = experienceYears,
-                education = education,
-                styles = emptyList(),
-                minStudentAge = minStudentAge,
-            ),
-            instruments = emptyList(),
-            schedule = existingTeacher.schedule,
+        val updatedTeacher = existingTeacher.copy(
+            name = name,
+            phone = phone,
+            experience = experience,
+            abilities = existingTeacher.abilities,
+            price = price,
+            description = description,
+            address = address,
+            district = existingTeacher.district,
+            images = updatedImages,
+            twoWeekOccupation = existingTeacher.twoWeekOccupation,
         )
 
-        teachers.updateTeacher(teacherId, updateTeacher)
+        teachers.update(teacherId, updatedTeacher)
         return Response(FOUND).header("Location", "/teacher/${teacherId}")
     }
 }

@@ -8,15 +8,14 @@
     <form method="post" action="/edit/teacher/delete-{{ model.teacher.id }}" enctype="application/x-www-form-urlencoded">
         <div class="card mb-4">
             <div class="card-body">
-                <h3 class="card-title">{{ model.teacher.fullName }}</h3>
-                <p class="card-text">{{ model.teacher.shortDescription }}</p>
+                <h3 class="card-title">{{ model.teacher.name }}</h3>
+                <p class="card-text">{{ model.teacher.description }}</p>
 
                 <div class="mb-3">
                     <h5>Информация об опыте:</h5>
                     <ul class="list-group">
-                        <li class="list-group-item">Полное имя: {{ model.teacher.fullName }}</li>
+                        <li class="list-group-item">Полное имя: {{ model.teacher.name }}</li>
                         <li class="list-group-item">Опыт преподавания: {{ model.teacher.experience }}</li>
-                        <li class="list-group-item">Образование: {{ model.teacher.education }}</li>
                     </ul>
                 </div>
 

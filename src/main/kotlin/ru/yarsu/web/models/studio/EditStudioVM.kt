@@ -8,7 +8,6 @@ import kotlin.enums.EnumEntries
 
 class EditStudioVM(
     val studio: Studio,
-    val user: String,
     val allInstruments: EnumEntries<Instrument>,
     val form: MultipartForm,
 ) : ViewModel {

@@ -26,7 +26,6 @@ class EditStudioGetHandler(private val htmlView: ContextAwareViewRender, private
     ).toLens()
 
     override fun invoke(request: Request): Response {
-        val user = AuthUtils.getUserFromCookie(request)
         val studioId = request.path("id")?.toLongOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID студии")
 
@@ -41,7 +40,6 @@ class EditStudioGetHandler(private val htmlView: ContextAwareViewRender, private
         val viewModel =
             EditStudioVM(
                 studio,
-                user = user?.id?.toString() ?: "null",
                 allInstruments,
                 filledForm
             )

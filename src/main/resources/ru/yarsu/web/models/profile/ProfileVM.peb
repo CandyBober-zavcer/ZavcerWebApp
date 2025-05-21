@@ -1,66 +1,62 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.ProfileVM" #}
 
-{% extends "../Layout.peb" %}
+    {% extends "../Layout.peb" %}
 
     {% block content %}
-
 <section style="background-color: #eee;">
     <div class="container py-5">
-
         <div class="row">
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="/img/{{ model.profile.avatarFileName | default('defaultProfile.webp') }}" alt="Аватар пользователя"
-                             class="rounded-circle img-fluid" style="width: 150px;">
-                        <h5 class="my-3">{{ model.profile.name }}</h5>
+                        {% if model.user.images is not empty %}
+                            <img src="/img/{{ model.user.images[0] }}" alt="Аватар пользователя"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                        {% else %}
+                            <img src="/img/defaultProfile.webp" alt="Аватар по умолчанию"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                        {% endif %}
+
+                        <h5 class="my-3">{{ model.user.name }}</h5>
                         <div class="d-flex justify-content-center mb-2">
-                            <a href="/edit/profile/edit-{{ model.profile.id }}" role="button" class="btn btn-primary">Редактировать</a>
-<!--                            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>-->
+                            <a href="/edit/profile/edit-{{ model.user.id }}" role="button" class="btn btn-primary">
+                                Редактировать
+                            </a>
                         </div>
                     </div>
                 </div>
-
             </div>
+
             <div class="col-lg-8">
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Имя</p>
-                            </div>
+                            <div class="col-sm-3"><p class="mb-0">Имя</p></div>
+                            <div class="col-sm-9"><p class="text-muted mb-0">{{ model.user.name }}</p></div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3"><p class="mb-0">Описание</p></div>
                             <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.name }}</p>
+                                <p class="text-muted mb-0">
+                                    {{ model.user.description | default("Описание отсутствует") }}
+                                </p>
                             </div>
                         </div>
                         <hr>
                         <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Описание</p>
+                            <div class="col-sm-3"><p class="mb-0">Инструменты</p></div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">
+                                        {% if model.abilityNames is not empty %}
+                                            {{ model.abilityNames }}
+                                        {% else %}
+                                            Не указаны
+                                        {% endif %}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.description }}</p>
-                            </div>
-                        </div>
                         <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Инструменты</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.instruments | join(", ") }}</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Музыкальные стили</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.styles | join(", ") }}</p>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>

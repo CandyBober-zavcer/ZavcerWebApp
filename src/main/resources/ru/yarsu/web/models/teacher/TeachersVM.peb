@@ -9,10 +9,10 @@
             {% for teacher in model.teachers %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
-                        <img src="/img/{{ teacher.avatarFileName[0] | default('defaultTeacher.webp') }}" class="card-img-top" alt="Преподаватель">
+                        <img src="/img/{{ teacher.images[0] | default('defaultTeacher.webp') }}" class="card-img-top" alt="Преподаватель">
                         <div class="card-body">
-                            <h5 class="card-title">{{ teacher.fullName }}</h5>
-                            <p class="card-text">{{ teacher.shortDescription }}</p>
+                            <h5 class="card-title">{{ teacher.name }}</h5>
+                            <p class="card-text">{{ teacher.description }}</p>
                             <a href="/teacher/{{ teacher.id }}" class="btn btn-primary">Записаться</a>
                             <a href="/edit/teacher/edit-{{ teacher.id }}" class="btn btn-primary">Редактировать</a>
                             <a href="/edit/teacher/delete-{{ teacher.id }}" class="btn btn-primary">Удалить</a>

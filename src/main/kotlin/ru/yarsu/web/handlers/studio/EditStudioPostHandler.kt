@@ -1,6 +1,7 @@
 package ru.yarsu.web.handlers.studio
 
 import org.http4k.core.*
+import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
@@ -12,9 +13,11 @@ import ru.yarsu.web.domain.models.telegram.AuthUtils
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.studio.EditStudioVM
 import ru.yarsu.web.templates.ContextAwareViewRender
+import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
+import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
+
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 
 class EditStudioPostHandler(
     private val htmlView: ContextAwareViewRender,
@@ -45,9 +48,8 @@ class EditStudioPostHandler(
     ).toLens()
 
     override fun invoke(request: Request): Response {
-        val user = AuthUtils.getUserFromCookie(request)
         val studioId = request.path("id")?.toLongOrNull()
-            ?: return Response(Status.BAD_REQUEST).body("Неверный ID студии")
+            ?: return Response(BAD_REQUEST).body("Неверный ID студии")
 
         val existingStudio = studios.getStudioById(studioId)
             ?: return Response(NOT_FOUND).body("Студия не найдена")
@@ -59,7 +61,6 @@ class EditStudioPostHandler(
         if (errors.isNotEmpty()) {
             val viewModel = EditStudioVM(
                 studio = existingStudio,
-                user = user?.id?.toString() ?: "null",
                 allInstruments = allInstruments,
                 form = form
             )
@@ -70,36 +71,29 @@ class EditStudioPostHandler(
         val description = lensOrDefault(descriptionLens, form) { existingStudio.description }
         val address = lensOrDefault(addressLens, form) { existingStudio.location.address }
         val capacity = lensOrDefault(capacityLens, form) { existingStudio.capacity.toString() }.toInt()
-        val area = lensOrDefault(areaSquareMetersLens, form) {existingStudio.areaSquareMeters.toString()}.toDouble()
-        val price = lensOrDefault(priceLens, form) {existingStudio.pricePerHour.toString()}.toDouble()
-        val minBookingTime = lensOrDefault(minBookingTimeLens, form) {existingStudio.minBookingTimeHours.toString()}.toDouble()
-
-        println("Имя: $name")
-        println("Описание: $description")
+        val area = lensOrDefault(areaSquareMetersLens, form) { existingStudio.areaSquareMeters.toString() }.toDouble()
+        val price = lensOrDefault(priceLens, form) { existingStudio.pricePerHour.toString() }.toDouble()
+        val minBookingTime = lensOrDefault(minBookingTimeLens, form) { existingStudio.minBookingTimeHours.toString() }.toDouble()
 
         var avatarFileName = existingStudio.avatarFileName
 
-        form.use {
-            val file = imageLens(it)
-            if (file != null && file.content.available() > 0) {
-                val originalName = file.filename ?: "studio_${studioId}.png"
-                val extension = originalName.substringAfterLast('.', "png")
-                val filename = "studio_${studioId}.$extension"
-                val safeFilename = filename.replace(Regex("[^a-zA-Z0-9._-]"), "_")
-                val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
+        val newPhoto = imageLens(form)
+        if (newPhoto != null && newPhoto.content.available() > 0) {
+            val safeFilename = generateSafeWebpFilename("studio", studioId)
+            val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
 
-                Files.createDirectories(avatarPath.parent)
-                Files.copy(file.content, avatarPath, StandardCopyOption.REPLACE_EXISTING)
 
-                println("Файл обновлён как: $safeFilename")
-                println("Путь до файла: ${avatarPath.toAbsolutePath()}")
-
+            Files.createDirectories(avatarPath.parent)
+            try {
+                saveImageAsWebP(newPhoto.content, avatarPath.toString())
                 avatarFileName = listOf(safeFilename)
-            } else {
-                println("Файл не был загружен или пуст.")
+                println("Изображение студии сохранено как WebP: $safeFilename")
+            } catch (e: Exception) {
+                println("Ошибка при сохранении WebP: ${e.message}")
             }
+        } else {
+            println("Файл изображения не был загружен или пуст.")
         }
-
 
         val updateStudio = Studio(
             id = studioId,

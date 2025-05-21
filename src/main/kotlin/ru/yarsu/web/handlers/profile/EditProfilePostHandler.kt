@@ -2,98 +2,89 @@ package ru.yarsu.web.handlers.profile
 
 import org.http4k.core.*
 import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
-import org.http4k.core.Status.Companion.FOUND
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.ProfilesData
-import ru.yarsu.web.domain.article.Profile
-import ru.yarsu.web.domain.article.Instrument
-import ru.yarsu.web.domain.article.MusicStyle
+import ru.yarsu.db.UserData
+import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.profile.EditProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
+import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
+import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
+
 import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 import java.nio.file.Paths
+import java.time.Instant
+import java.util.*
 
 class EditProfilePostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val profiles: ProfilesData
+    private val users: UserData,
 ) : HttpHandler {
 
-    private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
+    private val abilityLens = MultipartFormField.multi.optional("abilities")
     private val imageLens = MultipartFormFile.optional("avatar")
 
     private val formLens = Body.multipartForm(
         Validator.Feedback,
         nameLens,
         descriptionLens,
+        abilityLens,
         imageLens,
     ).toLens()
 
     override fun invoke(request: Request): Response {
-        val profileId = request.path("id")?.toLongOrNull()
+        val userId = request.path("id")?.toIntOrNull()
             ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
 
-        val existingProfile = profiles.getProfileById(profileId)
+        val existingUser = users.getById(userId)
             ?: return Response(NOT_FOUND).body("Профиль не найден")
 
-        val allInstruments = Instrument.entries
-        val allStyles = MusicStyle.entries
-
+        val allAbility = AbilityEnums.entries
         val form = formLens(request)
 
-        val errors = form.errors.map { it.meta.name }.toList()
+        val errors = form.errors.map { it.meta.name }
         if (errors.isNotEmpty()) {
             val viewModel = EditProfileVM(
-                profile = existingProfile,
-                allInstruments = allInstruments,
-                allStyles = allStyles,
-                form = form
+                user = existingUser,
+                allAbility = allAbility,
+                form = form,
             )
             return Response(OK).with(htmlView(request) of viewModel)
         }
 
-        val name = lensOrDefault(nameLens, form) { existingProfile.name }
-        val description = lensOrDefault(descriptionLens, form) { existingProfile.description }
+        val name = lensOrDefault(nameLens, form) { existingUser.name }
+        val description = lensOrDefault(descriptionLens, form) { existingUser.description }
 
-        println("Имя: $name")
-        println("Описание: $description")
+        val updatedImages = existingUser.images.toMutableList()
 
-        var avatarFileName = existingProfile.avatarFileName
+        val newAvatar = imageLens(form)
+        if (newAvatar != null && newAvatar.content.available() > 0) {
+            val safeFilename = generateSafeWebpFilename("user", userId)
+            val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
 
-        form.use {
-            imageLens(it)?.let { file ->
-                val originalName = file.filename ?: "avatar_${profileId}.png"
-                val extension = originalName.substringAfterLast('.', "png")
-                val filename = "avatar_${profileId}.$extension"
-                val safeFilename = filename.replace(Regex("[^a-zA-Z0-9._-]"), "_")
-                val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
-
-                Files.createDirectories(avatarPath.parent)
-                Files.copy(file.content, avatarPath, StandardCopyOption.REPLACE_EXISTING)
-
-                avatarFileName = safeFilename
-
-                println("Файл сохранён как: $safeFilename")
-                println("Путь до файла: ${avatarPath.toAbsolutePath()}")
-            } ?: println("Файл не был загружен.")
+            Files.createDirectories(avatarPath.parent)
+            try {
+                saveImageAsWebP(newAvatar.content, avatarPath.toString())
+                updatedImages.add(safeFilename)
+                println("Аватар сохранён как WebP: $safeFilename")
+            } catch (e: Exception) {
+                println("Ошибка при сохранении WebP: ${e.message}")
+            }
         }
 
-        val updatedProfile = Profile(
-            id = profileId,
+        val updatedUser = existingUser.copy(
             name = name,
             description = description,
-            instruments = existingProfile.instruments,
-            styles = existingProfile.styles,
-            avatarFileName = avatarFileName
+            images = updatedImages,
         )
 
-        profiles.updateProfile(profileId, updatedProfile)
-        return Response(FOUND).header("Location", "/profile/${profileId}")
+        users.update(userId, updatedUser)
+        return Response(FOUND).header("Location", "/profile/$userId")
     }
 }

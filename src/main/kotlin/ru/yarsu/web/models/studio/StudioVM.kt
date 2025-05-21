@@ -5,5 +5,4 @@ import ru.yarsu.web.domain.article.Studio
 
 class StudioVM(
     val studio: Studio,
-    val user: String
 ) : ViewModel

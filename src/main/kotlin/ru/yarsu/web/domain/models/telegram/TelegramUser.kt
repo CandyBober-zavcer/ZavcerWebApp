@@ -38,7 +38,6 @@ class JsonLogger(private val filePath: String) {
                 mutableListOf()
             }
 
-            // Обновляем или добавляем пользователя
             val existingIndex = users.indexOfFirst { it.id == user.id }
             if (existingIndex >= 0) {
                 users[existingIndex] = user

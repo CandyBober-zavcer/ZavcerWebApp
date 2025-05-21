@@ -73,6 +73,12 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
 
+    implementation("com.twelvemonkeys.imageio:imageio-core:3.10.1")
+    implementation("com.twelvemonkeys.imageio:imageio-webp:3.10.1")
+
+    implementation("com.sun.mail:jakarta.mail:2.0.1")
+    implementation("at.favre.lib:bcrypt:0.10.2")
+
     implementation("mysql:mysql-connector-java:8.0.33")
 
     testImplementation("org.http4k:http4k-testing-approval:$http4kVersion")

@@ -2,18 +2,16 @@ package ru.yarsu.web.handlers.teacher
 
 import org.http4k.core.*
 import org.http4k.core.body.form
-import ru.yarsu.db.TeachersData
-import ru.yarsu.web.templates.ContextAwareViewRender
+import ru.yarsu.db.UserData
 import java.nio.file.Files
 import java.nio.file.Paths
 
 class DeleteTeacherPostHandler(
-    private val htmlView: ContextAwareViewRender,
-    private val teachers: TeachersData
+    private val teachers: UserData
 ) : HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val teacherId = request.form("teacherId")?.toLongOrNull()
+        val teacherId = request.form("teacherId")?.toIntOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
         val existingTeacher = teachers.getTeacherById(teacherId)
@@ -27,7 +25,7 @@ class DeleteTeacherPostHandler(
 //            }
 //        }
 
-        teachers.removeTeacher(teacherId)
+        teachers.removeTeacherRoleById(teacherId)
 
         return Response(Status.FOUND).header("Location", "/teachers")
     }

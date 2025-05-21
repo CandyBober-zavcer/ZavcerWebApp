@@ -5,53 +5,47 @@ import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.ProfilesData
-import ru.yarsu.web.domain.article.Instrument
-import ru.yarsu.web.domain.article.MusicStyle
-import ru.yarsu.web.funs.lensOrNull
+import ru.yarsu.db.UserData
+import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.models.profile.EditProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
 class EditProfileGetHandler(
     private val htmlView: ContextAwareViewRender,
-    private val profiles: ProfilesData
+    private val users: UserData,
 ) : HttpHandler {
 
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
-    private val instrumentsLens = MultipartFormField.multi.required("instruments")
-    private val stylesLens = MultipartFormField.multi.required("styles")
+    private val abilityLens = MultipartFormField.multi.required("ability")
 
     private val formLens = Body.multipartForm(
         Validator.Feedback,
         nameLens,
         descriptionLens,
-        instrumentsLens,
-        stylesLens,
+        abilityLens,
     ).toLens()
 
     override fun invoke(request: Request): Response {
-        val profileId = request.path("id")?.toLongOrNull()
+        val userId = request.path("id")?.toIntOrNull()
             ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
 
-        val profile = profiles.getProfileById(profileId)
+        val user = users.getById(userId)
             ?: return Response(NOT_FOUND).body("Профиль не найден")
 
-        val allStyles = MusicStyle.entries
-        val allInstruments = Instrument.entries
+        val allAbility = AbilityEnums.entries
 
         val filledForm = MultipartForm()
-            .with(nameLens of profile.name)
-            .with(descriptionLens of profile.description)
+            .with(nameLens of user.name)
+            .with(descriptionLens of user.description)
 
 
         val viewModel =
             EditProfileVM(
-                profile,
-                allInstruments,
-                allStyles,
-                filledForm
+                user,
+                allAbility,
+                filledForm,
             )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)

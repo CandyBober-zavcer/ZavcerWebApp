@@ -8,7 +8,6 @@ import ru.yarsu.web.templates.ContextAwareViewRender
 class HomePageHandler(private val htmlView: ContextAwareViewRender) : HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val user = AuthUtils.getUserFromCookie(request)
         val viewModel = HomePageVM("Hello there!")
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }

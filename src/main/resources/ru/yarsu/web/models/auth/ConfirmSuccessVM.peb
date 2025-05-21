@@ -1,0 +1,23 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.auth.ConfirmSuccessVM" #}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Подтверждение email</title>
+    <meta http-equiv="refresh" content="3;url={{ model.redirectUrl }}">
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+    </style>
+</head>
+<body>
+    <h2>Email успешно подтверждён!</h2>
+    <p>Сейчас вы будете перенаправлены на страницу входа...</p>
+    <p><a href="{{ model.redirectUrl }}">Если перенаправление не произошло, нажмите здесь</a></p>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "{{ model.redirectUrl | escape('js') }}";
+        }, 3000);
+    </script>
+</body>
+</html>

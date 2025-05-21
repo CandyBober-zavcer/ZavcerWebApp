@@ -34,7 +34,7 @@
                             <a class="nav-link" href="/studios">Репетиционные точки</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/profile/1001">Профиль</a>
+                            <a class="nav-link" href="/profile/1">Профиль</a>
                         </li>
                     </ul>
 
@@ -47,12 +47,18 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 {% if user is not null %}
                                     <li><a class="dropdown-item" href="/profile/{{ user.id }}">Личный кабинет</a></li>
+                                    <li>
+                                        <form method="get" action="/auth/signout" style="margin: 0;">
+                                            <button type="submit" class="dropdown-item text-danger">Выйти</button>
+                                        </form>
+                                    </li>
                                 {% else %}
-                                    <li><a class="dropdown-item" href="/auth/telegram">Войти</a></li>
+                                    <li><a class="dropdown-item" href="/auth/signin">Войти</a></li>
                                 {% endif %}
                             </ul>
                         </li>
                     </ul>
+
                 </div>
             </div>
         </nav>

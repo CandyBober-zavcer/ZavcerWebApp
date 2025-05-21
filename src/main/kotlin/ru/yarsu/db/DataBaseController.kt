@@ -14,7 +14,7 @@ import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
 import ru.yarsu.web.domain.classes.DayOccupation
-import ru.yarsu.web.domain.classes.Spot
+import ru.yarsu.web.domain.article.Spot
 import ru.yarsu.web.domain.classes.User
 
 class DataBaseController {

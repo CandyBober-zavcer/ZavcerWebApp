@@ -1,9 +1,11 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.error.NotFoundVM" #}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Ошибка | Музыкальный портал</title>
-    <link rel="stylesheet" href="../css/error-styles.css">
+    <link href="../css/error-styles.css" rel="stylesheet">
 </head>
 <body>
     <div class="icon">🎧</div>

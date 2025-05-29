@@ -1,57 +1,34 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.auth.AuthVM" #}
-
-    {% extends "../Layout.peb" %}
-
     {% block style %}
-<style>
-    .auth-container {
-        max-width: 600px;
-        margin: 15rem auto;
-        padding: 2rem;
-        background-color: #ffffff;
-        border-radius: 1rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .telegram-auth-wrapper {
-        margin-top: 5rem;
-        text-align: center;
-    }
-
-    @media (max-width: 576px) {
-        .auth-container {
-            margin: 2rem 1rem;
-            padding: 1.5rem;
-        }
-    }
-</style>
-{% endblock %}
+    <link rel="stylesheet" href="/css/Auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center">
-    <div class="auth-container">
-        <h2 class="text-center mb-4">Вход</h2>
-
+<div class="bg-img">
+    <div class="content">
+        <header>Вход</header>
         <form method="post" action="/auth/signin">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control" id="email" name="email" required>
+            <div class="field">
+                <span class="fa fa-user"></span>
+                <input type="text" name="email" id="email" required placeholder="Email">
             </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Пароль</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            <div class="field space">
+                <span class="fa fa-lock"></span>
+                <input type="password" class="pass-key" name="password" id="password" required placeholder="Пароль">
+                <i class="show fas fa-eye"></i>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">Войти</button>
+            <div class="pass">
+                <a href="#">Забыли пароль?</a>
+            </div>
+            <div class="button-wrapper">
+              <div class="field" style="width: auto;">
+                <input type="submit" value="Войти">
+              </div>
+            </div>
         </form>
-
-        <div class="text-center mt-3">
-            <span>Нет аккаунта?</span>
-            <a href="/auth/signup" class="btn btn-outline-secondary mt-2 w-100">Зарегистрироваться</a>
-        </div>
-
-        <div class="telegram-auth-wrapper mt-4">
+        <div class="login">Или войдите через</div>
+        <div class="telegram-auth-wrapper">
             <script async src="https://telegram.org/js/telegram-widget.js?7"
                     data-telegram-login="Zavcer_bot"
                     data-size="large"
@@ -60,14 +37,29 @@
                     data-onauth="onTelegramAuth(user)">
             </script>
         </div>
+        <div class="signup">Нет аккаунта? <a href="/auth/signup">Зарегистрироваться</a></div>
     </div>
 </div>
 {% endblock %}
 
-
 {% block script %}
-<script src="/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript">
+<script>
+    const passField = document.querySelector('.pass-key');
+    const showBtn = document.querySelector('.show');
+    if (showBtn && passField) {
+        showBtn.addEventListener('click', function(){
+            if (passField.type === "password") {
+                passField.type = "text";
+                showBtn.classList.remove("fa-eye");
+                showBtn.classList.add("fa-eye-slash");
+            } else {
+                passField.type = "password";
+                showBtn.classList.remove("fa-eye-slash");
+                showBtn.classList.add("fa-eye");
+            }
+        });
+    }
+
     function onTelegramAuth(user) {
         fetch("/auth/telegram", {
             method: "POST",
@@ -75,8 +67,7 @@
                 "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify(user)
-        })
-        .then(response => {
+        }).then(response => {
             if (response.redirected) {
                 window.location.href = response.url;
             } else if (response.ok || response.status === 302) {
@@ -85,8 +76,7 @@
             } else {
                 alert("Ошибка авторизации!");
             }
-        })
-        .catch(error => {
+        }).catch(error => {
             console.error("Ошибка запроса:", error);
             alert("Ошибка при отправке данных!");
         });

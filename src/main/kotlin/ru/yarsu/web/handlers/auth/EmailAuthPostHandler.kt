@@ -1,7 +1,6 @@
 package ru.yarsu.web.handlers.auth
 
 import org.http4k.core.*
-import org.http4k.core.body.form
 import org.http4k.core.cookie.Cookie
 import org.http4k.core.cookie.SameSite
 import org.http4k.core.cookie.cookie
@@ -33,11 +32,10 @@ class EmailAuthPostHandler(
         val login = loginLens(form)
         val password = passwordLens(form)
 
-
         val user = login.let { users.findByLogin(it) }
             ?: return Response(Status.UNAUTHORIZED).body("Пользователь не найден")
 
-        if (user.password != password) {
+        if (!users.verifyPassword(user, password)) {
             return Response(Status.UNAUTHORIZED).body("Неверный пароль")
         }
 
@@ -52,7 +50,7 @@ class EmailAuthPostHandler(
         val signature = AuthUtils.hmacSign(rawData, salt)
 
         return Cookie(
-            name = "tg_auth",
+            name = "auth",
             value = "$rawData:$signature",
             path = "/",
             httpOnly = true,

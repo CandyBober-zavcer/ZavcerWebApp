@@ -17,80 +17,39 @@ import java.time.ZonedDateTime
 class TelegramAuthPostHandler(
     private val jsonLogger: JsonLogger,
     private val botToken: String,
-    private val users: UserData
+    private val users: UserData,
+    private val authSalt: String
 ) : HttpHandler {
 
     override fun invoke(request: Request): Response {
         return try {
-            val formData = request.parseJsonData()
-            println("Received auth data: $formData")
-
-            if (!isValidTelegramAuth(formData, botToken)) {
-                println("Telegram auth validation failed")
-                return Response(Status.UNAUTHORIZED).body("Invalid Telegram auth data")
-            }
+            val body = request.bodyString()
+            val telegramData = jsonLogger.parseTelegramData(body, botToken)
 
             val telegramUser = TelegramUser(
-                id = formData["id"]!!.toLong(),
-                first_name = formData["first_name"],
-                last_name = formData["last_name"],
-                username = formData["username"],
-                photo_url = formData["photo_url"],
-                auth_date = formData["auth_date"]!!.toLong(),
-                hash = formData["hash"]!!
+                id = telegramData.id,
+                username = telegramData.username,
+                first_name = telegramData.firstName,
+                last_name = telegramData.lastName
             )
 
-            jsonLogger.logToJson(telegramUser)
+            val user = users.findOrCreateTelegramUser(telegramUser)
 
-            if (!users.existsByTelegramId(formData["id"]!!.toLong())) {
-                val firstName = formData["first_name"]
-                val lastName = formData["last_name"]
-                val name = when {
-                    firstName == null && lastName == null -> ""
-                    firstName == null -> lastName!!
-                    lastName == null -> firstName
-                    else -> "$firstName $lastName"
-                }
-
-                users.add(
-                    UserModel(
-                        name = name,
-                        tg_id = formData["id"]!!.toLong()
-                    )
-                )
-            }
-
-
-            return Response(Status.FOUND)
+            Response(Status.FOUND)
                 .header("Location", "/")
-                .cookie(createAuthCookie(telegramUser))
-
+                .cookie(createAuthCookie(user, authSalt))
         } catch (e: Exception) {
-            println("Telegram auth error: ${e.stackTraceToString()}")
-            Response(Status.BAD_REQUEST).body("Error processing Telegram auth")
+            e.printStackTrace()
+            Response(Status.BAD_REQUEST).body("Ошибка авторизации через Telegram")
         }
     }
 
-    private fun Request.parseJsonData(): Map<String, String> {
-        val json = bodyString()
-        val parsed = Jackson.parse(json)
-        return parsed.fields().asSequence().associate { it.key to it.value.asText() }
-    }
-
-    private fun createAuthCookie(user: TelegramUser): Cookie {
-        val config = AppConfig()
-        val authSalt = config.webConfig.authSalt
-
-        val userModel = users.findByTelegramId(user.id)
-            ?: throw IllegalStateException("User with tg_id=${user.id} not found")
-
-        val userId = userModel.id
-        val username = user.username ?: ""
-        val rawData = "$userId:$username"
-        val signature = hmacSign(rawData, authSalt)
+    private fun createAuthCookie(user: UserModel, authSalt: String): Cookie {
+        val rawData = "${user.id}:${user.login}"
+        val signature = AuthUtils.hmacSign(rawData, authSalt)
 
         return Cookie(
-            name = "tg_auth",
+            name = "auth",
             value = "$rawData:$signature",
             path = "/",
             httpOnly = true,

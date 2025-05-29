@@ -21,7 +21,7 @@ fun createAuthCookie(user: UserModel, salt: String): Cookie {
     val signature = AuthUtils.hmacSign(rawData, salt)
 
     return Cookie(
-        name = "tg_auth",
+        name = "auth",
         value = "$rawData:$signature",
         path = "/",
         httpOnly = true,

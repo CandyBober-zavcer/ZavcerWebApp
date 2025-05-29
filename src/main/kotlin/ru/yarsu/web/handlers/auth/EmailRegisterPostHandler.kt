@@ -5,8 +5,6 @@ import org.http4k.lens.*
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.article.*
 import ru.yarsu.web.domain.models.email.EmailService
-import ru.yarsu.web.domain.models.email.hashPassword
-import java.util.*
 
 class EmailRegisterPostHandler(
     private val userData: UserData,
@@ -41,7 +39,7 @@ class EmailRegisterPostHandler(
         )
 
 
-        val token = tokenStorage.generateToken(newUser.id)
+        val token = tokenStorage.generateConfirmationToken(newUser.id)
         val confirmationLink = "https://zavcer.ru.tuna.am/auth/confirm?token=$token"
         val message = """
             <html>

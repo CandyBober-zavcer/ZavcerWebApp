@@ -4,7 +4,6 @@ import org.http4k.core.HttpHandler
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.http4k.format.Jackson.with
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.article.TokenStorage
 import ru.yarsu.web.models.auth.ConfirmSuccessVM

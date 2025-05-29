@@ -31,7 +31,7 @@
   text-align: center;
   padding: 50px 32px;
   width: 90%;
-  max-width: 460px; /* Увеличено с 370px */
+  max-width: 460px;
   transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, 0.04);
   box-shadow: -1px 4px 28px rgba(0, 0, 0, 0.75);
@@ -55,6 +55,7 @@
   padding: 0 12px;
   background: rgba(255, 255, 255, 0.94);
   border-radius: 6px;
+  margin-bottom: 12px;
 }
 
 .field span {
@@ -132,12 +133,27 @@
 
 .login {
   color: white;
-  margin: 20px 0;
+  margin: 10px 0;
   font-family: 'Poppins', sans-serif;
 }
 
-.telegram-auth-wrapper {
-  margin-bottom: 20px;
+.oauth-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.telegram-auth,
+.google-auth {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.google-auth .g_id_signin > div {
+  min-width: 180px !important;
 }
 
 .signup {
@@ -155,7 +171,7 @@
   text-decoration: underline;
 }
 
-/* 📱 Телефоны до 420px */
+/* 📱 Телефоны */
 @media (max-width: 420px) {
   .content {
     padding: 36px 20px;
@@ -188,25 +204,9 @@
   .signup {
     font-size: 14px;
   }
-}
 
-/* 📱 Планшеты от 421px до 768px */
-@media (min-width: 421px) and (max-width: 768px) {
-  .content {
-    max-width: 440px;
-    padding: 45px 28px;
-  }
-
-  .content header {
-    font-size: 28px;
-  }
-
-  .field {
-    height: 50px;
-    padding: 0 10px;
-  }
-
-  .field input[type="submit"] {
-    font-size: 17px;
+  .oauth-buttons {
+    flex-direction: column;
+    gap: 12px;
   }
 }

@@ -35,7 +35,6 @@ class EmailService(private val config: AppConfig) {
             }
 
             Transport.send(message)
-            println("Письмо отправлено: $to")
         } catch (e: MessagingException) {
             println("Ошибка при отправке письма: ${e.message}")
         }

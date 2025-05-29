@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec
 object AuthUtils {
 
     fun getUserFromCookie(request: Request, authSalt: String, users: UserData): UserModel? {
-        val tgAuthCookie = request.cookies().find { it.name == "tg_auth" } ?: return null
+        val tgAuthCookie = request.cookies().find { it.name == "auth" } ?: return null
         val parts = tgAuthCookie.value.split(":")
         if (parts.size != 3) return null
 

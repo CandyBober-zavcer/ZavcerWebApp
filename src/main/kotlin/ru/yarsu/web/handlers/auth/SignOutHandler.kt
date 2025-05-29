@@ -8,7 +8,7 @@ import java.time.Instant
 class SignOutHandler : HttpHandler {
     override fun invoke(request: Request): Response {
         val expiredTgCookie = Cookie(
-            name = "tg_auth",
+            name = "auth",
             value = "",
             path = "/",
             httpOnly = true,

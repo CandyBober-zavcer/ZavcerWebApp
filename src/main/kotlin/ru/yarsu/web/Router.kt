@@ -23,6 +23,7 @@ import ru.yarsu.web.handlers.profile.EditProfilePostHandler
 import ru.yarsu.web.handlers.profile.ProfileGetHandler
 import ru.yarsu.web.handlers.studio.*
 import ru.yarsu.web.handlers.teacher.*
+import ru.yarsu.web.models.auth.ResetPasswordVM
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -55,8 +56,14 @@ fun router(
         "/auth/telegram" bind Method.POST to TelegramAuthPostHandler(
             jsonLogger = JsonLogger(config.telegramConfig.userDataFile),
             botToken = config.telegramConfig.botToken,
-            users
+            users = users,
+            authSalt = config.webConfig.authSalt
         ),
+        "/auth/google" bind Method.POST to GmailAuthPostHandler(users, config),
+        "/auth/forgot-password" bind Method.GET to ResetForgotPasswordGetHandler(renderer),
+        "/auth/forgot-password" bind Method.POST to ResetForgotPasswordPostHandler(users, tokenStorage, emailService),
+        "/auth/reset-password" bind Method.GET to ResetPasswordGetHandler(tokenStorage, renderer),
+        "/auth/reset-password" bind Method.POST to ResetPasswordPostHandler(users, tokenStorage),
         "/auth/signout" bind Method.GET to SignOutHandler(),
         "/auth/register" bind Method.POST to EmailRegisterPostHandler(users, tokenStorage, emailService),
         "/auth/confirm" bind Method.GET to EmailConfirmHandler(tokenStorage, users, renderer),

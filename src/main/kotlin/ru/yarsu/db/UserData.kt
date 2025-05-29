@@ -47,12 +47,30 @@ class UserData {
                 roles = setOf(RoleEnums.USER, RoleEnums.TEACHER)
             )
         )
+        add(
+            UserModel(
+                name = "Александр",
+                tg_id = 0L,
+                login = "hfxjr56@mail.ru",
+                password = "123",
+                experience = 1,
+                abilities = setOf(AbilityEnums.GUITAR),
+                price = 1000,
+                description = "Талантище",
+                address = "Тута",
+                district = DistrictEnums.DZERZHINSKY,
+                images = listOf(""),
+                roles = setOf(RoleEnums.TEACHER)
+            )
+        )
     }
 
     fun add(user: UserModel): UserModel {
+        val hashed = hashPassword(user.password)
+        println("Пароль '${user.password}' захеширован в: $hashed")
         val hashedUser = user.copy(
             id = nextId++,
-            password = hashPassword(user.password)
+            password = hashed
         )
         users.add(hashedUser)
         return hashedUser
@@ -137,32 +155,45 @@ class UserData {
         return verifyPassword(password, user.password)
     }
 
-    fun getOrCreateTelegramUser(telegramUser: TelegramUser): UserModel {
-        val existing = getUserByTelegramId(telegramUser.id)
+    fun findOrCreateTelegramUser(telegramData: TelegramUser): UserModel {
+        val existing = findByTelegramId(telegramData.id)
         if (existing != null) return existing
 
-        val name = listOfNotNull(telegramUser.first_name, telegramUser.last_name)
-            .joinToString(" ").ifBlank { telegramUser.username ?: "TelegramUser" }
+        val name = listOfNotNull(telegramData.first_name, telegramData.last_name)
+            .joinToString(" ")
+            .ifBlank { telegramData.username ?: "TelegramUser" }
 
-        return createUserFromTelegram(telegramUser.id, name)
-    }
+        val login = telegramData.username ?: "tg_user_${telegramData.id}"
 
-    fun getUserByTelegramId(id: Long): UserModel? {
-        return users.find { it.tg_id == id }
-    }
-
-
-    fun createUserFromTelegram(telegramId: Long, name: String): UserModel {
         return add(
             UserModel(
                 name = name,
-                tg_id = telegramId,
+                login = login,
+                tg_id = telegramData.id,
                 password = "",
-                roles = setOf(RoleEnums.USER)
+                experience = 0,
+                abilities = emptySet(),
+                price = 0,
+                description = "",
+                address = "",
+                district = DistrictEnums.UNKNOWN,
+                images = emptyList(),
+                roles = setOf(RoleEnums.USER),
+                isConfirmed = true
             )
         )
     }
 
+    fun updatePassword(userId: Int, newPassword: String): Boolean {
+        val index = users.indexOfFirst { it.id == userId }
+        if (index != -1) {
+            val user = users[index]
+            val updatedUser = user.copy(password = hashPassword(newPassword))
+            users[index] = updatedUser
+            return true
+        }
+        return false
+    }
 
 
 }

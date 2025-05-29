@@ -28,5 +28,5 @@ data class Studio(
     val pricePerHour: Double,
     val minBookingTimeHours: Double,
     val equipment: List<Instrument>,
-    val schedule: Schedule
+    val schedule: Schedule,
 )

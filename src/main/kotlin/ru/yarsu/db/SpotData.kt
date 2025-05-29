@@ -23,8 +23,8 @@ class SpotData {
                 address = "Ярославль, ул. Музыкальная, 1",
                 district = DistrictEnums.KIROVSKY,
                 images = listOf("studio1.webp", "studio2.webp"),
-                owners = listOf(1)
-            )
+                owners = listOf(1),
+            ),
         )
         add(
             Spot(
@@ -37,8 +37,8 @@ class SpotData {
                 address = "Ярославль, пр. Ленина, 45",
                 district = DistrictEnums.LENINSKY,
                 images = listOf("studio3.jpg"),
-                owners = listOf(2)
-            )
+                owners = listOf(2),
+            ),
         )
     }
 
@@ -48,7 +48,10 @@ class SpotData {
         return newSpot
     }
 
-    fun update(id: Int, updatedSpot: Spot): Boolean {
+    fun update(
+        id: Int,
+        updatedSpot: Spot,
+    ): Boolean {
         val index = spots.indexOfFirst { it.id == id }
         return if (index != -1) {
             spots[index] = updatedSpot.copy(id = id)
@@ -58,15 +61,9 @@ class SpotData {
         }
     }
 
-    fun deleteById(id: Int): Boolean {
-        return spots.removeIf { it.id == id }
-    }
+    fun deleteById(id: Int): Boolean = spots.removeIf { it.id == id }
 
-    fun getById(id: Int): Spot? {
-        return spots.find { it.id == id }
-    }
+    fun getById(id: Int): Spot? = spots.find { it.id == id }
 
-    fun getAll(): List<Spot> {
-        return spots.toList()
-    }
+    fun getAll(): List<Spot> = spots.toList()
 }

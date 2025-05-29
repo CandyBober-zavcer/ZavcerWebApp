@@ -8,16 +8,22 @@ import java.util.*
 import javax.imageio.ImageIO
 
 object ImageUtils {
-
-    fun generateSafeWebpFilename(prefix: String, id: Any): String {
+    fun generateSafeWebpFilename(
+        prefix: String,
+        id: Any,
+    ): String {
         val timestamp = Instant.now().epochSecond
         val uniqueId = UUID.randomUUID().toString().take(8)
         return "${prefix}_${id}_${timestamp}_$uniqueId.webp"
     }
 
-    fun saveImageAsWebP(inputStream: InputStream, outputPath: String) {
-        val originalImage: BufferedImage = ImageIO.read(inputStream)
-            ?: throw IllegalArgumentException("Невозможно прочитать изображение")
+    fun saveImageAsWebP(
+        inputStream: InputStream,
+        outputPath: String,
+    ) {
+        val originalImage: BufferedImage =
+            ImageIO.read(inputStream)
+                ?: throw IllegalArgumentException("Невозможно прочитать изображение")
 
         val writers = ImageIO.getImageWritersByFormatName("webp")
         if (!writers.hasNext()) {

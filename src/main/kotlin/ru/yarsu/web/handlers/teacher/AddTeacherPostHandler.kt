@@ -15,9 +15,8 @@ import java.nio.file.StandardCopyOption
 
 class AddTeacherPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val teachers: TeachersData
+    private val teachers: TeachersData,
 ) : HttpHandler {
-
     private val nameLens = MultipartFormField.string().required("fullName")
     private val descriptionLens = MultipartFormField.string().required("shortDescription")
     private val imageLens = MultipartFormFile.optional("photo")
@@ -26,16 +25,18 @@ class AddTeacherPostHandler(
     private val minStudentAgeLens = MultipartFormField.string().required("minStudentAge")
     private val addressLens = MultipartFormField.string().required("address")
 
-    private val formLens = Body.multipartForm(
-        Validator.Feedback,
-        nameLens,
-        descriptionLens,
-        imageLens,
-        experienceYearsLens,
-        educationLens,
-        minStudentAgeLens,
-        addressLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .multipartForm(
+                Validator.Feedback,
+                nameLens,
+                descriptionLens,
+                imageLens,
+                experienceYearsLens,
+                educationLens,
+                minStudentAgeLens,
+                addressLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
         val form = formLens(request)
@@ -69,22 +70,24 @@ class AddTeacherPostHandler(
             }
         }
 
-        val teacher = Teacher(
-            id = newId,
-            fullName = name,
-            shortDescription = description,
-            avatarFileName = avatarFileName,
-            roles = PersonRole(listOf(1831874252), listOf(777990904)), // Заглушка
-            address = Location(address),
-            instruments = emptyList(),
-            experienceInfo = ExperienceInfo(
-                experienceYears = experienceYears,
-                education = education,
-                styles = emptyList(),
-                minStudentAge = minStudentAge
-            ),
-            schedule = Schedule(emptyMap()),
-        )
+        val teacher =
+            Teacher(
+                id = newId,
+                fullName = name,
+                shortDescription = description,
+                avatarFileName = avatarFileName,
+                roles = PersonRole(listOf(1831874252), listOf(777990904)), // Заглушка
+                address = Location(address),
+                instruments = emptyList(),
+                experienceInfo =
+                    ExperienceInfo(
+                        experienceYears = experienceYears,
+                        education = education,
+                        styles = emptyList(),
+                        minStudentAge = minStudentAge,
+                    ),
+                schedule = Schedule(emptyMap()),
+            )
 
         // Если есть ошибки — показать форму с ошибками
         if (errors.isNotEmpty()) {

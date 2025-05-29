@@ -13,9 +13,11 @@ import ru.yarsu.db.tables.Users
 import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
-import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.article.Spot
+import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.classes.User
+import ru.yarsu.web.domain.enums.AbilityEnums
+import ru.yarsu.web.domain.enums.DistrictEnums
 
 class DataBaseController {
     /**
@@ -40,7 +42,12 @@ class DataBaseController {
     fun getUserByPage(
         page: Int,
         limit: Int,
-    ): List<User> = UsersController().getUsersByPage(page, limit)
+        abilityIds: List<Int> = AbilityEnums.entries.map { it.id },
+        districtIds: List<Int> = DistrictEnums.entries.map { it.id },
+        priceMin: Int = 0,
+        priceMax: Int = Int.MAX_VALUE,
+        experienceMin: Int = 0,
+    ): List<User> = UsersController().getUsersByPage(page, limit, abilityIds, districtIds, priceMin, priceMax, experienceMin)
 
     fun getUserById(id: Int): User = UsersController().getUserById(id)
 
@@ -95,7 +102,13 @@ class DataBaseController {
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-    ): List<Spot> = SpotsController().getSpotsByPage(page, limit)
+        drums: Boolean? = null,
+        guitarAmps: Int = 0,
+        bassAmps: Int = 0,
+        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        priceLow: Int = 0,
+        priceHigh: Int = Int.MAX_VALUE,
+    ): List<Spot> = SpotsController().getSpotsByPage(page, limit, drums, guitarAmps, bassAmps, districtList, priceLow, priceHigh)
 
     fun getSpotById(id: Int): Spot = SpotsController().getSpotById(id)
 

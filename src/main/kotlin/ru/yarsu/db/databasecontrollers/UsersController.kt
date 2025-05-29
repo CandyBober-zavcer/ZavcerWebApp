@@ -1,12 +1,15 @@
 package ru.yarsu.db.databasecontrollers
 
+import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inSubQuery
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.yarsu.db.tables.DayOccupationLine
-import ru.yarsu.db.tables.DayOccupations
-import ru.yarsu.db.tables.SpotLine
-import ru.yarsu.db.tables.Spots
-import ru.yarsu.db.tables.UserLine
+import ru.yarsu.db.tables.*
 import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
@@ -15,27 +18,43 @@ import ru.yarsu.web.domain.enums.RoleEnums
 class UsersController {
     /**
      * Собирает список объектов класса User по заданному номеру страницы.
+     * @param abilityIds Список айдишников умений преподавателя. По умолчанию состоит из всех айдишников.
+     * @param districtIds Список айдишников районов. По умолчанию состоит из всех айдишников.
+     * @param priceMin Нижняя граница цены. По умолчанию 0.
+     * @param priceMax Верхняя граница цены. По умолчанию Int.MAX_VALUE.
+     * @param experienceMin Нижняя граница преподавательского опыта.
      * @return список User`ов. При неудаче список будет пустым.
      */
     fun getUsersByPage(
         page: Int,
         limit: Int,
-    ): List<User> {
-        val result = mutableListOf<User>()
-
+        abilityIds: List<Int> = AbilityEnums.entries.map { it.id },
+        districtIds: List<Int> = DistrictEnums.entries.map { it.id },
+        priceMin: Int = 0,
+        priceMax: Int = Int.MAX_VALUE,
+        experienceMin: Int = 0,
+    ): List<User> =
         transaction {
-            val users =
-                UserLine
-                    .all()
-                    .offset((limit * page).toLong())
-                    .limit(limit)
-                    .toList()
-            for (user in users) {
-                result.add(packUser(user))
-            }
+            val whereClause: Op<Boolean> =
+                (
+                    Users.id inSubQuery
+                        UsersAbilities
+                            .select(UsersAbilities.user)
+                            .where { UsersAbilities.ability inList abilityIds }
+                ) and (Users.district inList districtIds) and (
+                    (Users.price greaterEq priceMin) and
+                        (Users.price lessEq priceMax)
+                ) and (Users.experience greaterEq experienceMin)
+
+            UserLine
+                .find {
+                    whereClause
+                }.orderBy(Users.price to SortOrder.ASC)
+                .limit(limit)
+                .offset((page * limit).toLong())
+                .map { packUser(it) }
+                .toList()
         }
-        return result
-    }
 
     /**
      * Собирает объект класса User из строчки базы данных по выбранному ID.
@@ -48,21 +67,6 @@ class UsersController {
             val userLine = UserLine.findById(id)
             userLine?.let {
                 user = packUser(it)
-//                user.id = id
-//                user.name = it.name
-//                user.tg_name = it.tg_name
-//                user.password = it.password
-//                user.phone = it.phone
-//                user.experience = it.experience
-//                user.abilities = stringToAbilities(it.abilities)
-//                user.price = it.price
-//                user.description = it.description
-//                user.address = it.address
-//                user.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
-//                user.images = it.images.toMutableList()
-//                user.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
-//                user.spots = it.spots.map { spot -> spot.id.value }.toMutableList()
-//                user.roles = stringToRoles(it.roles)
             }
         }
         return user
@@ -78,20 +82,20 @@ class UsersController {
 
         transaction {
             val userLine =
-                UserLine.new {
-                    name = user.name
-                    tg_name = user.tg_name
-                    password = user.password
-                    phone = user.phone
-                    experience = user.experience
-                    abilities = abilitiesToString(user.abilities)
-                    price = user.price
-                    description = user.description
-                    address = user.address
-                    district = user.district.id
-                    images = user.images.toTypedArray()
-                    roles = rolesToString(user.roles)
-                }
+                UserLine
+                    .new {
+                        name = user.name
+                        tg_name = user.tg_name
+                        password = user.password
+                        phone = user.phone
+                        experience = user.experience
+                        price = user.price
+                        description = user.description
+                        address = user.address
+                        district = user.district.id
+                        images = user.images.toTypedArray()
+                        roles = rolesToString(user.roles)
+                    }.withAbilities(user.abilities.map { it.id })
             id = userLine.id.value
         }
         return id
@@ -106,29 +110,28 @@ class UsersController {
     fun updateUserInfo(
         id: Int,
         data: User,
-    ): Boolean {
-        var result = false
-
+    ): Boolean =
         transaction {
-            val user = UserLine.findById(id)
-            user?.let {
-                it.name = data.name
-                it.tg_name = data.tg_name
-                it.password = data.password
-                it.phone = data.phone
-                it.experience = data.experience
-                it.abilities = abilitiesToString(data.abilities)
-                it.price = data.price
-                it.description = data.description
-                it.address = data.address
-                it.district = data.district.id
-                it.images = data.images.toTypedArray()
-                it.roles = rolesToString(data.roles)
-                result = true
-            }
+            UserLine.findById(id)?.let { user ->
+                user.apply {
+                    name = data.name
+                    tg_name = data.tg_name
+                    password = data.password
+                    phone = data.phone
+                    experience = data.experience
+                    price = data.price
+                    description = data.description
+                    address = data.address
+                    district = data.district.id
+                    images = data.images.toTypedArray()
+                    roles = rolesToString(data.roles)
+                }
+
+                user.updateAbilities(data.abilities.map { it.id })
+
+                true
+            } ?: false
         }
-        return result
-    }
 
     /**
      * Добавляет место в список владений пользователя.
@@ -404,7 +407,7 @@ class UsersController {
         user.password = line.password
         user.phone = line.phone
         user.experience = line.experience
-        user.abilities = stringToAbilities(line.abilities)
+        user.abilities = line.abilities.map { AbilityEnums.from(it.id.value) ?: AbilityEnums.VOICE }.toMutableSet()
         user.price = line.price
         user.description = line.description
         user.address = line.address

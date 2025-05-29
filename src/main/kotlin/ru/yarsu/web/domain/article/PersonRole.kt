@@ -11,7 +11,7 @@ import java.time.LocalTime
  */
 data class PersonRole(
     val owners: List<Long>,
-    val administrators: List<Long>
+    val administrators: List<Long>,
 )
 
 /**
@@ -20,7 +20,7 @@ data class PersonRole(
  * @property address Адрес в текстовом формате.
  */
 data class Location(
-    val address: String
+    val address: String,
 )
 
 /**
@@ -30,5 +30,5 @@ data class Location(
  * указывающих на доступные слоты в течение этой даты.
  */
 data class Schedule(
-    val availability: Map<LocalDate, List<LocalTime>>
+    val availability: Map<LocalDate, List<LocalTime>>,
 )

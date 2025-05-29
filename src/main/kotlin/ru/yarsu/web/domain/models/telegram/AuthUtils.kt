@@ -8,8 +8,11 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 object AuthUtils {
-
-    fun getUserFromCookie(request: Request, authSalt: String, users: UserData): UserModel? {
+    fun getUserFromCookie(
+        request: Request,
+        authSalt: String,
+        users: UserData,
+    ): UserModel? {
         val tgAuthCookie = request.cookies().find { it.name == "tg_auth" } ?: return null
         val parts = tgAuthCookie.value.split(":")
         if (parts.size != 3) return null
@@ -27,12 +30,15 @@ object AuthUtils {
         return user
     }
 
-
-    fun hmacSign(data: String, secret: String): String {
+    fun hmacSign(
+        data: String,
+        secret: String,
+    ): String {
         val hmacKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
         val mac = Mac.getInstance("HmacSHA256")
         mac.init(hmacKey)
-        return mac.doFinal(data.toByteArray())
+        return mac
+            .doFinal(data.toByteArray())
             .joinToString("") { "%02x".format(it) }
     }
 }

@@ -23,5 +23,3 @@ fun <IN : Any, OUT> lensOrDefault(
     } catch (_: LensFailure) {
         default()
     }
-
-

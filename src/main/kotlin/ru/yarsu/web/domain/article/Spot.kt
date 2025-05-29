@@ -12,7 +12,7 @@ data class Spot(
     var description: String = "",
     var address: String = "",
     var district: DistrictEnums = DistrictEnums.UNKNOWN,
-    var images: List<String> = emptyList(),
-    var twoWeekOccupation: List<Int> = emptyList(),
-    var owners: List<Int> = emptyList(),
+    var images: List<String> = mutableListOf(),
+    var twoWeekOccupation: MutableList<Int> = mutableListOf(),
+    var owners: List<Int> = mutableListOf(),
 )

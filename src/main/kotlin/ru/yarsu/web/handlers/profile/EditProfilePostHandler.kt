@@ -14,47 +14,49 @@ import ru.yarsu.web.models.profile.EditProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
 import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
-
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.time.Instant
 import java.util.*
 
 class EditProfilePostHandler(
     private val htmlView: ContextAwareViewRender,
     private val users: UserData,
 ) : HttpHandler {
-
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
     private val abilityLens = MultipartFormField.multi.optional("abilities")
     private val imageLens = MultipartFormFile.optional("avatar")
 
-    private val formLens = Body.multipartForm(
-        Validator.Feedback,
-        nameLens,
-        descriptionLens,
-        abilityLens,
-        imageLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .multipartForm(
+                Validator.Feedback,
+                nameLens,
+                descriptionLens,
+                abilityLens,
+                imageLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val userId = request.path("id")?.toIntOrNull()
-            ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
+        val userId =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
 
-        val existingUser = users.getById(userId)
-            ?: return Response(NOT_FOUND).body("Профиль не найден")
+        val existingUser =
+            users.getById(userId)
+                ?: return Response(NOT_FOUND).body("Профиль не найден")
 
         val allAbility = AbilityEnums.entries
         val form = formLens(request)
 
         val errors = form.errors.map { it.meta.name }
         if (errors.isNotEmpty()) {
-            val viewModel = EditProfileVM(
-                user = existingUser,
-                allAbility = allAbility,
-                form = form,
-            )
+            val viewModel =
+                EditProfileVM(
+                    user = existingUser,
+                    allAbility = allAbility,
+                    form = form,
+                )
             return Response(OK).with(htmlView(request) of viewModel)
         }
 
@@ -78,11 +80,12 @@ class EditProfilePostHandler(
             }
         }
 
-        val updatedUser = existingUser.copy(
-            name = name,
-            description = description,
-            images = updatedImages,
-        )
+        val updatedUser =
+            existingUser.copy(
+                name = name,
+                description = description,
+                images = updatedImages,
+            )
 
         users.update(userId, updatedUser)
         return Response(FOUND).header("Location", "/profile/$userId")

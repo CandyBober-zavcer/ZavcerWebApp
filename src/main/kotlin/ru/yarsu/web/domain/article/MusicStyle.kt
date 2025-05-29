@@ -6,7 +6,10 @@ package ru.yarsu.web.domain.article
  * @property id Уникальный идентификатор стиля.
  * @property displayName Отображаемое имя стиля.
  */
-enum class MusicStyle(val id: Int, private val displayName: String) {
+enum class MusicStyle(
+    val id: Int,
+    private val displayName: String,
+) {
     CLASSICAL(1, "Классическая музыка"),
     JAZZ(2, "Джаз"),
     ROCK(3, "Рок"),
@@ -23,10 +26,12 @@ enum class MusicStyle(val id: Int, private val displayName: String) {
     RNB(14, "R&B"),
     EXPERIMENTAL(15, "Экспериментальная музыка"),
     PUNK(16, "Панк"),
-    OTHER(16, "Другое");
+    OTHER(16, "Другое"),
+    ;
 
     companion object {
         private val idMap = entries.associateBy { it.id }
+
         fun get(id: Int): MusicStyle? = idMap[id]
     }
 

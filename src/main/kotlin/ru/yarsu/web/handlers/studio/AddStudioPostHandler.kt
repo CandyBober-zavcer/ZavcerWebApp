@@ -18,9 +18,8 @@ import java.nio.file.StandardCopyOption
 
 class AddStudioPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val studios: StudiosData
+    private val studios: StudiosData,
 ) : HttpHandler {
-
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
     private val imageLens = MultipartFormFile.optional("photo")
@@ -30,17 +29,19 @@ class AddStudioPostHandler(
     private val priceLens = MultipartFormField.string().required("pricePerHour")
     private val minBookingTimeLens = MultipartFormField.string().required("minBookingTimeHours")
 
-    private val formLens = Body.multipartForm(
-        Validator.Feedback,
-        nameLens,
-        descriptionLens,
-        imageLens,
-        addressLens,
-        capacityLens,
-        areaSquareMetersLens,
-        priceLens,
-        minBookingTimeLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .multipartForm(
+                Validator.Feedback,
+                nameLens,
+                descriptionLens,
+                imageLens,
+                addressLens,
+                capacityLens,
+                areaSquareMetersLens,
+                priceLens,
+                minBookingTimeLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
         val form = formLens(request)
@@ -76,20 +77,21 @@ class AddStudioPostHandler(
             }
         }
 
-        val studio = Studio(
-            id = newId,
-            name = name,
-            description = description,
-            avatarFileName = avatarFileName,
-            roles = PersonRole(listOf(1831874252), listOf(777990904)), // Заглушка
-            location = Location(address),
-            capacity = capacity,
-            areaSquareMeters = area,
-            pricePerHour = price,
-            minBookingTimeHours = minBookingTime,
-            equipment = emptyList(),
-            schedule = Schedule(emptyMap()),
-        )
+        val studio =
+            Studio(
+                id = newId,
+                name = name,
+                description = description,
+                avatarFileName = avatarFileName,
+                roles = PersonRole(listOf(1831874252), listOf(777990904)), // Заглушка
+                location = Location(address),
+                capacity = capacity,
+                areaSquareMeters = area,
+                pricePerHour = price,
+                minBookingTimeHours = minBookingTime,
+                equipment = emptyList(),
+                schedule = Schedule(emptyMap()),
+            )
 
         // Если есть ошибки — показать форму с ошибками
         if (errors.isNotEmpty()) {

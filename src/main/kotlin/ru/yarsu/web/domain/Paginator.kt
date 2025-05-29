@@ -31,24 +31,16 @@ class Paginator(
         return nextPages
     }
 
-    fun getStartPage(): Int {
-        return viewPage
-    }
+    fun getStartPage(): Int = viewPage
 
-    fun getAllPages(): Int {
-        return allPages
-    }
+    fun getAllPages(): Int = allPages
 
     fun getPageUri(pageNumber: Int = 0): Uri {
         val page = if (pageNumber == allPages) (pageNumber - 1) else pageNumber
         return uri.query("page", page.toString())
     }
 
-    fun isNearStart(): Boolean {
-        return nearStart
-    }
+    fun isNearStart(): Boolean = nearStart
 
-    fun isNearEnd(): Boolean {
-        return nearEnd
-    }
+    fun isNearEnd(): Boolean = nearEnd
 }

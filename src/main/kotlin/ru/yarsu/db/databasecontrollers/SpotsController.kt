@@ -1,7 +1,13 @@
 package ru.yarsu.db.databasecontrollers
 
 import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.yarsu.db.tables.*
 import ru.yarsu.db.tables.DayOccupationLine
 import ru.yarsu.db.tables.DayOccupations
 import ru.yarsu.db.tables.SpotLine
@@ -13,27 +19,43 @@ import ru.yarsu.web.domain.enums.DistrictEnums
 class SpotsController {
     /**
      * Собирает список объектов класса Spot по заданному номеру страницы.
+     * @param drums Boolean? Если не null, производит фильтрацию по наличию барабанов. По умолчанию null.
+     * @param guitarAmps Содержит необходимый минимум гитарных комбиков. По умолчанию 0.
+     * @param bassAmps Содержит необходимый минимум басовых комбиков. По умолчанию 0.
+     * @param districtList Список айдишников районов. По умолчанию состоит из всех айдишников.
+     * @param priceLow Нижняя граница цены. По умолчанию 0.
+     * @param priceHigh Верхняя граница цены. По умолчанию Int.MAX_VALUE.
      * @return список Spot`ов. При неудаче список будет пустым.
      */
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-    ): List<Spot> {
-        val result = mutableListOf<Spot>()
-
+        drums: Boolean? = null,
+        guitarAmps: Int = 0,
+        bassAmps: Int = 0,
+        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        priceLow: Int = 0,
+        priceHigh: Int = Int.MAX_VALUE,
+    ): List<Spot> =
         transaction {
-            val spots =
-                SpotLine
-                    .all()
-                    .offset((limit * page).toLong())
-                    .limit(limit)
-                    .toList()
-            for (spot in spots) {
-                result.add(packSpot(spot))
-            }
+            val districts = districtList.map { it.id }
+
+            var whereClause =
+                (Spots.district inList districts) and
+                    (Spots.guitarAmps greaterEq guitarAmps) and
+                    (Spots.bassAmps greaterEq bassAmps) and
+                    (Spots.price greaterEq priceLow) and
+                    (Spots.price lessEq priceHigh)
+
+            drums?.let { whereClause = whereClause and (Spots.hasDrums eq it) }
+
+            SpotLine
+                .find { whereClause }
+                .limit(limit)
+                .offset((page * limit).toLong())
+                .map { packSpot(it) }
+                .toList()
         }
-        return result
-    }
 
     /**
      * Собирает класс Spot из строчки базы данных по выбранному ID.

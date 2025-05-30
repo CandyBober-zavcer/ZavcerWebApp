@@ -9,6 +9,7 @@ enum class RoleEnums(
     TEACHER(2, "Преподаватель"),
     USER(3, "Пользователь"),
     ANONYMOUS(4, "Незарегистрирован"),
+    PENDING_TEACHER(5, "Ожидает подтверждения преподавателя"),
     ;
 
     companion object : EnumFinder<Int, RoleEnums>(entries.associateBy { it.id })

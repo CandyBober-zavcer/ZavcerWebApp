@@ -67,7 +67,6 @@ class UserData {
 
     fun add(user: UserModel): UserModel {
         val hashed = hashPassword(user.password)
-        println("Пароль '${user.password}' захеширован в: $hashed")
         val hashedUser = user.copy(
             id = nextId++,
             password = hashed
@@ -107,6 +106,18 @@ class UserData {
     fun getTeacherById(id: Int): UserModel? {
         return users.find {
             it.id == id && RoleEnums.TEACHER in it.roles && it.isConfirmed
+        }
+    }
+
+    fun getUserIfNotTeacher(id: Int): UserModel? {
+        return users.find {
+            it.id == id && RoleEnums.TEACHER !in it.roles && it.isConfirmed
+        }
+    }
+
+    fun getTeacherByIdIfRolePendingTeacher(id: Int): UserModel? {
+        return users.find {
+            it.id == id && RoleEnums.PENDING_TEACHER in it.roles && it.isConfirmed
         }
     }
 

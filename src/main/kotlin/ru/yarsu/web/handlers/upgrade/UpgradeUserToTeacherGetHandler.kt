@@ -1,14 +1,14 @@
-package ru.yarsu.web.handlers.teacher
+package ru.yarsu.web.handlers.upgrade
 
 import org.http4k.core.*
 import org.http4k.lens.*
 import org.http4k.routing.path
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.enums.AbilityEnums
-import ru.yarsu.web.models.teacher.EditTeacherVM
+import ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender, private val teachers: UserData) :
+class UpgradeUserToTeacherGetHandler(private val htmlView: ContextAwareViewRender, private val users: UserData) :
     HttpHandler {
 
     private val pathLens = Path.long().of("id")
@@ -23,20 +23,20 @@ class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender, privat
     ).toLens()
 
     override fun invoke(request: Request): Response {
-        val teacherId = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
+        val userId = request.path("id")?.toIntOrNull()
+            ?: return Response(Status.BAD_REQUEST).body("Некорректный ID пользователя")
 
-        val teacher = teachers.getTeacherById(teacherId)
-            ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
+        val user = users.getUserIfNotTeacher(userId)
+            ?: return Response(Status.NOT_FOUND).body("Пользователь не найден или не может стать учителем")
 
         val allAbility = AbilityEnums.entries
 
         val filledForm = MultipartForm()
-            .with(nameLens of teacher.name)
-            .with(descriptionLens of teacher.description)
+            .with(nameLens of user.name)
+            .with(descriptionLens of user.description)
 
-        val viewModel = EditTeacherVM(
-            teacher,
+        val viewModel = UpgradeUserToTeacherVM(
+            user,
             allAbility,
             filledForm
         )

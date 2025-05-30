@@ -85,12 +85,8 @@
   font-size: 16px;
   color: #444;
   position: absolute;
-  display: none;
   cursor: pointer;
-}
-
-.pass-key:valid ~ .show {
-  display: block;
+  z-index: 2;
 }
 
 .pass {
@@ -119,6 +115,23 @@
   cursor: pointer;
   font-family: 'Montserrat', sans-serif;
   transition: all 0.3s ease;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
+input::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  display: none !important;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+  display: none;
 }
 
 .field input[type="submit"]:hover {
@@ -171,7 +184,7 @@
   text-decoration: underline;
 }
 
-/* 📱 Телефоны */
+/* Телефоны */
 @media (max-width: 420px) {
   .content {
     padding: 36px 20px;

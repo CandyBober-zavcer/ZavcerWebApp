@@ -9,7 +9,7 @@
 <div class="bg-img">
     <div class="content">
         <header>Регистрация</header>
-        <form method="post" action="/auth/register">
+        <form method="post" action="/auth/register" id="registerForm">
             <div class="field">
                 <span class="fa fa-user"></span>
                 <input type="email" name="email" id="email" required placeholder="Email">
@@ -33,23 +33,7 @@
 {% endblock %}
 
 {% block script %}
-<script>
-    const passField = document.querySelector('.pass-key');
-    const showBtn = document.querySelector('.show');
-    if (showBtn && passField) {
-        showBtn.addEventListener('click', function() {
-            if (passField.type === "password") {
-                passField.type = "text";
-                showBtn.classList.remove("fa-eye");
-                showBtn.classList.add("fa-eye-slash");
-            } else {
-                passField.type = "password";
-                showBtn.classList.remove("fa-eye-slash");
-                showBtn.classList.add("fa-eye");
-            }
-        });
-    }
-</script>
+<script src="../js/password-validation.js"></script>
 {% endblock %}
 
 

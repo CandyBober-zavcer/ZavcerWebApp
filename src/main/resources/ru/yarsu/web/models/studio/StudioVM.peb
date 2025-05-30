@@ -1,7 +1,9 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudioVM" #}
 
     {% extends "../Layout.peb" %}
-    {% block style %}../css/Studio.css{% endblock %}
+    {% block style %}
+        <link href="/css/Studio.css" rel="stylesheet">
+    {% endblock %}
     {% block content %}
 <div class="container mt-5">
     <a href="/studios" class="btn btn-outline-secondary mb-4">

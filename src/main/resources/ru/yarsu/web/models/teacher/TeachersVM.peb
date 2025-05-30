@@ -1,7 +1,19 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
     {% extends "../Layout.peb" %}
 
+    {% block style %}
+        <link href="/css/Teachers.css" rel="stylesheet">
+    {% endblock %}
+
 {% block content %}
+    {% if user is not null %}
+        <div class="upgrade-button-container">
+            <a href="/upgrade/teacher/{{ user.id }}" class="upgrade-button">
+                Стать преподавателем
+            </a>
+        </div>
+    {% endif %}
+
     <div class="container mt-5">
         <h1 class="mb-4">Наши преподаватели</h1>
         <a href="/edit/teacher/add" class="btn btn-outline-primary">Добавить</a>

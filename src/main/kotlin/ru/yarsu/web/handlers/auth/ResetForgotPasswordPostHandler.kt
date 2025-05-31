@@ -14,7 +14,11 @@ class ResetForgotPasswordPostHandler(
 ) : HttpHandler {
 
     private val emailLens = FormField.nonEmptyString().map({ it.trim() }, { it }).required("email")
-    private val formLens = Body.webForm(Validator.Strict, emailLens).toLens()
+
+    private val formLens = Body.webForm(
+        Validator.Strict,
+        emailLens,
+    ).toLens()
 
     override fun invoke(request: Request): Response {
         val form = try {

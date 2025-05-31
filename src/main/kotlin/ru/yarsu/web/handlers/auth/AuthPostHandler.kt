@@ -13,10 +13,15 @@ class AuthPostHandler(
 
     private val emailLens = FormField.nonEmptyString().map({ it.trim() }, { it }).required("email")
     private val passwordLens = FormField.nonEmptyString().required("password")
+    private val generatedAtLens = FormField.long().required("formGeneratedAt")
+    private val honeypotLens = FormField.string().defaulted("website", "")
+
     private val formLens = Body.webForm(
         Validator.Strict,
         emailLens,
-        passwordLens
+        passwordLens,
+        generatedAtLens,
+        honeypotLens,
     ).toLens()
 
     override fun invoke(request: Request): Response {
@@ -25,6 +30,20 @@ class AuthPostHandler(
         } catch (e: LensFailure) {
             println("Ошибка парсинга формы: ${e.failures}")
             return Response(Status.BAD_REQUEST).body("Неверные данные формы")
+        }
+
+        val honeypot = honeypotLens(form)
+        if (honeypot.isNotBlank()) {
+            return Response(Status.BAD_REQUEST).body("Похоже, вы бот.")
+        }
+
+        val generatedAt = generatedAtLens(form)
+        val now = System.currentTimeMillis()
+        val timeDiff = now - generatedAt
+
+        if (timeDiff < 1000) {
+            println("Форма отправлена слишком быстро: ${timeDiff}мс")
+            return Response(Status.BAD_REQUEST).body("Слишком быстрая отправка формы")
         }
 
         val email = emailLens(form)

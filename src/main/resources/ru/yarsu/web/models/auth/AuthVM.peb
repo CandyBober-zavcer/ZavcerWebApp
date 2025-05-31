@@ -24,6 +24,13 @@
             <div class="pass">
                 <a href="/auth/forgot-password">Забыли пароль?</a>
             </div>
+
+            <div style="display:none;">
+                <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <input type="hidden" name="formGeneratedAt" id="formGeneratedAt">
+
             <div class="button-wrapper">
                 <div class="field" style="width: auto;">
                     <input type="submit" value="Войти">
@@ -57,6 +64,14 @@
 
 {% block script %}
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const tsField = document.getElementById("formGeneratedAt");
+        if (tsField) {
+            tsField.value = Date.now();
+        }
+    });
+
     const passField = document.querySelector('.pass-key');
     const showBtn = document.querySelector('.show');
     if (showBtn && passField) {

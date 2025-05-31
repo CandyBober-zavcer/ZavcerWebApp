@@ -11,12 +11,15 @@
             <a href="/upgrade/teacher/{{ user.id }}" class="upgrade-button">
                 Стать преподавателем
             </a>
+            <a href="/upgrade/teachers" class="upgrade-button">
+                Приём преподавателей
+            </a>
         </div>
     {% endif %}
 
+
     <div class="container mt-5">
         <h1 class="mb-4">Наши преподаватели</h1>
-        <a href="/edit/teacher/add" class="btn btn-outline-primary">Добавить</a>
         <div class="row">
             {% for teacher in model.teachers %}
                 <div class="col-md-4 mb-4">

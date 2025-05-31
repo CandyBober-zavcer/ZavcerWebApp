@@ -23,8 +23,8 @@ import ru.yarsu.web.handlers.profile.EditProfilePostHandler
 import ru.yarsu.web.handlers.profile.ProfileGetHandler
 import ru.yarsu.web.handlers.studio.*
 import ru.yarsu.web.handlers.teacher.*
-import ru.yarsu.web.handlers.upgrade.UpgradeUserToTeacherGetHandler
-import ru.yarsu.web.handlers.upgrade.UpgradeUserToTeacherPostHandler
+import ru.yarsu.web.handlers.upgrade.*
+//import ru.yarsu.web.handlers.upgrade.TeachersGetHandler
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -78,6 +78,12 @@ fun router(
 
         "/upgrade/teacher/{id}" bind Method.GET to UpgradeUserToTeacherGetHandler(htmlView, users),
         "/upgrade/teacher/{id}" bind Method.POST to UpgradeUserToTeacherPostHandler(htmlView, users),
+        "/upgrade/teachers" bind Method.GET to UpgradeListGetHandler(htmlView, users),
+        "/upgrade/teacher/profiles/{id}" bind Method.GET to UpgradeProfileGetHandler(htmlView, users),
+
+        "/upgrade/teacher/accept/{id}" bind Method.POST to AcceptTeacherPostHandler(users),
+        "/upgrade/teacher/reject/{id}" bind Method.POST to RejectTeacherPostHandler(users),
+
 //        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView, users),
         "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView, users),

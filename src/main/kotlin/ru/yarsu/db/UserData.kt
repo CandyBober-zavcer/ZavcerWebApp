@@ -103,6 +103,12 @@ class UserData {
         }
     }
 
+    fun getPendingTeachers(): List<UserModel> {
+        return users.filter {
+            RoleEnums.PENDING_TEACHER in it.roles && it.isConfirmed
+        }
+    }
+
     fun getTeacherById(id: Int): UserModel? {
         return users.find {
             it.id == id && RoleEnums.TEACHER in it.roles && it.isConfirmed
@@ -206,5 +212,21 @@ class UserData {
         return false
     }
 
+    fun rejectTeacherRequest(id: Int): Boolean {
+        val user = users.find { it.id == id } ?: return false
+        val newRoles = user.roles.toMutableSet().apply { remove(RoleEnums.PENDING_TEACHER) }
+        val updatedUser = user.copy(roles = newRoles)
+        return update(user.id, updatedUser)
+    }
+
+    fun acceptTeacherRequest(id: Int): Boolean {
+        val user = users.find { it.id == id } ?: return false
+        val newRoles = user.roles.toMutableSet().apply {
+            remove(RoleEnums.PENDING_TEACHER)
+            add(RoleEnums.TEACHER)
+        }
+        val updatedUser = user.copy(roles = newRoles)
+        return update(user.id, updatedUser)
+    }
 
 }

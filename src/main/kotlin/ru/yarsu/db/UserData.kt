@@ -229,4 +229,15 @@ class UserData {
         return update(user.id, updatedUser)
     }
 
+    fun attachTelegram(userId: Int, telegramId: Long): Boolean {
+        val index = users.indexOfFirst { it.id == userId }
+        if (index != -1) {
+            val user = users[index]
+            users[index] = user.copy(tg_id = telegramId)
+            return true
+        }
+        return false
+    }
+
+
 }

@@ -70,6 +70,7 @@ class GmailAuthPostHandler(
         val algorithm = Algorithm.RSA256(jwk.publicKey as java.security.interfaces.RSAPublicKey, null)
         val verifier = JWT.require(algorithm)
             .withAudience(clientId)
+            .acceptLeeway(5)
             .build()
 
         val verified = verifier.verify(token)

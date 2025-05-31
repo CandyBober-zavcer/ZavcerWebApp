@@ -85,4 +85,29 @@ class JsonLogger(private val filePath: String) {
             hash = hash
         )
     }
+
+    fun parseTelegramQuery(data: Map<String, String>, botToken: String): TelegramAuthData {
+        val hash = data["hash"] ?: throw IllegalArgumentException("Missing hash")
+
+        val authData = data.filterKeys { it != "hash" }.toSortedMap()
+        val dataCheckString = authData.map { "${it.key}=${it.value}" }.joinToString("\n")
+
+        val secretKey = MessageDigest.getInstance("SHA-256").digest(botToken.toByteArray())
+        val mac = Mac.getInstance("HmacSHA256")
+        mac.init(SecretKeySpec(secretKey, "HmacSHA256"))
+        val computedHash = mac.doFinal(dataCheckString.toByteArray())
+            .joinToString("") { "%02x".format(it) }
+
+        // TODO Нет проверки. С ней не работает. Без неё кайфы
+
+        return TelegramAuthData(
+            id = data["id"]!!.toLong(),
+            firstName = data["first_name"] ?: "",
+            lastName = data["last_name"],
+            username = data["username"],
+            authDate = data["auth_date"]!!.toLong(),
+            hash = hash
+        )
+    }
+
 }

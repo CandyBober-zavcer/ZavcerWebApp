@@ -3,9 +3,10 @@
     {% extends "../Layout.peb" %}
 
     {% block content %}
-<section style="background-color: #eee;">
+<section class="main-section bg-light">
     <div class="container py-5">
         <div class="row">
+            <!-- Левая колонка -->
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
@@ -16,20 +17,35 @@
                             <img src="/img/defaultProfile.webp" alt="Аватар по умолчанию"
                                  class="rounded-circle img-fluid" style="width: 150px;">
                         {% endif %}
-
                         <h5 class="my-3">{{ model.user.name }}</h5>
                         <div class="d-flex justify-content-center mb-2">
-                            <a href="/edit/profile/edit-{{ model.user.id }}" role="button" class="btn btn-primary">
-                                Редактировать
-                            </a>
+                            <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-primary">Редактировать</a>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Правая колонка -->
             <div class="col-lg-8">
-                <div class="card mb-4">
+                <div class="card mb-4 position-relative">
                     <div class="card-body">
+
+                        <!-- Telegram кнопка -->
+                        <div class="d-flex justify-content-end mb-3">
+                            {% if model.user.tg_id != 0 %}
+                                <span class="badge bg-success p-2">Telegram привязан</span>
+                            {% else %}
+                                <script async src="https://telegram.org/js/telegram-widget.js?22"
+                                        data-telegram-login="Zavcer_bot"
+                                        data-size="large"
+                                        data-userpic="false"
+                                        data-request-access="write"
+                                        data-auth-url="https://zavcer.ru.tuna.am/auth/attach-telegram?userId={{ model.user.id }}"
+                                        data-lang="ru">
+                                </script>
+                            {% endif %}
+                        </div>
+
                         <div class="row">
                             <div class="col-sm-3"><p class="mb-0">Имя</p></div>
                             <div class="col-sm-9"><p class="text-muted mb-0">{{ model.user.name }}</p></div>
@@ -46,16 +62,16 @@
                         <hr>
                         <div class="row">
                             <div class="col-sm-3"><p class="mb-0">Инструменты</p></div>
-                                <div class="col-sm-9">
-                                    <p class="text-muted mb-0">
-                                        {% if model.abilityNames is not empty %}
-                                            {{ model.abilityNames }}
-                                        {% else %}
-                                            Не указаны
-                                        {% endif %}
-                                    </p>
-                                </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    {% if model.abilityNames is not empty %}
+                                        {{ model.abilityNames }}
+                                    {% else %}
+                                        Не указаны
+                                    {% endif %}
+                                </p>
                             </div>
+                        </div>
                         <hr>
                     </div>
                 </div>
@@ -66,5 +82,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
 {% endblock %}

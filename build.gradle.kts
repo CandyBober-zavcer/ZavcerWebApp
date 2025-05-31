@@ -58,7 +58,7 @@ dependencies {
     implementation("org.http4k:http4k-multipart:$http4kVersion")
     implementation("org.http4k:http4k-server-netty:$http4kVersion")
     implementation("org.http4k:http4k-template-pebble:$http4kVersion")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.20")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     implementation("ch.qos.logback:logback-classic:1.5.18")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")

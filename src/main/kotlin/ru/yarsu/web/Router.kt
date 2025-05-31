@@ -1,5 +1,6 @@
 package ru.yarsu.web
 
+import ru.yarsu.web.handlers.profile.AttachTelegramGetHandler
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
@@ -18,9 +19,7 @@ import ru.yarsu.web.domain.models.telegram.JsonLogger
 import ru.yarsu.web.handlers.PingHandler
 import ru.yarsu.web.handlers.auth.*
 import ru.yarsu.web.handlers.home.HomePageHandler
-import ru.yarsu.web.handlers.profile.EditProfileGetHandler
-import ru.yarsu.web.handlers.profile.EditProfilePostHandler
-import ru.yarsu.web.handlers.profile.ProfileGetHandler
+import ru.yarsu.web.handlers.profile.*
 import ru.yarsu.web.handlers.studio.*
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
@@ -68,9 +67,20 @@ fun router(
         "/auth/signout" bind Method.GET to SignOutHandler(),
         "/auth/register" bind Method.POST to EmailRegisterPostHandler(users, tokenStorage, emailService),
         "/auth/confirm" bind Method.GET to EmailConfirmHandler(tokenStorage, users, renderer),
+
         "/profile/{id}" bind Method.GET to ProfileGetHandler(htmlView, users),
         "/edit/profile/edit-{id}" bind Method.GET to EditProfileGetHandler(htmlView, users),
         "/edit/profile/edit-{id}" bind Method.POST to EditProfilePostHandler(htmlView, users),
+        "/auth/attach-telegram" bind Method.GET to AttachTelegramGetHandler(
+            users = users,
+            jsonLogger = JsonLogger(config.telegramConfig.userDataFile),
+            botToken = config.telegramConfig.botToken,
+        ),
+        "/auth/attach-telegram" bind Method.POST to AttachTelegramHandler(
+            jsonLogger = JsonLogger(config.telegramConfig.userDataFile),
+            botToken = config.telegramConfig.botToken,
+            users = users,
+        ),
 
         "/studio/{id}" bind Method.GET to StudioGetHandler(htmlView, studios),
 //        "/studio" bind Method.POST to StudioPostHandler(config.telegramConfig.botToken, 1831874252.toString()),

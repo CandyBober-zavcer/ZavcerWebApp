@@ -1,39 +1,63 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.home.HomePageVM" #}
-{% extends "../Layout.peb" %}
 
-{% block content %}
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-8 mx-auto text-center">
-                    <h1 class="mb-4">Записывайтесь к лучшим преподавателям или бронируйте репетиционные точки для занятий</h1>
-                    <p class="lead">
-                        Выбери, что тебе нужно:
-                         Репетиционные точки – современные студии с профессиональным оборудованием в твоем городе.
-                         Преподаватели – опытные музыканты для обучения игре на гитаре, фортепиано, ударных и других инструментах.
-                    </p>
+<!DOCTYPE html>
+<html lang="ru">
 
-                    <div class="row mt-5">
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Преподаватели</h5>
-                                    <p class="card-text">Выберите профессионального преподавателя по вашему инструменту</p>
-                                    <a href="/teachers" class="btn btn-primary">Посмотреть список</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <h5 class="card-title">Репетиционные точки</h5>
-                                    <p class="card-text">Забронируйте студию для репетиций или самостоятельных занятий</p>
-                                    <a href="/studios" class="btn btn-primary">Посмотреть список</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/index.css">
+    <title>Zavcer</title>
+</head>
+
+<body>
+
+    <section class="first-section">
+        <img src="../img/vinyl.png" alt="vinyl" class="vinyl-image">
+        <div class="first-section-content">
+            <div class="name">
+                <h1 class="thin-text">CandyБобер</h1>
+            </div>
+            <div class="slogan">
+                <h1 class="bold-text">Найди свой звук!</h1>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-outline"><a href="/studios">реп. точки</a></button>
+                <button class="btn btn-red"> <a href="/teachers">репетиторы</a></button>
             </div>
         </div>
+    </section>
+    <header>
+        <h2><a href="/">CandyБобер</a></h2>
+        <nav>
+            <ul>
+                <li><a href="/studios">Реп точки</a></li>
+                <li><a href="/teachers">Преподаватели</a></li>
+                <li><a href="#"><img src="../img/user-icon.png" alt="Профиль"></a></li>
+            </ul>
+        </nav>
+    </header>
+    <section class="other-section">
+        <div class="other-section-content">
+            <div class="other-name">
+                <h2>Репетиционные точки</h2>
+            </div>
+            <p>Крутейшие реп точки по всему Ярославлю !</p>
+            <button class="btn btn-outline"><a href="/studios">Арендовать</a></button>
+        </div>
+        <img src="../img/guitar.jpg" alt="">
 
-{% endblock %}
+    </section>
+    <section class="other-section">
+        <img src="../img/guitar.jpg" alt="">
+        <div class="other-section-content">
+            <h2>Преподаватели</h2>
+            <p>А преподаватели просто сок !</p>
+            <button class="btn btn-outline"><a href="/teachers">Научиться</a></button>
+        </div>
+
+
+    </section>
+</body>
+
+</html>

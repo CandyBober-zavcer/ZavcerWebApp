@@ -1,34 +1,83 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudiosVM" #}
 
-    {% extends "../Layout.peb" %}
 
-{% block content %}
-<div class="container mt-5 mb-5">
-    <h1 class="mb-4">Репетиционные точки</h1>
-    <a href="/edit/studio/add" class="btn btn-outline-primary">Добавить</a>
-    <div class="row">
 
-        {% for studio in model.studios %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="{{ studio.photoUrl[0] | default("https://via.placeholder.com/400x300") }}" class="card-img-top" alt="Студия">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ studio.name }}</h5>
-                        <p class="card-text">
-                            <strong>Адрес:</strong> {{ studio.location.address }}<br>
-                            <strong>Оборудование:</strong>
-                            {% for instrument in studio.equipment %}
-                                {{ instrument }}{% if not loop.last %}, {% endif %}
-                            {% endfor %}<br>
-                            <strong>Цена:</strong> {{ studio.pricePerHour }} руб/час
-                        </p>
-                        <a href="/studio/{{ studio.id }}" class="btn btn-primary">Забронировать</a>
-                        <a href="/edit/studio/edit-{{studio.id}}" class="btn btn-primary">Редактировать</a>
-                        <a href="/edit/studio/delete" class="btn btn-primary">Удалить</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/studios_list.css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+    <title>Реп точки</title>
+</head>
+
+<body>
+    <header class="border-bottom">
+        <h2><a href="/">CandyБобер</a></h2>
+        <nav>
+            <ul>
+                <li><a href="/studios">Реп точки</a></li>
+                <li><a href="/teachers">Преподаватели</a></li>
+                <li><a href="#"><img src="../img/user-icon.png" alt="Профиль"></a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+
+
+    <div class="container container-custom-margin">
+
+        <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+            <button class="btn btn-link text-secondary p-0">
+                <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+            </button>
+
+            <div class="d-flex gap-3">
+                <a href="/edit/studio/add" class="btn btn-link text-secondary p-0">
+                    <i class="bi bi-plus" style="font-size: 2.4rem;"></i>
+                </a>
+                <button class="btn btn-link text-secondary p-0">
+                    <i class="bi bi-arrow-down-up" style="font-size: 1.5rem;"></i>
+                </button>
+                <button class="btn btn-link text-secondary p-0">
+                    <i class="bi bi-funnel" style="font-size: 1.5rem;"></i>
+                </button>
+            </div>
+        </section>
+
+        <div class="row g-4">
+            {% for studio in model.studios %}
+            <div class="col-md-4">
+                <div class="card1 h-100">
+                    <a href="/studio/{{ studio.id }}"><img
+                            src="{{ studio.photoUrl[0] | default('https://via.placeholder.com/400x300') }}"
+                            class="img-fluid" alt="Фото студии"></a>
+                    <div class="card-info1 flex-grow-1">
+                        <p><strong>Где?</strong><br>{{ studio.location.address }}</p>
+                        <p><strong>Сколько?</strong><br>{{ studio.pricePerHour }}/час</p>
+                        <div class="for_admin">
+                            <p><a href="/edit/studio/delete-{{ studio.id }}">Удалить</a>&nbsp;&nbsp;&nbsp;<a
+                                    href="/edit/studio/edit-{{ studio.id }}">Редактировать</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
-{% endblock %}
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -1,40 +1,63 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
-    {% extends "../Layout.peb" %}
 
-    {% block style %}
-        <link href="/css/Teachers.css" rel="stylesheet">
-    {% endblock %}
 
+{% extends "../DesignedLayout.peb" %}
+{% block style %}teachers_list.css{% endblock %}
 {% block content %}
-    {% if user is not null %}
-        <div class="upgrade-button-container">
-            <a href="/upgrade/teacher/{{ user.id }}" class="upgrade-button">
-                Стать преподавателем
+
+{% if user is not null %}
+<div class="upgrade-button-container">
+    <a href="/upgrade/teacher/{{ user.id }}" class="upgrade-button">
+        Стать преподавателем
+    </a>
+    <a href="/upgrade/teachers" class="upgrade-button">
+        Приём преподавателей
+    </a>
+</div>
+{% endif %}
+<div class="container container-custom-margin">
+
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <button class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </button>
+
+        <div class="d-flex gap-3">
+            <a href="/edit/teacher/add" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-plus" style="font-size: 2.4rem;"></i>
             </a>
-            <a href="/upgrade/teachers" class="upgrade-button">
-                Приём преподавателей
-            </a>
+            <button class="btn btn-link text-secondary p-0">
+                <i class="bi bi-arrow-down-up" style="font-size: 1.5rem;"></i>
+            </button>
+            <button class="btn btn-link text-secondary p-0">
+                <i class="bi bi-funnel" style="font-size: 1.5rem;"></i>
+            </button>
         </div>
-    {% endif %}
+    </section>
 
+    <div class="row g-4">
+        {% for teacher in model.teachers %}
+        {{teacher.avatarFileName[0]}}
+        <div class="col-md-4">
+            <div class="card1 h-100">
+                <a href="/teacher/{{ teacher.id }}"><img
+                        src="../img/{{ teacher.images[0] | default('defaultTeacher.webp') }}"
+                        class="img-fluid" alt="Фото студии"></a>
+                <div class="card-info1 flex-grow-1">
+                    <p><strong>Имя</strong><br>{{ teacher.name }}</p>
+                    <p><strong>О себе</strong><br>{{ teacher.description }}</p>
+                    <p><strong>Где?</strong><br>{{ teacher.address }}</p>
+                    <p><strong>Сколько?</strong><br>{{ teacher.price }}/час</p>
 
-    <div class="container mt-5">
-        <h1 class="mb-4">Наши преподаватели</h1>
-        <div class="row">
-            {% for teacher in model.teachers %}
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="/img/{{ teacher.images[0] | default('defaultTeacher.webp') }}" class="card-img-top" alt="Преподаватель">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ teacher.name }}</h5>
-                            <p class="card-text">{{ teacher.description }}</p>
-                            <a href="/teacher/{{ teacher.id }}" class="btn btn-primary">Записаться</a>
-                            <a href="/edit/teacher/edit-{{ teacher.id }}" class="btn btn-primary">Редактировать</a>
-                            <a href="/edit/teacher/delete-{{ teacher.id }}" class="btn btn-primary">Удалить</a>
-                        </div>
+                    <div class="for_admin">
+                        <p><a href="/edit/teacher/delete-{{ teacher.id }}">Удалить</a>&nbsp;&nbsp;&nbsp;<a
+                                href="/edit/teacher/edit-{{ teacher.id }}">Редактировать</a></p>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
+        {% endfor %}
     </div>
+</div>
+
 {% endblock %}

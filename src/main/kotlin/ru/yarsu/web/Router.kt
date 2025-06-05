@@ -97,10 +97,7 @@ fun router(
 //        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView, users),
         "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView, users),
-//
-//        "/edit/teacher/add" bind Method.GET to AddTeacherGetHandler(htmlView, teachers),
-//        "/edit/teacher/add" bind Method.POST to AddTeacherPostHandler(htmlView, teachers),
-//
+
         "/edit/teacher/edit-{id}" bind Method.GET to EditTeacherGetHandler(htmlView, users),
         "/edit/teacher/edit-{id}" bind Method.POST to EditTeacherPostHandler(htmlView, users),
 

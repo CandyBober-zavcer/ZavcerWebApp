@@ -1,5 +1,11 @@
 
-
+.for_admin p a,
+.for_admin p a:visited,
+.for_admin p a:hover,
+.for_admin p a:active {
+    color: #333;
+    text-decoration: none;
+}
 .card1 {
     width: 300px;
     height: 100%;

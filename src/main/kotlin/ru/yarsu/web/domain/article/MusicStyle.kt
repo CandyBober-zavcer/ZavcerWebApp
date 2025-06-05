@@ -26,7 +26,8 @@ enum class MusicStyle(val id: Int, private val displayName: String) {
     OTHER(16, "Другое");
 
     companion object {
-        fun fromId(id: Int): MusicStyle? = entries.find { it.id == id }
+        private val idMap = entries.associateBy { it.id }
+        fun get(id: Int): MusicStyle? = idMap[id]
     }
 
     override fun toString(): String = displayName

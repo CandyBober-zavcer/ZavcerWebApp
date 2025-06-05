@@ -58,7 +58,7 @@ dependencies {
     implementation("org.http4k:http4k-multipart:$http4kVersion")
     implementation("org.http4k:http4k-server-netty:$http4kVersion")
     implementation("org.http4k:http4k-template-pebble:$http4kVersion")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.20")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     implementation("ch.qos.logback:logback-classic:1.5.18")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
@@ -72,6 +72,14 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
+
+    implementation("com.twelvemonkeys.imageio:imageio-core:3.10.1")
+    implementation("com.twelvemonkeys.imageio:imageio-webp:3.10.1")
+
+    implementation("com.sun.mail:jakarta.mail:2.0.1")
+    implementation("at.favre.lib:bcrypt:0.10.2")
+    implementation("com.auth0:java-jwt:4.5.0")
+    implementation("com.auth0:jwks-rsa:0.22.1")
 
     implementation("mysql:mysql-connector-java:8.0.33")
 

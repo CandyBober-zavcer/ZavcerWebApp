@@ -1,5 +1,6 @@
 package ru.yarsu.web.models.studio
 
+import org.http4k.lens.MultipartForm
 import org.http4k.template.ViewModel
 import ru.yarsu.web.domain.article.Instrument
 import ru.yarsu.web.domain.article.Studio
@@ -7,8 +8,8 @@ import kotlin.enums.EnumEntries
 
 class EditStudioVM(
     val studio: Studio,
-    val user: String,
-    val allInstruments: EnumEntries<Instrument>
+    val allInstruments: EnumEntries<Instrument>,
+    val form: MultipartForm,
 ) : ViewModel {
     private val selectedInstrumentNames = studio.equipment.map { it.name }.toSet()
     val instrumentSelected: Map<String, Boolean> =

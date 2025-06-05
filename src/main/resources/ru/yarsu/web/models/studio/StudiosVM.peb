@@ -56,7 +56,7 @@
             <div class="col-md-4">
                 <div class="card1 h-100">
                     <a href="/studio/{{ studio.id }}"><img
-                            src="{{ studio.photoUrl[0] | default('https://via.placeholder.com/400x300') }}"
+                            src="../img/{{ studio.avatarFileName[0] | default('../img/defaultStudio.jpg') }}"
                             class="img-fluid" alt="Фото студии"></a>
                     <div class="card-info1 flex-grow-1">
                         <p><strong>Где?</strong><br>{{ studio.location.address }}</p>

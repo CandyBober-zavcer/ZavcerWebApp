@@ -5,4 +5,5 @@ build/
 .gradle/
 .kotlin
 
+#data/app.properties
 data/telegram_users.json

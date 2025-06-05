@@ -1,31 +1,44 @@
 package ru.yarsu.web.handlers.teacher
 
 import org.http4k.core.*
+import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.TeachersData
-import ru.yarsu.web.domain.article.Instrument
-import ru.yarsu.web.domain.article.MusicStyle
-import ru.yarsu.web.domain.models.telegram.AuthUtils
+import ru.yarsu.db.UserData
+import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender): HttpHandler {
+class EditTeacherGetHandler(private val htmlView: ContextAwareViewRender, private val teachers: UserData) :
+    HttpHandler {
+
+    private val pathLens = Path.long().of("id")
+
+    private val nameLens = MultipartFormField.string().required("name")
+    private val descriptionLens = MultipartFormField.string().required("description")
+
+    private val formLens = Body.multipartForm(
+        Validator.Feedback,
+        nameLens,
+        descriptionLens,
+    ).toLens()
 
     override fun invoke(request: Request): Response {
-        val user = AuthUtils.getUserFromCookie(request)
-        val teacherId = request.path("id")?.toLongOrNull()
+        val teacherId = request.path("id")?.toIntOrNull()
             ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
-        val teacher = TeachersData().getTeacherById(teacherId)
+        val teacher = teachers.getTeacherById(teacherId)
             ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
-        val allStyles = MusicStyle.entries
-        val allInstruments = Instrument.entries
+
+        val allAbility = AbilityEnums.entries
+
+        val filledForm = MultipartForm()
+            .with(nameLens of teacher.name)
+            .with(descriptionLens of teacher.description)
 
         val viewModel = EditTeacherVM(
             teacher,
-            user?.id?.toString() ?: "null",
-            allStyles,
-            allInstruments
+            allAbility,
+            filledForm
         )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)

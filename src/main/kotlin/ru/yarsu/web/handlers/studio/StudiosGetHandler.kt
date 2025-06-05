@@ -7,11 +7,10 @@ import ru.yarsu.web.models.studio.StudiosVM
 import ru.yarsu.web.models.teacher.TeachersVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class StudiosGetHandler(private val htmlView: ContextAwareViewRender) : HttpHandler {
+class StudiosGetHandler(private val htmlView: ContextAwareViewRender, private val studios: StudiosData) : HttpHandler {
 
     override fun invoke(request: Request): Response {
-        val studios = StudiosData().getAllStudios()
-        val viewModel = StudiosVM(studios)
+        val viewModel = StudiosVM(studios.getAllStudios())
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 }

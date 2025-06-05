@@ -1,0 +1,154 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.auth.AuthVM" #}
+
+    {% block style %}
+        <link rel="stylesheet" href="/css/Auth.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+    {% endblock %}
+
+    {% block content %}
+<div class="bg-img">
+    <div class="content">
+        <header>Вход</header>
+
+        <form method="post" action="/auth/signin">
+            <div class="field">
+                <span class="fa fa-user"></span>
+                <input type="text" name="email" id="email" required placeholder="Email">
+            </div>
+            <div class="field space">
+                <span class="fa fa-lock"></span>
+                <input type="password" class="pass-key" name="password" id="password" required placeholder="Пароль">
+                <i class="show fas fa-eye"></i>
+            </div>
+            <div class="pass">
+                <a href="/auth/forgot-password">Забыли пароль?</a>
+            </div>
+
+            <div style="display:none;">
+                <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <input type="hidden" name="formGeneratedAt" id="formGeneratedAt">
+
+            <div class="button-wrapper">
+                <div class="field" style="width: auto;">
+                    <input type="submit" value="Войти">
+                </div>
+            </div>
+        </form>
+
+        <div class="login">Или войдите через</div>
+
+        <div class="oauth-buttons">
+            <div class="telegram-auth">
+                <script async src="https://telegram.org/js/telegram-widget.js?7"
+                        data-telegram-login="Zavcer_bot"
+                        data-size="large"
+                        data-userpic="false"
+                        data-request-access="write"
+                        data-onauth="onTelegramAuth(user)">
+                </script>
+            </div>
+            <div class="google-auth">
+                <div class="g_id_signin"></div>
+            </div>
+        </div>
+
+        <div class="signup">
+            Нет аккаунта? <a href="/auth/signup">Зарегистрироваться</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const tsField = document.getElementById("formGeneratedAt");
+        if (tsField) {
+            tsField.value = Date.now();
+        }
+    });
+
+    const passField = document.querySelector('.pass-key');
+    const showBtn = document.querySelector('.show');
+    if (showBtn && passField) {
+        showBtn.addEventListener('click', function () {
+            if (passField.type === "password") {
+                passField.type = "text";
+                showBtn.classList.remove("fa-eye");
+                showBtn.classList.add("fa-eye-slash");
+            } else {
+                passField.type = "password";
+                showBtn.classList.remove("fa-eye-slash");
+                showBtn.classList.add("fa-eye");
+            }
+        });
+    }
+
+    function onTelegramAuth(user) {
+        fetch("/auth/telegram", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            credentials: "include",
+            body: JSON.stringify(user)
+        }).then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else if (response.ok || response.status === 302) {
+                window.location.href = "/";
+            } else {
+                alert("Ошибка авторизации через Telegram!");
+            }
+        }).catch(error => {
+            console.error("Ошибка запроса:", error);
+            alert("Ошибка при отправке данных!");
+        });
+    }
+
+    function handleCredentialResponse(response) {
+        fetch("/auth/google", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ credential: response.credential })
+        })
+        .then(res => {
+            if (res.redirected) {
+                window.location.href = res.url;
+            } else if (res.ok) {
+                window.location.href = "/";
+            } else {
+                alert("Ошибка входа через Google");
+            }
+        })
+        .catch(err => {
+            console.error("Ошибка отправки credential:", err);
+            alert("Ошибка авторизации.");
+        });
+    }
+
+    window.onload = function () {
+        google.accounts.id.initialize({
+            client_id: "65976960637-2j5r5656rf2v4mn6q8gl5c7ebbg7e7t3.apps.googleusercontent.com",
+            callback: handleCredentialResponse
+        });
+
+        google.accounts.id.renderButton(
+            document.querySelector(".g_id_signin"),
+            {
+                theme: "filled_black",
+                size: "large",
+                shape: "pill",
+                text: "continue_with",
+                logo_alignment: "left"
+            }
+        );
+    };
+</script>
+{% endblock %}

@@ -14,7 +14,7 @@ import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
 import ru.yarsu.web.domain.classes.DayOccupation
-import ru.yarsu.web.domain.classes.Spot
+import ru.yarsu.web.domain.article.Spot
 import ru.yarsu.web.domain.classes.User
 
 class DataBaseController {
@@ -27,7 +27,21 @@ class DataBaseController {
         }
     }
 
+    /**
+     * Сносит БД к чертям.
+     */
+    fun dropTables() {
+        transaction {
+            SchemaUtils.drop(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
+        }
+    }
+
     // Работа с Users
+    fun getUserByPage(
+        page: Int,
+        limit: Int,
+    ): List<User> = UsersController().getUsersByPage(page, limit)
+
     fun getUserById(id: Int): User = UsersController().getUserById(id)
 
     fun insertUser(user: User): Int = UsersController().insertUser(user)
@@ -50,7 +64,7 @@ class DataBaseController {
     fun userRemoveSpot(
         userId: Int,
         spotId: Int,
-    ): Boolean = UsersController().addSpot(userId, spotId)
+    ): Boolean = UsersController().removeSpot(userId, spotId)
 
     fun userRemoveSpot(
         userId: Int,
@@ -78,6 +92,11 @@ class DataBaseController {
     ): Boolean = UsersController().removeDayOccupation(userId, daysId)
 
     // Работа со Spots
+    fun getSpotsByPage(
+        page: Int,
+        limit: Int,
+    ): List<Spot> = SpotsController().getSpotsByPage(page, limit)
+
     fun getSpotById(id: Int): Spot = SpotsController().getSpotById(id)
 
     fun insertSpot(spot: Spot): Int = SpotsController().insertSpot(spot)

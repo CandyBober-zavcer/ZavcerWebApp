@@ -6,11 +6,13 @@ import java.io.File
 class AppConfig {
     val webConfig: WebConfig
     val telegramConfig: TelegramConfig
+    val gmailConfig: GmailConfig
 
     init {
         val env = getAppEnv()
         webConfig = WebConfig(env)
         telegramConfig = TelegramConfig(env)
+        gmailConfig = GmailConfig(env)
     }
 
     private fun getAppEnv(): Environment {

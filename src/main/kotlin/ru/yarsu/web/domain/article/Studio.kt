@@ -6,7 +6,7 @@ package ru.yarsu.web.domain.article
  * @property id Уникальный идентификатор студии.
  * @property name Название студии.
  * @property description Краткое описание студии.
- * @property photoUrl Ссылка на фотографию студии.
+ * @property avatarFileName Путь до фотографии.
  * @property roles Роли пользователей (владельцы и администраторы).
  * @property location Адрес расположения студии.
  * @property capacity Вместимость студии (количество человек).
@@ -20,7 +20,7 @@ data class Studio(
     val id: Long,
     val name: String,
     val description: String?,
-    val photoUrl: List<String>?,
+    val avatarFileName: List<String>?,
     val roles: PersonRole,
     val location: Location,
     val capacity: Int,

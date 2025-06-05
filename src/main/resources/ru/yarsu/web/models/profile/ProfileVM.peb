@@ -1,66 +1,78 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.ProfileVM" #}
 
-{% extends "../Layout.peb" %}
+    {% extends "../Layout.peb" %}
 
     {% block content %}
-
-<section style="background-color: #eee;">
+<section class="main-section bg-light">
     <div class="container py-5">
-
         <div class="row">
+            <!-- Левая колонка -->
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        <img src="{{ model.profile.avatarUrl }}" alt="Аватар пользователя"
-                             class="rounded-circle img-fluid" style="width: 150px;">
-                        <h5 class="my-3">{{ model.profile.name }}</h5>
+                        {% if model.user.images is not empty %}
+                            <img src="/img/{{ model.user.images[0] }}" alt="Аватар пользователя"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                        {% else %}
+                            <img src="/img/defaultProfile.webp" alt="Аватар по умолчанию"
+                                 class="rounded-circle img-fluid" style="width: 150px;">
+                        {% endif %}
+                        <h5 class="my-3">{{ model.user.name }}</h5>
                         <div class="d-flex justify-content-center mb-2">
-                            <a href="/edit/profile/edit-{{ model.profile.id }}" role="button" class="btn btn-primary">Редактировать</a>
-<!--                            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>-->
+                            <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-primary">Редактировать</a>
                         </div>
                     </div>
                 </div>
-
             </div>
+
+            <!-- Правая колонка -->
             <div class="col-lg-8">
-                <div class="card mb-4">
+                <div class="card mb-4 position-relative">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Имя</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.name }}</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Описание</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.description }}</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Инструменты</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.instruments | join(", ") }}</p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <p class="mb-0">Музыкальные стили</p>
-                            </div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">{{ model.profile.styles | join(", ") }}</p>
-                            </div>
+
+                        <!-- Telegram кнопка -->
+                        <div class="d-flex justify-content-end mb-3">
+                            {% if model.user.tg_id != 0 %}
+                                <span class="badge bg-success p-2">Telegram привязан</span>
+                            {% else %}
+                                <script async src="https://telegram.org/js/telegram-widget.js?22"
+                                        data-telegram-login="Zavcer_bot"
+                                        data-size="large"
+                                        data-userpic="false"
+                                        data-request-access="write"
+                                        data-auth-url="https://zavcer.ru.tuna.am/auth/attach-telegram?userId={{ model.user.id }}"
+                                        data-lang="ru">
+                                </script>
+                            {% endif %}
                         </div>
 
+                        <div class="row">
+                            <div class="col-sm-3"><p class="mb-0">Имя</p></div>
+                            <div class="col-sm-9"><p class="text-muted mb-0">{{ model.user.name }}</p></div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3"><p class="mb-0">Описание</p></div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    {{ model.user.description | default("Описание отсутствует") }}
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3"><p class="mb-0">Инструменты</p></div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">
+                                    {% if model.abilityNames is not empty %}
+                                        {{ model.abilityNames }}
+                                    {% else %}
+                                        Не указаны
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <hr>
                     </div>
                 </div>
             </div>
@@ -70,5 +82,6 @@
 {% endblock %}
 
 {% block script %}
-    <script src="/js/bootstrap.bundle.min.js"></script>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
 {% endblock %}

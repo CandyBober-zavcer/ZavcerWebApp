@@ -1,0 +1,56 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.auth.SignupVM" #}
+
+    {% block style %}
+        <link rel="stylesheet" href="/css/Auth.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    {% endblock %}
+
+{% block content %}
+<div class="bg-img">
+    <div class="content">
+        <header>Регистрация</header>
+        <form method="post" action="/auth/register" id="registerForm">
+            <div class="field">
+                <span class="fa fa-user"></span>
+                <input type="email" name="email" id="email" required placeholder="Email">
+            </div>
+            <div class="field space">
+                <span class="fa fa-lock"></span>
+                <input type="password" class="pass-key" name="password" id="password" required placeholder="Пароль">
+                <i class="show fas fa-eye"></i>
+            </div>
+
+            <div style="display:none;">
+                <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <input type="hidden" name="formGeneratedAt" id="formGeneratedAt">
+
+            <div class="button-wrapper">
+                <div class="field" style="width: auto;">
+                    <input type="submit" value="Зарегистрироваться">
+                </div>
+            </div>
+        </form>
+        <div class="signup">
+            Уже есть аккаунт? <a href="/auth/signin">Войти</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="../js/password-validation.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const tsField = document.getElementById("formGeneratedAt");
+    if (tsField) {
+        tsField.value = Date.now();
+    }
+});
+</script>
+{% endblock %}
+
+
+

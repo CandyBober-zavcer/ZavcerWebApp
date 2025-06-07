@@ -59,7 +59,7 @@ class UserData {
                 description = "Талантище",
                 address = "Тута",
                 district = DistrictEnums.DZERZHINSKY,
-                images = listOf(""),
+                images = emptyList(),
                 roles = setOf(RoleEnums.TEACHER)
             )
         )

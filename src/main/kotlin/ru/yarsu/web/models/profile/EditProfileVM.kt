@@ -20,4 +20,6 @@ class EditProfileVM(
     val allAbilityWithNames: List<Pair<String, String>> = allAbility.map {
         it.name to it.instrument.replaceFirstChar { ch -> ch.uppercaseChar() }
     }
+
+    val nowEpochSeconds: Long = System.currentTimeMillis() / 1000
 }

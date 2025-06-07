@@ -20,7 +20,7 @@
 
             {% if model.user.images[0] %}
             <div class="mb-2">
-                <img id="teacher-photo-preview" src="/img/{{ model.user.images[0] }}" alt="Фото преподавателя"
+                <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}" alt="Фото преподавателя"
                      class="img-thumbnail" style="max-width: 200px;">
             </div>
             {% else %}

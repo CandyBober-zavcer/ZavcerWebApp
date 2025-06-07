@@ -12,8 +12,8 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.profile.EditProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
-import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
-import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
+import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
+import ru.yarsu.web.utils.ImageUtils.saveImageAsPng
 
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -64,17 +64,18 @@ class EditProfilePostHandler(
         val updatedImages = existingUser.images.toMutableList()
 
         val newAvatar = imageLens(form)
-        if (newAvatar != null && newAvatar.content.available() > 0) {
-            val safeFilename = generateSafeWebpFilename("user", userId)
-            val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
-
-            Files.createDirectories(avatarPath.parent)
-            try {
-                saveImageAsWebP(newAvatar.content, avatarPath.toString())
-                updatedImages.add(safeFilename)
-                println("Аватар сохранён как WebP: $safeFilename")
-            } catch (e: Exception) {
-                println("Ошибка при сохранении WebP: ${e.message}")
+        if (newAvatar != null) {
+            val bytes = newAvatar.content.readAllBytes()
+            if (bytes.isNotEmpty()) {
+                val safeFilename = generateSafePngFilename("user", userId)
+                val avatarPath = Paths.get("public/image").resolve(safeFilename)
+                Files.createDirectories(avatarPath.parent)
+                try {
+                    saveImageAsPng(bytes.inputStream(), avatarPath.toString())
+                    updatedImages.add(0, safeFilename)
+                } catch (e: Exception) {
+                    println("Ошибка при сохранении Png: ${e.message}")
+                }
             }
         }
 

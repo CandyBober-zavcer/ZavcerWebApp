@@ -29,9 +29,6 @@ tasks.withType<JavaExec> {
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://dl.bintray.com/kotlin/exposed")
-    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -73,8 +70,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-money:$exposedVersion")
 
-    implementation("com.twelvemonkeys.imageio:imageio-core:3.10.1")
-    implementation("com.twelvemonkeys.imageio:imageio-webp:3.10.1")
+    implementation("org.sejda.imageio:webp-imageio:0.1.6")
 
     implementation("com.sun.mail:jakarta.mail:2.0.1")
     implementation("at.favre.lib:bcrypt:0.10.2")

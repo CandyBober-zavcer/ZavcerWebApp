@@ -18,16 +18,10 @@
         <div class="mb-3">
             <label for="photo" class="form-label">Фотография преподавателя</label>
 
-            {% if model.teacher.images[0] %}
-            <div class="mb-2">
-                <img id="teacher-photo-preview" src="/img/{{ model.teacher.images[0] }}" alt="Фото преподавателя"
-                     class="img-thumbnail" style="max-width: 200px;">
-            </div>
+            {% if model.teacher.images | length > 0 %}
+                <img src="/image/{{ model.teacher.images[0] }}" alt="Аватар преподавателя" class="img-thumbnail" style="max-width: 200px;">
             {% else %}
-            <div class="mb-2">
-                <img id="teacher-photo-preview" src="#" alt="Фото преподавателя"
-                     class="img-thumbnail d-none" style="max-width: 200px;">
-            </div>
+                <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию" class="img-thumbnail" style="max-width: 200px;">
             {% endif %}
 
             <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="previewPhoto(event)">

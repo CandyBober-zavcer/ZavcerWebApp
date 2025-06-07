@@ -12,7 +12,7 @@
     <div class="card shadow-lg">
         <div class="row g-0">
             <div class="col-md-5">
-                <img src="/img/{{ model.user.images[0] | default('defaultTeacher.webp') }}"
+                <img src="/image/{{ model.user.images[0] | default('defaultTeacher.webp') }}"
                      class="img-fluid rounded-start" alt="Фото пользователя">
             </div>
             <div class="col-md-7">

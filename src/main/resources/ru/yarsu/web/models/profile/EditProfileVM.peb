@@ -15,13 +15,8 @@
                         <form method="post" enctype="multipart/form-data">
                             <div class="row mb-4">
                                 <div class="col-md-4 text-center">
-                                    {% if model.user.images is not empty %}
-                                        <img src="/img/{{ model.user.images[0] }}" alt="Аватар пользователя"
-                                             class="rounded-circle img-fluid mb-3" style="width: 150px;">
-                                    {% else %}
-                                        <img src="/img/defaultProfile.webp" alt="Аватар по умолчанию"
-                                             class="rounded-circle img-fluid mb-3" style="width: 150px;">
-                                    {% endif %}
+                                    <img src="{{ model.user.images | length > 0 ? '/image/' ~ model.user.images[0] : '/img/defaultProfile.webp' }}" alt="Аватар пользователя"
+                                        class="rounded-circle img-fluid" style="width: 150px;">
                                     <div class="d-flex justify-content-center">
                                         <input type="file" class="form-control" id="avatar" name="avatar"
                                                accept="image/*" style="width: 200px;">

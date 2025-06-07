@@ -11,8 +11,8 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
-import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
-import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
+import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
+import ru.yarsu.web.utils.ImageUtils.saveImageAsPng
 
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -73,17 +73,17 @@ class EditTeacherPostHandler(
 
         val newPhoto = imageLens(form)
         if (newPhoto != null && newPhoto.content.available() > 0) {
-            val safeFilename = generateSafeWebpFilename("teacher", teacherId)
-            val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
+            val safeFilename = generateSafePngFilename("user", teacherId)
 
+            val avatarPath = Paths.get("public/image").resolve(safeFilename)
 
             Files.createDirectories(avatarPath.parent)
+
             try {
-                saveImageAsWebP(newPhoto.content, avatarPath.toString())
-                updatedImages.add(safeFilename)
-                println("Изображение сохранено как WebP: $safeFilename")
+                saveImageAsPng(newPhoto.content, avatarPath.toString())
+                updatedImages.add(0, safeFilename)
             } catch (e: Exception) {
-                println("Ошибка при сохранении WebP: ${e.message}")
+                e.printStackTrace()
             }
         }
 

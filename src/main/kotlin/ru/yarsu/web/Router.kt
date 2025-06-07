@@ -9,6 +9,7 @@ import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import ru.yarsu.config.AppConfig
+import ru.yarsu.db.SpotData
 import ru.yarsu.db.StudiosData
 import ru.yarsu.db.TeachersData
 import ru.yarsu.db.UserData
@@ -20,10 +21,8 @@ import ru.yarsu.web.handlers.PingHandler
 import ru.yarsu.web.handlers.auth.*
 import ru.yarsu.web.handlers.home.HomePageHandler
 import ru.yarsu.web.handlers.profile.*
-import ru.yarsu.web.handlers.studio.*
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
-//import ru.yarsu.web.handlers.upgrade.TeachersGetHandler
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -37,9 +36,8 @@ fun router(
     renderer: ContextAwareTemplateRenderer,
     htmlView: ContextAwareViewRender,
     config: AppConfig,
-    teachers: TeachersData,
-    studios: StudiosData,
     users: UserData,
+    spots: SpotData,
     sessionStorage: SessionStorage
 ): RoutingHttpHandler {
 
@@ -82,10 +80,6 @@ fun router(
             users = users,
         ),
 
-        "/studio/{id}" bind Method.GET to StudioGetHandler(htmlView, studios),
-//        "/studio" bind Method.POST to StudioPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
-        "/studios" bind Method.GET to StudiosGetHandler(htmlView, studios),
-
         "/upgrade/teacher/{id}" bind Method.GET to UpgradeUserToTeacherGetHandler(htmlView, users),
         "/upgrade/teacher/{id}" bind Method.POST to UpgradeUserToTeacherPostHandler(htmlView, users),
         "/upgrade/teachers" bind Method.GET to UpgradeListGetHandler(htmlView, users),
@@ -103,14 +97,5 @@ fun router(
 
         "/edit/teacher/delete-{id}" bind Method.GET to DeleteTeacherGetHandler(htmlView, users),
         "/edit/teacher/delete-{id}" bind Method.POST to DeleteTeacherPostHandler(users),
-
-        "/edit/studio/edit-{id}" bind Method.GET to EditStudioGetHandler(htmlView, studios),
-        "/edit/studio/edit-{id}" bind Method.POST to EditStudioPostHandler(htmlView, studios),
-
-        "/edit/studio/add" bind Method.GET to AddStudioGetHandler(htmlView),
-        "/edit/studio/add" bind Method.POST to AddStudioPostHandler(htmlView, studios),
-
-        "/edit/studio/delete-{id}" bind Method.GET to DeleteStudioGetHandler(htmlView, studios),
-        "/edit/studio/delete-{id}" bind Method.POST to DeleteStudioPostHandler(htmlView, studios),
     )
 }

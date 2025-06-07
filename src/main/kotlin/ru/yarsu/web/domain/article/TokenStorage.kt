@@ -9,22 +9,28 @@ class TokenStorage {
 
     fun generateConfirmationToken(userId: Int): String {
         val token = UUID.randomUUID().toString()
-        tokens[token] = ConfirmationToken(
-            token = token,
-            userId = userId,
-            expiresAt = System.currentTimeMillis() + 15 * 60 * 1000,
-            type = TokenType.CONFIRMATION
-        )
+        tokens[token] =
+            ConfirmationToken(
+                token = token,
+                userId = userId,
+                expiresAt = System.currentTimeMillis() + 15 * 60 * 1000,
+                type = TokenType.CONFIRMATION,
+            )
         return token
     }
 
-    fun saveResetPasswordToken(email: String, token: String, durationMinutes: Long = 60) {
-        tokens[token] = ConfirmationToken(
-            token = token,
-            email = email,
-            expiresAt = System.currentTimeMillis() + durationMinutes * 60 * 1000,
-            type = TokenType.RESET_PASSWORD
-        )
+    fun saveResetPasswordToken(
+        email: String,
+        token: String,
+        durationMinutes: Long = 60,
+    ) {
+        tokens[token] =
+            ConfirmationToken(
+                token = token,
+                email = email,
+                expiresAt = System.currentTimeMillis() + durationMinutes * 60 * 1000,
+                type = TokenType.RESET_PASSWORD,
+            )
     }
 
     fun findUserIdByToken(token: String): Int? {
@@ -35,7 +41,9 @@ class TokenStorage {
             confirmation.expiresAt > System.currentTimeMillis()
         ) {
             confirmation.userId
-        } else null
+        } else {
+            null
+        }
     }
 
     fun findEmailByResetToken(token: String): String? {
@@ -46,7 +54,9 @@ class TokenStorage {
             entry.expiresAt > System.currentTimeMillis()
         ) {
             entry.email
-        } else null
+        } else {
+            null
+        }
     }
 
     fun remove(token: String) {

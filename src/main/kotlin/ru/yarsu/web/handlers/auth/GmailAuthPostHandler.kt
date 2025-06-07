@@ -22,16 +22,19 @@ import java.util.concurrent.TimeUnit
 
 class GmailAuthPostHandler(
     private val users: UserData,
-    private val config: AppConfig
+    private val config: AppConfig,
 ) : HttpHandler {
-
     private val clientId = config.gmailConfig.clientId
-    private val jwkProvider = JwkProviderBuilder(URL("https://www.googleapis.com/oauth2/v3/certs"))
-        .cached(10, 24, TimeUnit.HOURS)
-        .build()
+    val jwkProvider =
+        JwkProviderBuilder(
+            java.net.URI("https://www.googleapis.com/oauth2/v3/certs").toURL()
+        )
+            .cached(10, 24, TimeUnit.HOURS)
+            .build()
 
-    override fun invoke(request: Request): Response {
-        return try {
+
+    override fun invoke(request: Request): Response =
+        try {
             val body = request.bodyString()
             val credential = extractToken(body)
             val decodedJWT = verifyAndDecode(credential)
@@ -55,8 +58,6 @@ class GmailAuthPostHandler(
             e.printStackTrace()
             Response(Status.BAD_REQUEST).body("Ошибка авторизации через Google: ${e.message}")
         }
-    }
-
 
     private fun extractToken(body: String): String {
         val mapper = jacksonObjectMapper()
@@ -68,10 +69,12 @@ class GmailAuthPostHandler(
         val decoded = JWT.decode(token)
         val jwk = jwkProvider.get(decoded.keyId)
         val algorithm = Algorithm.RSA256(jwk.publicKey as java.security.interfaces.RSAPublicKey, null)
-        val verifier = JWT.require(algorithm)
-            .withAudience(clientId)
-            .acceptLeeway(5)
-            .build()
+        val verifier =
+            JWT
+                .require(algorithm)
+                .withAudience(clientId)
+                .acceptLeeway(5)
+                .build()
 
         val verified = verifier.verify(token)
         val issuer = verified.issuer
@@ -82,7 +85,10 @@ class GmailAuthPostHandler(
         return verified
     }
 
-    private fun createAuthCookie(user: UserModel, authSalt: String): Cookie {
+    private fun createAuthCookie(
+        user: UserModel,
+        authSalt: String,
+    ): Cookie {
         val rawData = "${user.id}:${user.login}"
         val signature = AuthUtils.hmacSign(rawData, authSalt)
 
@@ -93,10 +99,12 @@ class GmailAuthPostHandler(
             httpOnly = true,
             secure = true,
             sameSite = SameSite.Strict,
-            expires = ZonedDateTime.of(
-                LocalDateTime.now().plusDays(7),
-                ZoneId.of("Europe/Moscow")
-            ).toInstant()
+            expires =
+                ZonedDateTime
+                    .of(
+                        LocalDateTime.now().plusDays(7),
+                        ZoneId.of("Europe/Moscow"),
+                    ).toInstant(),
         )
     }
 }

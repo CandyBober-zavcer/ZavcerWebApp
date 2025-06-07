@@ -15,10 +15,9 @@ class AppConfig {
         gmailConfig = GmailConfig(env)
     }
 
-    private fun getAppEnv(): Environment {
-        return Environment.from(File("data/app.properties")) overrides
-                Environment.ENV overrides
-                Environment.JVM_PROPERTIES overrides
-                Environment.EMPTY
-    }
+    private fun getAppEnv(): Environment =
+        Environment.from(File("data/app.properties")) overrides
+            Environment.ENV overrides
+            Environment.JVM_PROPERTIES overrides
+            Environment.EMPTY
 }

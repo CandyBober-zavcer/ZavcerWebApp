@@ -1,0 +1,26 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.spot.SpotVM" #}
+    {% extends "../Layout.peb" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ model.spot.name | escape }}</h2>
+    <p class="text-muted">{{ model.spot.address | escape }}</p>
+    <p><strong>Район:</strong> {{ model.spot.district.district }}</p>
+    <p><strong>Цена за час:</strong> {{ model.spot.price }} ₽</p>
+    <p><strong>Описание:</strong> {{ model.spot.description | escape }}</p>
+
+    <ul>
+        <li>Есть ударная установка: {{ model.spot.hasDrums ? "Да" : "Нет" }}</li>
+        <li>Гитарных усилителей: {{ model.spot.guitarAmps }}</li>
+        <li>Басовых усилителей: {{ model.spot.bassAmps }}</li>
+    </ul>
+
+    {% if model.spot.images != null and model.spot.images.size > 0 %}
+        <div class="mt-4 d-flex gap-2 flex-wrap">
+            {% for file in model.spot.images %}
+                <img src="/image/{{ file }}" alt="Фото" class="img-thumbnail" style="max-width: 200px;">
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

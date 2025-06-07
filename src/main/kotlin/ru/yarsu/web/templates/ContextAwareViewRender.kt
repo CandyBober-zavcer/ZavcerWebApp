@@ -38,16 +38,16 @@ data class ContextAwareViewRender(
         return this.copy(contextLenses = newContextLenses)
     }
 
-    operator fun invoke(request: Request): BiDiBodyLens<ViewModel> {
-        return baseBodyLensSpec.map<ViewModel>(
-            { _: String ->
-                throw UnsupportedOperationException("Cannot parse a ViewModel")
-            },
-            { viewModel: ViewModel ->
-                templateRenderer(extractContext(request), viewModel)
-            },
-        ).toLens()
-    }
+    operator fun invoke(request: Request): BiDiBodyLens<ViewModel> =
+        baseBodyLensSpec
+            .map<ViewModel>(
+                { _: String ->
+                    throw UnsupportedOperationException("Cannot parse a ViewModel")
+                },
+                { viewModel: ViewModel ->
+                    templateRenderer(extractContext(request), viewModel)
+                },
+            ).toLens()
 
     private fun extractContext(request: Request): Map<String, Any?> =
         contextLenses.mapValues {

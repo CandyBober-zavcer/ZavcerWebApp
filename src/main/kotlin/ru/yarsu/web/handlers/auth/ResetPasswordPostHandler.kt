@@ -7,28 +7,30 @@ import ru.yarsu.web.domain.article.TokenStorage
 
 class ResetPasswordPostHandler(
     private val userData: UserData,
-    private val tokenStorage: TokenStorage
+    private val tokenStorage: TokenStorage,
 ) : HttpHandler {
-
     private val tokenLens = FormField.nonEmptyString().required("token")
     private val passwordLens = FormField.nonEmptyString().required("password")
     private val generatedAtLens = FormField.long().required("formGeneratedAt")
     private val honeypotLens = FormField.string().defaulted("website", "")
 
-    private val formLens = Body.webForm(
-        Validator.Strict,
-        tokenLens,
-        passwordLens,
-        generatedAtLens,
-        honeypotLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .webForm(
+                Validator.Strict,
+                tokenLens,
+                passwordLens,
+                generatedAtLens,
+                honeypotLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val form = try {
-            formLens(request)
-        } catch (e: LensFailure) {
-            return Response(Status.BAD_REQUEST).body("Неверные данные формы.")
-        }
+        val form =
+            try {
+                formLens(request)
+            } catch (e: LensFailure) {
+                return Response(Status.BAD_REQUEST).body("Неверные данные формы.")
+            }
 
         val honeypot = honeypotLens(form)
         if (honeypot.isNotBlank()) {
@@ -47,11 +49,13 @@ class ResetPasswordPostHandler(
         val token = tokenLens(form)
         val newPassword = passwordLens(form)
 
-        val email = tokenStorage.findEmailByResetToken(token)
-            ?: return Response(Status.BAD_REQUEST).body("Ссылка устарела или недействительна.")
+        val email =
+            tokenStorage.findEmailByResetToken(token)
+                ?: return Response(Status.BAD_REQUEST).body("Ссылка устарела или недействительна.")
 
-        val user = userData.getByEmail(email)
-            ?: return Response(Status.NOT_FOUND).body("Пользователь не найден.")
+        val user =
+            userData.getByEmail(email)
+                ?: return Response(Status.NOT_FOUND).body("Пользователь не найден.")
 
         userData.updatePassword(user.id, newPassword)
         tokenStorage.remove(token)

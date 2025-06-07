@@ -2,6 +2,8 @@ package ru.yarsu.db
 
 import ru.yarsu.web.domain.article.Spot
 import ru.yarsu.web.domain.enums.DistrictEnums
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class SpotData {
     private val spots = mutableListOf<Spot>()
@@ -23,8 +25,8 @@ class SpotData {
                 address = "Ярославль, ул. Музыкальная, 1",
                 district = DistrictEnums.KIROVSKY,
                 images = listOf("studio1.webp", "studio2.webp"),
-                owners = listOf(1)
-            )
+                owners = listOf(1),
+            ),
         )
         add(
             Spot(
@@ -37,8 +39,8 @@ class SpotData {
                 address = "Ярославль, пр. Ленина, 45",
                 district = DistrictEnums.LENINSKY,
                 images = listOf("studio3.jpg"),
-                owners = listOf(2)
-            )
+                owners = listOf(2),
+            ),
         )
     }
 
@@ -48,7 +50,10 @@ class SpotData {
         return newSpot
     }
 
-    fun update(id: Int, updatedSpot: Spot): Boolean {
+    fun update(
+        id: Int,
+        updatedSpot: Spot,
+    ): Boolean {
         val index = spots.indexOfFirst { it.id == id }
         return if (index != -1) {
             spots[index] = updatedSpot.copy(id = id)
@@ -59,14 +64,30 @@ class SpotData {
     }
 
     fun deleteById(id: Int): Boolean {
-        return spots.removeIf { it.id == id }
+        val spot = spots.find { it.id == id } ?: return false
+        deleteImages(spot.images)
+        return spots.remove(spot)
     }
 
-    fun getById(id: Int): Spot? {
-        return spots.find { it.id == id }
-    }
+    fun getById(id: Int): Spot? = spots.find { it.id == id }
 
-    fun getAll(): List<Spot> {
-        return spots.toList()
+    fun getAll(): List<Spot> = spots.toList()
+
+    fun getNextId(): Int = nextId
+
+    private fun deleteImages(images: List<String>) {
+        val basePath = Paths.get("public/img")
+        images
+            .filterNot { it == "defaultStudio.jpg" }
+            .forEach { image ->
+                val path = basePath.resolve(image)
+                if (Files.exists(path)) {
+                    try {
+                        Files.delete(path)
+                    } catch (e: Exception) {
+                        println("Ошибка при удалении файла: $path — ${e.message}")
+                    }
+                }
+            }
     }
 }

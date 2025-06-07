@@ -8,4 +8,3 @@ import ru.yarsu.web.domain.models.telegram.TelegramUser
 val contexts = RequestContexts()
 val TelegramUserLens = RequestContextKey.optional<TelegramUser>(contexts, "telegramUser")
 val UserModelLens = RequestContextKey.optional<UserModel>(contexts, "userModel")
-

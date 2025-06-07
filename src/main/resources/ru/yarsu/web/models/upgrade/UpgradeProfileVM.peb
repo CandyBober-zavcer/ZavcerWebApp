@@ -12,9 +12,19 @@
     <div class="card shadow-lg">
         <div class="row g-0">
             <div class="col-md-5">
-                <img src="/image/{{ model.user.images[0] | default('defaultTeacher.webp') }}"
-                     class="img-fluid rounded-start" alt="Фото пользователя">
+            {% if model.user.images is not empty %}
+                <div class="mb-2">
+                    <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}" alt="Фото преподавателя"
+                         class="img-thumbnail" style="max-width: 200px;">
+                </div>
+            {% else %}
+                <div class="mb-2">
+                    <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                         class="img-thumbnail" style="max-width: 200px;">
+                </div>
+            {% endif %}
             </div>
+
             <div class="col-md-7">
                 <div class="card-body">
                     <h2 class="card-title mb-2">{{ model.user.name }}</h2>

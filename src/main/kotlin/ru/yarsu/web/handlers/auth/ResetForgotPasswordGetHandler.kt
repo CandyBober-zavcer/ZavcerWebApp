@@ -5,7 +5,7 @@ import ru.yarsu.web.models.auth.ResetForgotPasswordGetVM
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 
 class ResetForgotPasswordGetHandler(
-    private val renderer: ContextAwareTemplateRenderer
+    private val renderer: ContextAwareTemplateRenderer,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
         val viewModel = ResetForgotPasswordGetVM()

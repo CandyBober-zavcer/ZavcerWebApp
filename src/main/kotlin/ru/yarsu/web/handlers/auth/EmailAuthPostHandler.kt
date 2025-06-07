@@ -15,28 +15,30 @@ import java.time.ZonedDateTime
 
 class EmailAuthPostHandler(
     private val users: UserData,
-    private val config: AppConfig
+    private val config: AppConfig,
 ) : HttpHandler {
-
     private val loginLens = FormField.nonEmptyString().required("login")
     private val passwordLens = FormField.nonEmptyString().required("password")
     private val generatedAtLens = FormField.long().required("formGeneratedAt")
     private val honeypotLens = FormField.string().defaulted("website", "")
 
-    private val formLens = Body.webForm(
-        Validator.Strict,
-        loginLens,
-        passwordLens,
-        generatedAtLens,
-        honeypotLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .webForm(
+                Validator.Strict,
+                loginLens,
+                passwordLens,
+                generatedAtLens,
+                honeypotLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val form = try {
-            formLens(request)
-        } catch (e: LensFailure) {
-            return Response(Status.BAD_REQUEST).body("Неверные данные формы")
-        }
+        val form =
+            try {
+                formLens(request)
+            } catch (e: LensFailure) {
+                return Response(Status.BAD_REQUEST).body("Неверные данные формы")
+            }
 
         val honeypot = honeypotLens(form)
         if (honeypot.isNotBlank()) {
@@ -55,8 +57,9 @@ class EmailAuthPostHandler(
         val login = loginLens(form)
         val password = passwordLens(form)
 
-        val user = login.let { users.findByLogin(it) }
-            ?: return Response(Status.UNAUTHORIZED).body("Пользователь не найден")
+        val user =
+            login.let { users.findByLogin(it) }
+                ?: return Response(Status.UNAUTHORIZED).body("Пользователь не найден")
 
         if (!users.verifyPassword(user, password)) {
             return Response(Status.UNAUTHORIZED).body("Неверный пароль")
@@ -67,7 +70,10 @@ class EmailAuthPostHandler(
             .cookie(createAuthCookie(user, config.webConfig.authSalt))
     }
 
-    private fun createAuthCookie(user: UserModel, salt: String): Cookie {
+    private fun createAuthCookie(
+        user: UserModel,
+        salt: String,
+    ): Cookie {
         val login = user.login ?: "unknown"
         val rawData = "${user.id}:$login"
         val signature = AuthUtils.hmacSign(rawData, salt)
@@ -79,7 +85,7 @@ class EmailAuthPostHandler(
             httpOnly = true,
             secure = true,
             sameSite = SameSite.Strict,
-            expires = ZonedDateTime.of(LocalDateTime.now().plusDays(7), ZoneId.of("Europe/Moscow")).toInstant()
+            expires = ZonedDateTime.of(LocalDateTime.now().plusDays(7), ZoneId.of("Europe/Moscow")).toInstant(),
         )
     }
 }

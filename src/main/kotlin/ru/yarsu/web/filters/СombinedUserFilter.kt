@@ -11,25 +11,27 @@ import ru.yarsu.web.domain.models.telegram.AuthUtils
 fun combinedUserFilter(
     authSalt: String,
     userData: UserData,
-    sessionStorage: SessionStorage
-): Filter = Filter { next ->
-    { request ->
-        // пытаемся достать user из Tg
-        val telegramUser = AuthUtils.getUserFromCookie(request, authSalt, userData)
+    sessionStorage: SessionStorage,
+): Filter =
+    Filter { next ->
+        { request ->
+            // пытаемся достать user из Tg
+            val telegramUser = AuthUtils.getUserFromCookie(request, authSalt, userData)
 
-        // пытаемся достать user из сессии
-        val sessionToken = request.cookie("session")?.value
-        val sessionUser = sessionToken?.let { sessionStorage.getUserId(it) }?.let { userData.getById(it) }
+            // пытаемся достать user из сессии
+            val sessionToken = request.cookie("session")?.value
+            val sessionUser = sessionToken?.let { sessionStorage.getUserId(it) }?.let { userData.getById(it) }
 
-        // выбираем любого найденного (например, telegram > session, или наоборот)
-        val finalUser = telegramUser ?: sessionUser
+            // выбираем любого найденного (например, telegram > session, или наоборот)
+            val finalUser = telegramUser ?: sessionUser
 
-        val updatedRequest = if (finalUser != null) {
-            request.with(UserModelLens of finalUser)
-        } else {
-            request
+            val updatedRequest =
+                if (finalUser != null) {
+                    request.with(UserModelLens of finalUser)
+                } else {
+                    request
+                }
+
+            next(updatedRequest)
         }
-
-        next(updatedRequest)
     }
-}

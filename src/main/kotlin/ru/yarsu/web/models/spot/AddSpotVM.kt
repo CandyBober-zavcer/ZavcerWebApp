@@ -7,7 +7,7 @@ import ru.yarsu.web.domain.enums.DistrictEnums
 
 data class AddSpotVM(
     val spot: Spot,
-    val form: MultipartForm
+    val form: MultipartForm,
 ) : ViewModel {
     val allDistricts = DistrictEnums.entries
 }

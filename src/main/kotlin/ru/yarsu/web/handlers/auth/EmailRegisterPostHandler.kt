@@ -9,28 +9,30 @@ import ru.yarsu.web.domain.models.email.EmailService
 class EmailRegisterPostHandler(
     private val userData: UserData,
     private val tokenStorage: TokenStorage,
-    private val emailService: EmailService
+    private val emailService: EmailService,
 ) : HttpHandler {
-
     private val loginLens = FormField.nonEmptyString().required("email")
     private val passwordLens = FormField.nonEmptyString().required("password")
     private val generatedAtLens = FormField.long().required("formGeneratedAt")
     private val honeypotLens = FormField.string().defaulted("website", "")
 
-    private val formLens = Body.webForm(
-        Validator.Strict,
-        loginLens,
-        passwordLens,
-        generatedAtLens,
-        honeypotLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .webForm(
+                Validator.Strict,
+                loginLens,
+                passwordLens,
+                generatedAtLens,
+                honeypotLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val form = try {
-            formLens(request)
-        } catch (e: LensFailure) {
-            return Response(Status.BAD_REQUEST).body("Неверные данные формы")
-        }
+        val form =
+            try {
+                formLens(request)
+            } catch (e: LensFailure) {
+                return Response(Status.BAD_REQUEST).body("Неверные данные формы")
+            }
 
         val honeypot = honeypotLens(form)
         if (honeypot.isNotBlank()) {
@@ -53,18 +55,19 @@ class EmailRegisterPostHandler(
             return Response(Status.CONFLICT).body("Пользователь с таким email уже существует")
         }
 
-        val newUser = userData.add(
-            UserModel(
-                login = login,
-                password = password,
-                isConfirmed = false
+        val newUser =
+            userData.add(
+                UserModel(
+                    login = login,
+                    password = password,
+                    isConfirmed = false,
+                ),
             )
-        )
-
 
         val token = tokenStorage.generateConfirmationToken(newUser.id)
         val confirmationLink = "https://zavcer.ru.tuna.am/auth/confirm?token=$token"
-        val message = """
+        val message =
+            """
             <html>
             <body>
                 <p>Здравствуйте!</p>
@@ -73,7 +76,7 @@ class EmailRegisterPostHandler(
                 <p>Срок действия ссылки: 15 минут.</p>
             </body>
             </html>
-        """.trimIndent()
+            """.trimIndent()
 
         emailService.send(login, "Подтверждение регистрации", message)
 

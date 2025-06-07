@@ -21,7 +21,7 @@ data class Teacher(
     val roles: PersonRole,
     val address: Location,
     val schedule: Schedule,
-    val instruments: List<Instrument>
+    val instruments: List<Instrument>,
 )
 
 /**
@@ -36,5 +36,5 @@ data class ExperienceInfo(
     val experienceYears: Int,
     val education: String,
     val styles: List<MusicStyle>,
-    val minStudentAge: Int
+    val minStudentAge: Int,
 )

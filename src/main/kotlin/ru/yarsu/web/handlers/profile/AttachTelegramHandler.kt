@@ -11,7 +11,6 @@ class AttachTelegramHandler(
     private val jsonLogger: JsonLogger,
     private val botToken: String,
 ) : HttpHandler {
-
     override fun invoke(request: Request): Response {
         return try {
             val body = request.bodyString()
@@ -27,5 +26,4 @@ class AttachTelegramHandler(
             Response(Status.BAD_REQUEST).body("Ошибка при привязке Telegram: ${e.message}")
         }
     }
-
 }

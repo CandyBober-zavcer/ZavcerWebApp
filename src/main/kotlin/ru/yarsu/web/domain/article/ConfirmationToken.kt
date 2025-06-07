@@ -5,5 +5,5 @@ data class ConfirmationToken(
     val userId: Int? = null,
     val email: String? = null,
     val expiresAt: Long, // System.currentTimeMillis() + 15 * 60 * 1000
-    val type: TokenType
+    val type: TokenType,
 )

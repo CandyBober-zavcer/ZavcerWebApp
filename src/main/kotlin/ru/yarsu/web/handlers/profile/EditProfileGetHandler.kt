@@ -14,32 +14,35 @@ class EditProfileGetHandler(
     private val htmlView: ContextAwareViewRender,
     private val users: UserData,
 ) : HttpHandler {
-
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
     private val abilityLens = MultipartFormField.multi.required("ability")
 
-    private val formLens = Body.multipartForm(
-        Validator.Feedback,
-        nameLens,
-        descriptionLens,
-        abilityLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .multipartForm(
+                Validator.Feedback,
+                nameLens,
+                descriptionLens,
+                abilityLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val userId = request.path("id")?.toIntOrNull()
-            ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
+        val userId =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
 
-        val user = users.getById(userId)
-            ?: return Response(NOT_FOUND).body("Профиль не найден")
+        val user =
+            users.getById(userId)
+                ?: return Response(NOT_FOUND).body("Профиль не найден")
 
         val allAbility = AbilityEnums.entries
 
-        val filledForm = MultipartForm()
-            .with(nameLens of user.name)
-            .with(descriptionLens of user.description)
-
+        val filledForm =
+            MultipartForm()
+                .with(nameLens of user.name)
+                .with(descriptionLens of user.description)
 
         val viewModel =
             EditProfileVM(

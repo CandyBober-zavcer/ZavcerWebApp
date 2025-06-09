@@ -151,7 +151,18 @@ img {
 }
 
 ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* или contain — в зависимости от желаемого эффекта */
+  border-radius: 50px; /* если нужен радиус */
+}
+
+.calendar{
+    max-width: 350px;
 }

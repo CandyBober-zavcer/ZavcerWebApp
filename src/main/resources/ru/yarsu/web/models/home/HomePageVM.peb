@@ -22,7 +22,7 @@
                 <h1 class="bold-text">Найди свой звук!</h1>
             </div>
             <div class="buttons">
-                <button class="btn btn-outline"><a href="/studios">реп. точки</a></button>
+                <button class="btn btn-outline"><a href="/spots">реп. точки</a></button>
                 <button class="btn btn-red"> <a href="/teachers">репетиторы</a></button>
             </div>
         </div>
@@ -31,7 +31,7 @@
         <h2><a href="/">CandyБобер</a></h2>
         <nav>
             <ul>
-                <li><a href="/studios">Реп точки</a></li>
+                <li><a href="/spots">Реп точки</a></li>
                 <li><a href="/teachers">Преподаватели</a></li>
                 <li><a href="/profile/1"><img src="../img/user-icon.png" alt="Профиль"></a></li>
             </ul>
@@ -43,7 +43,7 @@
                 <h2>Репетиционные точки</h2>
             </div>
             <p>Крутейшие реп точки по всему Ярославлю !</p>
-            <button class="btn btn-outline"><a href="/studios">Арендовать</a></button>
+            <button class="btn btn-outline"><a href="/spots">Арендовать</a></button>
         </div>
         <img src="../img/guitar.jpg" alt="">
 

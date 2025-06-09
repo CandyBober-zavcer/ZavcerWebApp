@@ -1,0 +1,48 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.spot.DeleteSpotVM" #}
+
+    {% extends "../Layout.peb" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Подтверждение удаления репетиционной точки</h2>
+    <form method="post">
+        <input type="hidden" name="spotId" value="{{ model.spot.id }}">
+
+        {% if model.spot.images != null and model.spot.images.size > 0 %}
+            <div class="mb-3">
+                <img src="/image/{{ model.spot.images[0] }}" alt="Фото точки" class="img-fluid rounded" style="max-width: 300px;">
+            </div>
+        {% else %}
+            <div class="mb-3">
+                <img src="/img/defaultStudio.jpg" alt="Фото точки по умолчанию" class="img-fluid rounded" style="max-width: 300px;">
+            </div>
+        {% endif %}
+
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="mb-3">
+                    <h5>Информация о точке {{ model.spot.id }}:</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Название: {{ model.spot.name }}</li>
+                        <li class="list-group-item">Адрес: {{ model.spot.location.address }}</li>
+                        {% if model.spot.price is not null %}
+                        <li class="list-group-item">Цена за час: {{ model.spot.price }} ₽</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">Внимание!</h4>
+                    <p>Вы собираетесь удалить репетиционную точку. Это действие невозможно отменить.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="/spots" class="btn btn-secondary">Отмена</a>
+            <button type="submit" class="btn btn-danger">Да, удалить точку</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

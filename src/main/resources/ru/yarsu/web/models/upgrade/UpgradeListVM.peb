@@ -14,8 +14,17 @@
                 <div class="col-md-4 mb-4">
                     <div class="card-body">
                         <div class="col-md-5">
-                            <img src="/img/{{ teacher.images[0] | default('defaultTeacher.webp') }}"
-                            class="img-fluid rounded-start" alt="Фото пользователя">
+                        {% if teacher.images is not empty %}
+                            <div class="mb-2">
+                                <img id="teacher-photo-preview" src="/image/{{ teacher.images[0] }}" alt="Фото преподавателя"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% else %}
+                            <div class="mb-2">
+                                <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% endif %}
                         </div>
                         <h5 class="card-title">{{ teacher.name }}</h5>
                         <p class="card-text">{{ teacher.description }}</p>

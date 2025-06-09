@@ -1,49 +1,36 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.EditTeacherVM" #}
-{% extends "../Layout.peb" %}
-
-{% block style %}
-<link href="/css/Studio.css" rel="stylesheet">
-{% endblock %}
+    {% extends "../Layout.peb" %}
 
 {% block content %}
 <div class="container mt-5">
-    <form method="post" id="bookingForm" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data">
 
         <div class="mb-3">
             <label for="fullName" class="form-label">Полное имя</label>
-            <input type="text" value="{{ model.teacher.name }} " class="form-control" id="name" name="name" required>
+            <input type="text" value="{{ model.teacher.name }} "class="form-control" id="name" name="name" required>
         </div>
 
         <div class="mb-3">
             <label for="shortDescription" class="form-label">Краткое описание</label>
-            <input type="text" value="{{ model.teacher.description }}" class="form-control" id="description"
-                name="description" required>
+            <input type="text" value="{{ model.teacher.description }}" class="form-control" id="description" name="description" required>
         </div>
 
         <div class="mb-3">
             <label for="photo" class="form-label">Фотография преподавателя</label>
 
-            {% if model.teacher.images[0] %}
-            <div class="mb-2">
-                <img id="teacher-photo-preview" src="/img/{{ model.teacher.images[0] }}" alt="Фото преподавателя"
-                    class="img-thumbnail" style="max-width: 200px;">
-            </div>
+            {% if model.teacher.images | length > 0 %}
+                <img src="/image/{{ model.teacher.images[0] }}" alt="Аватар преподавателя" class="img-thumbnail" style="max-width: 200px;">
             {% else %}
-            <div class="mb-2">
-                <img id="teacher-photo-preview" src="#" alt="Фото преподавателя" class="img-thumbnail d-none"
-                    style="max-width: 200px;">
-            </div>
+                <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию" class="img-thumbnail" style="max-width: 200px;">
             {% endif %}
 
-            <input type="file" class="form-control" id="photo" name="photo" accept="image/*"
-                onchange="previewPhoto(event)">
+            <input type="file" class="form-control" id="photo" name="photo" accept="image/*" onchange="previewPhoto(event)">
         </div>
 
 
         <div class="mb-3">
             <label for="address" class="form-label">Адрес проведения занятий</label>
-            <input type="text" class="form-control" id="address" name="address" required
-                value="{{ model.teacher.address }}">
+            <input type="text" class="form-control" id="address" name="address" required value="{{ model.teacher.address }}">
         </div>
 
         <div class="mb-3">
@@ -53,24 +40,22 @@
 
         <div class="mb-3">
             <label for="experience" class="form-label">Опыт преподавания (в годах)</label>
-            <input type="number" class="form-control" id="experience" name="experience" min="0" required
-                value="{{ model.teacher.experience }}">
+            <input type="number" class="form-control" id="experience" name="experience" min="0" required value="{{ model.teacher.experience }}">
         </div>
 
         <div class="mb-3">
             <label for="price" class="form-label">Стоимость за час</label>
-            <input type="number" class="form-control" id="price" name="price" min="0" required
-                value="{{ model.teacher.price }}">
+            <input type="number" class="form-control" id="price" name="price" min="0" required value="{{ model.teacher.price }}">
         </div>
 
         <div class="mb-3">
             <label for="district" class="form-label">Район</label>
             <select class="form-select" id="district" name="district" required>
                 {% for district in model.allDistricts %}
-                <option value="{{ district.name }}" {% if district.name==model.teacher.district.name %}selected{% endif
-                    %}>
-                    {{ district.district }}
-                </option>
+                    <option value="{{ district.name }}"
+                        {% if district.name == model.teacher.district.name %}selected{% endif %}>
+                        {{ district.district }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
@@ -79,62 +64,47 @@
             <label class="form-label">Инструменты</label>
             <div class="d-flex flex-wrap">
                 {% for ability in model.allAbilityWithNames %}
-                <div class="form-check me-3 mb-2">
-                    <input class="form-check-input" type="checkbox" id="ability-{{ ability.first }}" name="abilities"
-                        value="{{ ability.first }}" {% if model.abilitySelected[ability.first] %}checked{% endif %}>
-                    <label class="form-check-label" for="ability-{{ ability.first }}">
-                        {{ ability.second }}
-                    </label>
-                </div>
+                    <div class="form-check me-3 mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="ability-{{ ability.first }}"
+                               name="abilities"
+                               value="{{ ability.first }}"
+                               {% if model.abilitySelected[ability.first] %}checked{% endif %}>
+                        <label class="form-check-label" for="ability-{{ ability.first }}">
+                            {{ ability.second }}
+                        </label>
+                    </div>
                 {% endfor %}
             </div>
         </div>
+
         <div class="mb-3">
-            <label class="form-label">Выберите дату</label>
-            <div class="calendar">
-                <div class="calendar-header">
-                    <button class="calendar-nav" id="prevMonth">❮</button>
-                    <div class="calendar-title" id="currentMonthYear"></div>
-                    <button class="calendar-nav" id="nextMonth">❯</button>
-                </div>
-                <div class="calendar-weekdays">
-                    <div>Пн</div>
-                    <div>Вт</div>
-                    <div>Ср</div>
-                    <div>Чт</div>
-                    <div>Пт</div>
-                    <div>Сб</div>
-                    <div>Вс</div>
-                </div>
-                <div class="calendar-days" id="calendarDays"></div>
+            <label class="form-label">Дни работы</label>
+            {% for day in ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="{{ day }}" name="workingDays" value="{{ day }}">
+                <label class="form-check-label" for="{{ day }}">{{ day|capitalize }}</label>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="startTime" class="form-label">Время открытия</label>
+                <input type="time" class="form-control" id="startTime" name="startTime" required>
+            </div>
+            <div class="col-md-6">
+                <label for="endTime" class="form-label">Время закрытия</label>
+                <input type="time" class="form-control" id="endTime" name="endTime" required>
             </div>
         </div>
-
-
-        <!-- Таймпикер -->
-        <div class="time-picker">
-            <label class="form-label">Выберите время</label>
-            <div class="time-slots"></div>
-            <div class="reset-time">Сбросить выбор времени</div>
-        </div>
-
-        <!-- Сводка бронирования -->
-        <div class="booking-summary">
-            <h6>Ваше бронирование:</h6>
-            <p>Дата: <span class="summary-date"></span></p>
-            <p>Время: <span class="summary-time"></span></p>
-            <p>Стоимость: <span class="summary-price"></span> руб.</p>
-        </div>
-
-
-        <button type="button" id="saveScheduleBtn" class="btn btn-secondary">Сохранить расписание</button>
-        <button type="submit" class="btn btn-primary">Сохранить данные преподавателя</button>
-
+        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </div>
 {% endblock %}
 
 {% block script %}
-
-<script src="/js/EditDateAndTime.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <script src="../js/Teacher.js"></script>
 {% endblock %}

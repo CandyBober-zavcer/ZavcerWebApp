@@ -8,40 +8,46 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class UpgradeUserToTeacherGetHandler(private val htmlView: ContextAwareViewRender, private val users: UserData) :
-    HttpHandler {
-
+class UpgradeUserToTeacherGetHandler(
+    private val htmlView: ContextAwareViewRender,
+    private val users: UserData,
+) : HttpHandler {
     private val pathLens = Path.long().of("id")
 
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
 
-    private val formLens = Body.multipartForm(
-        Validator.Feedback,
-        nameLens,
-        descriptionLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .multipartForm(
+                Validator.Feedback,
+                nameLens,
+                descriptionLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val userId = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST).body("Некорректный ID пользователя")
+        val userId =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(Status.BAD_REQUEST).body("Некорректный ID пользователя")
 
-        val user = users.getUserIfNotTeacher(userId)
-            ?: return Response(Status.NOT_FOUND).body("Пользователь не найден или не может стать учителем")
+        val user =
+            users.getUserIfNotTeacher(userId)
+                ?: return Response(Status.NOT_FOUND).body("Пользователь не найден или не может стать учителем")
 
         val allAbility = AbilityEnums.entries
 
-        val filledForm = MultipartForm()
-            .with(nameLens of user.name)
-            .with(descriptionLens of user.description)
+        val filledForm =
+            MultipartForm()
+                .with(nameLens of user.name)
+                .with(descriptionLens of user.description)
 
-        val viewModel = UpgradeUserToTeacherVM(
-            user,
-            allAbility,
-            filledForm
-        )
+        val viewModel =
+            UpgradeUserToTeacherVM(
+                user,
+                allAbility,
+                filledForm,
+            )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
-
 }

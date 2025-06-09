@@ -11,17 +11,15 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
-import ru.yarsu.web.utils.ImageUtils.generateSafeWebpFilename
-import ru.yarsu.web.utils.ImageUtils.saveImageAsWebP
-
+import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
+import ru.yarsu.web.utils.ImageUtils.saveImageAsPng
 import java.nio.file.Files
 import java.nio.file.Paths
 
 class EditTeacherPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val teachers: UserData
+    private val teachers: UserData,
 ) : HttpHandler {
-
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
@@ -31,34 +29,39 @@ class EditTeacherPostHandler(
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
 
-    private val formLens = Body.multipartForm(
-        Validator.Feedback,
-        nameLens,
-        descriptionLens,
-        imageLens,
-        addressLens,
-        experienceLens,
-        phoneLens,
-        priceLens
-    ).toLens()
+    private val formLens =
+        Body
+            .multipartForm(
+                Validator.Feedback,
+                nameLens,
+                descriptionLens,
+                imageLens,
+                addressLens,
+                experienceLens,
+                phoneLens,
+                priceLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val teacherId = request.path("id")?.toIntOrNull()
-            ?: return Response(Status.BAD_REQUEST).body("Неверный ID преподавателя")
+        val teacherId =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(Status.BAD_REQUEST).body("Неверный ID преподавателя")
 
-        val existingTeacher = teachers.getTeacherById(teacherId)
-            ?: return Response(NOT_FOUND).body("Преподаватель не найден")
+        val existingTeacher =
+            teachers.getTeacherById(teacherId)
+                ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
         val form = formLens(request)
         val errors = form.errors.map { it.meta.name }
         val allAbility = AbilityEnums.entries
 
         if (errors.isNotEmpty()) {
-            val viewModel = EditTeacherVM(
-                teacher = existingTeacher,
-                ability = allAbility,
-                form = form,
-            )
+            val viewModel =
+                EditTeacherVM(
+                    teacher = existingTeacher,
+                    ability = allAbility,
+                    form = form,
+                )
             return Response(OK).with(htmlView(request) of viewModel)
         }
 
@@ -73,34 +76,35 @@ class EditTeacherPostHandler(
 
         val newPhoto = imageLens(form)
         if (newPhoto != null && newPhoto.content.available() > 0) {
-            val safeFilename = generateSafeWebpFilename("teacher", teacherId)
-            val avatarPath = Paths.get("src/main/resources/ru/yarsu/public/img").resolve(safeFilename)
+            val safeFilename = generateSafePngFilename("user", teacherId)
 
+            val avatarPath = Paths.get("public/image").resolve(safeFilename)
 
             Files.createDirectories(avatarPath.parent)
+
             try {
-                saveImageAsWebP(newPhoto.content, avatarPath.toString())
-                updatedImages.add(safeFilename)
-                println("Изображение сохранено как WebP: $safeFilename")
+                saveImageAsPng(newPhoto.content, avatarPath.toString())
+                updatedImages.add(0, safeFilename)
             } catch (e: Exception) {
-                println("Ошибка при сохранении WebP: ${e.message}")
+                e.printStackTrace()
             }
         }
 
-        val updatedTeacher = existingTeacher.copy(
-            name = name,
-            phone = phone,
-            experience = experience,
-            abilities = existingTeacher.abilities,
-            price = price,
-            description = description,
-            address = address,
-            district = existingTeacher.district,
-            images = updatedImages,
-            twoWeekOccupation = existingTeacher.twoWeekOccupation,
-        )
+        val updatedTeacher =
+            existingTeacher.copy(
+                name = name,
+                phone = phone,
+                experience = experience,
+                abilities = existingTeacher.abilities,
+                price = price,
+                description = description,
+                address = address,
+                district = existingTeacher.district,
+                images = updatedImages,
+                twoWeekOccupation = existingTeacher.twoWeekOccupation,
+            )
 
         teachers.update(teacherId, updatedTeacher)
-        return Response(FOUND).header("Location", "/teacher/${teacherId}")
+        return Response(FOUND).header("Location", "/teacher/$teacherId")
     }
 }

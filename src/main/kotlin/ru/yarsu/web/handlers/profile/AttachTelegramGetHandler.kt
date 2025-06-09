@@ -11,16 +11,18 @@ import ru.yarsu.web.domain.models.telegram.JsonLogger
 class AttachTelegramGetHandler(
     private val users: UserData,
     private val jsonLogger: JsonLogger,
-    private val botToken: String
+    private val botToken: String,
 ) : HttpHandler {
-
     override fun invoke(request: Request): Response {
         return try {
-            val user = UserModelLens(request)
-                ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
+            val user =
+                UserModelLens(request)
+                    ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
 
-            val paramsMap = request.uri.query.toParameters()
-                .associate { it.first to (it.second ?: "") }
+            val paramsMap =
+                request.uri.query
+                    .toParameters()
+                    .associate { it.first to (it.second ?: "") }
 
             val telegramData = jsonLogger.parseTelegramQuery(paramsMap, botToken)
 

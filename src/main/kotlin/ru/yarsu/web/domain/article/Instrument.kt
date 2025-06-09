@@ -1,6 +1,9 @@
 package ru.yarsu.web.domain.article
 
-enum class Instrument(val id: Int, private val displayName: String) {
+enum class Instrument(
+    val id: Int,
+    private val displayName: String,
+) {
     GUITAR(1, "Гитара"),
     ACOUSTIC_GUITAR(2, "Акустическая гитара"),
     ELECTRIC_GUITAR(3, "Электрогитара"),
@@ -32,10 +35,12 @@ enum class Instrument(val id: Int, private val displayName: String) {
     JAZZ_VOCAL(29, "Джазовый вокал"),
     DJ(30, "DJ-пульт"),
     COMPUTER_MUSIC(31, "Компьютерная музыка"),
-    OTHER(32, "Другое");
+    OTHER(32, "Другое"),
+    ;
 
     companion object {
         private val idMap = entries.associateBy { it.id }
+
         fun get(id: Int): Instrument? = idMap[id]
     }
 

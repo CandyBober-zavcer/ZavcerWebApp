@@ -8,29 +8,31 @@ import ru.yarsu.web.domain.article.SessionStorage
 
 class AuthPostHandler(
     private val userData: UserData,
-    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage,
 ) : HttpHandler {
-
     private val emailLens = FormField.nonEmptyString().map({ it.trim() }, { it }).required("email")
     private val passwordLens = FormField.nonEmptyString().required("password")
     private val generatedAtLens = FormField.long().required("formGeneratedAt")
     private val honeypotLens = FormField.string().defaulted("website", "")
 
-    private val formLens = Body.webForm(
-        Validator.Strict,
-        emailLens,
-        passwordLens,
-        generatedAtLens,
-        honeypotLens,
-    ).toLens()
+    private val formLens =
+        Body
+            .webForm(
+                Validator.Strict,
+                emailLens,
+                passwordLens,
+                generatedAtLens,
+                honeypotLens,
+            ).toLens()
 
     override fun invoke(request: Request): Response {
-        val form = try {
-            formLens(request)
-        } catch (e: LensFailure) {
-            println("Ошибка парсинга формы: ${e.failures}")
-            return Response(Status.BAD_REQUEST).body("Неверные данные формы")
-        }
+        val form =
+            try {
+                formLens(request)
+            } catch (e: LensFailure) {
+                println("Ошибка парсинга формы: ${e.failures}")
+                return Response(Status.BAD_REQUEST).body("Неверные данные формы")
+            }
 
         val honeypot = honeypotLens(form)
         if (honeypot.isNotBlank()) {
@@ -49,8 +51,9 @@ class AuthPostHandler(
         val email = emailLens(form)
         val password = passwordLens(form)
 
-        val user = userData.getByEmail(email)
-            ?: return Response(Status.UNAUTHORIZED).body("Неверный email или пароль")
+        val user =
+            userData.getByEmail(email)
+                ?: return Response(Status.UNAUTHORIZED).body("Неверный email или пароль")
 
         if (!userData.verifyPassword(user, password)) {
             return Response(Status.UNAUTHORIZED).body("Неверный email или пароль")
@@ -61,5 +64,4 @@ class AuthPostHandler(
             .header("Location", "/")
             .cookie(session.cookie)
     }
-
 }

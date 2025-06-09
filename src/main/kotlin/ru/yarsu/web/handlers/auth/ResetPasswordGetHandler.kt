@@ -7,14 +7,14 @@ import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 
 class ResetPasswordGetHandler(
     private val tokenStorage: TokenStorage,
-    private val renderer: ContextAwareTemplateRenderer
+    private val renderer: ContextAwareTemplateRenderer,
 ) : HttpHandler {
-
     override fun invoke(request: Request): Response {
         val token = request.query("token") ?: return Response(Status.BAD_REQUEST).body("Нет токена")
 
-        val email = tokenStorage.findEmailByResetToken(token)
-            ?: return Response(Status.BAD_REQUEST).body("Ссылка устарела или недействительна")
+        val email =
+            tokenStorage.findEmailByResetToken(token)
+                ?: return Response(Status.BAD_REQUEST).body("Ссылка устарела или недействительна")
 
         val viewModel = ResetPasswordVM(token)
         val html = renderer(mapOf("model" to viewModel), viewModel)

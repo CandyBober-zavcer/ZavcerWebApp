@@ -10,13 +10,8 @@
             <div class="col-lg-4">
                 <div class="card mb-4">
                     <div class="card-body text-center">
-                        {% if model.user.images is not empty %}
-                            <img src="/img/{{ model.user.images[0] }}" alt="Аватар пользователя"
-                                 class="rounded-circle img-fluid" style="width: 150px;">
-                        {% else %}
-                            <img src="/img/defaultProfile.webp" alt="Аватар по умолчанию"
-                                 class="rounded-circle img-fluid" style="width: 150px;">
-                        {% endif %}
+                        <img src="{{ model.user.images | length > 0 ? '/image/' ~ model.user.images[0] : '/img/defaultProfile.webp' }}" alt="Аватар пользователя"
+                            class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">{{ model.user.name }}</h5>
                         <div class="d-flex justify-content-center mb-2">
                             <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-primary">Редактировать</a>

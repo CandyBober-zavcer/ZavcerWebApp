@@ -1,0 +1,128 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.spot.EditSpotVM" #}
+
+    {% extends "../Layout.peb" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Редактирование репетиционной точки</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="name" class="form-label">Название</label>
+            <input type="text" class="form-control" id="name" name="name" required value="{{ model.spot.name | escape }}">
+            {% for error in model.form.fields("name").errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" name="description" rows="3">{{ model.spot.description | escape }}</textarea>
+            {% for error in model.form.fields("description").errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Адрес</label>
+            <input type="text" class="form-control" id="address" name="address" required value="{{ model.spot.address | escape }}">
+            {% for error in model.form.fields("address").errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3" style="max-width: 300px;">
+            <label for="district" class="form-label">Район</label>
+            <select class="form-select" id="district" name="district" required>
+                <option value="" disabled>Выберите район</option>
+                {% for district in model.allDistricts %}
+    {% if district.name != 'UNKNOWN' %}
+                        <option value="{{ district.name }}"
+                            {% if district.name == model.spot.district.name %}selected{% endif %}>
+                            {{ district.district }}
+                        </option>
+                    {% endif %}
+{% endfor %}
+            </select>
+            {% for error in model.form.fields("district").errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Цена за час (₽)</label>
+            <input type="number" class="form-control" id="price" name="price" min="0" required value="{{ model.spot.price }}">
+            {% for error in model.form.fields("price").errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="hasDrums" name="hasDrums" {% if model.spot.hasDrums %}checked{% endif %}>
+            <label class="form-check-label" for="hasDrums">Есть ударная установка</label>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="guitarAmps" class="form-label">Гитарных усилителей</label>
+                <input type="number" class="form-control" id="guitarAmps" name="guitarAmps" min="0" value="{{ model.spot.guitarAmps }}">
+                {% for error in model.form.fields("guitarAmps").errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <label for="bassAmps" class="form-label">Басовых усилителей</label>
+                <input type="number" class="form-control" id="bassAmps" name="bassAmps" min="0" value="{{ model.spot.bassAmps }}">
+                {% for error in model.form.fields("bassAmps").errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="photos" class="form-label">Фотографии</label>
+            <input type="file" class="form-control" id="photos" name="photos" multiple accept="image/*" onchange="previewImages(event)">
+            {% for error in model.form.fields("photos").errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+
+            <div class="mt-2 d-flex gap-2 flex-wrap" id="new-photo-preview"></div>
+
+
+            {% if model.spot.images != null and model.spot.images.size > 0 %}
+                <div class="mt-3 d-flex gap-2 flex-wrap">
+                    {% for file in model.spot.images %}
+                        <img src="/image/{{ file }}" alt="Фото" style="max-width: 150px;" class="img-thumbnail">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+
+<script>
+function previewImages(event) {
+    const previewContainer = document.getElementById("new-photo-preview");
+    previewContainer.innerHTML = "";
+
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    for (const file of files) {
+        if (!file.type.startsWith("image/")) continue;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.classList.add("img-thumbnail", "me-2", "mb-2");
+            img.style.maxWidth = "150px";
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+{% endblock %}

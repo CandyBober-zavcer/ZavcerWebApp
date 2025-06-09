@@ -12,11 +12,15 @@ fun hashPassword(password: String): String {
     return BCrypt.withDefaults().hashToString(12, password.toCharArray()) // если надо будет повысить безопасность, то можно взять 14, а не 12
 }
 
-fun verifyPassword(password: String, hash: String): Boolean {
-    return BCrypt.verifyer().verify(password.toCharArray(), hash).verified
-}
+fun verifyPassword(
+    password: String,
+    hash: String,
+): Boolean = BCrypt.verifyer().verify(password.toCharArray(), hash).verified
 
-fun createAuthCookie(user: UserModel, salt: String): Cookie {
+fun createAuthCookie(
+    user: UserModel,
+    salt: String,
+): Cookie {
     val rawData = "${user.id}:${user.login}"
     val signature = AuthUtils.hmacSign(rawData, salt)
 
@@ -27,6 +31,6 @@ fun createAuthCookie(user: UserModel, salt: String): Cookie {
         httpOnly = true,
         secure = true,
         sameSite = SameSite.Strict,
-        expires = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).plusDays(7).toInstant()
+        expires = ZonedDateTime.now(ZoneId.of("Europe/Moscow")).plusDays(7).toInstant(),
     )
 }

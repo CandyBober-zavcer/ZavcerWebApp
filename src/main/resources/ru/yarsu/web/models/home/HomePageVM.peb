@@ -33,7 +33,7 @@
             <ul>
                 <li><a href="/studios">Реп точки</a></li>
                 <li><a href="/teachers">Преподаватели</a></li>
-                <li><a href="#"><img src="../img/user-icon.png" alt="Профиль"></a></li>
+                <li><a href="/profile/1"><img src="../img/user-icon.png" alt="Профиль"></a></li>
             </ul>
         </nav>
     </header>

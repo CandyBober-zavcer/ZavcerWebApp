@@ -1,50 +1,37 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeacherVM" #}
-    {% extends "../Layout.peb" %}
-    {% block style %}
-        <link href="/css/Teacher.css" rel="stylesheet">
-    {% endblock %}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}Teacher.css{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <a href="/teachers" class="btn btn-outline-secondary mb-4">← Назад ко всем преподавателям</a>
-    <a href="/edit/teacher/edit-{{model.teacher.id}}" class="btn btn-outline-warning mb-4">Редактировать</a>
-    <a href="/edit/teacher/delete-{{ model.teacher.id }}" class="btn btn-outline-danger mb-4">Удалить</a>
+<div class="container container-custom-margin">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="/teachers" class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
 
-    <div class="card shadow-lg">
-        <div class="row g-0">
-            <div class="col-md-5">
-                <img src="/img/{{ model.teacher.images[0] | default('defaultTeacher.webp') }}"
-                     class="img-fluid rounded-start" alt="Фото преподавателя">
-            </div>
-            <div class="col-md-7">
-                <div class="card-body">
-                    <h2 class="card-title mb-2">{{ model.teacher.name }}</h2>
-                    <p class="card-text text-muted mb-3">{{ model.teacher.description }}</p>
+        <div style="display: flex; align-items: center; gap: 10px;">
 
-                    <p class="card-text"><strong>📞 Телефон:</strong> {{ model.teacher.phone }}</p>
-                    <p class="card-text"><strong>👛 Стоимость за час:</strong> {{ model.teacher.price }}</p>
-                    <p class="card-text"><strong>👩‍🏫 Опыт преподавания:</strong> {{ model.teacher.experience }} лет</p>
+            <a href="/edit/teacher/delete-{{ model.teacher.id }}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-x" style="font-size: 2.4rem;"></i>
+            </a>
+            <a href="/edit/teacher/edit-{{model.teacher.id}}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-gear" style="font-size: 1.4rem;"></i>
+            </a>
+        </div>
+    </section>
+    <div class="container mt-5">
 
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><strong>🎸 Инструменты:</strong></div>
-                        <div class="col-sm-9">
-                            {% if model.abilityNames is not empty %}
-                                {{ model.abilityNames }}
-                            {% else %}
-                                <span class="text-muted">Не указаны</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="mb-3">
-                        <h5 class="text-primary">📍 Адрес</h5>
-                        <p>{{ model.teacher.address }}</p>
-                        <p><strong>Район:</strong> {{ model.teacher.district.district }}</p>
-                    </div>
+        <div class="card ">
+            <div class="row ">
+                <div class="col">
+                    <img src="/img/{{ model.teacher.images[0] | default('defaultTeacher.webp') }}" class="img-fluid "
+                        alt="Фото преподавателя">
 
                     <form id="bookingForm">
-                            <!-- Календарь -->
-                            <div class="mb-3">
-                                <label class="form-label">Выберите дату</label>
+                        <!-- Календарь -->
+                        <div class="mb-3">
+
+
+                            <div id="calendarCollapse">
                                 <div class="calendar">
                                     <div class="calendar-header">
                                         <button class="calendar-nav" id="prevMonth">❮</button>
@@ -63,28 +50,84 @@
                                     <div class="calendar-days" id="calendarDays"></div>
                                 </div>
                             </div>
+                        </div>
 
-                            <!-- Таймпикер -->
-                            <div class="time-picker">
-                                <label class="form-label">Выберите время</label>
-                                <div class="time-slots"></div>
-                                <div class="reset-time">Сбросить выбор времени</div>
-                            </div>
+                        <!-- Таймпикер -->
+                        <div class="time-picker">
+                            <label class="form-label">Выберите время</label>
+                            <div class="time-slots"></div>
+                            <div class="reset-time">Сбросить выбор времени</div>
+                        </div>
 
-                            <!-- Сводка бронирования -->
-                            <div class="booking-summary">
-                                <h6>Ваше бронирование:</h6>
-                                <p>Дата: <span class="summary-date"></span></p>
-                                <p>Время: <span class="summary-time"></span></p>
-                                <p>Стоимость: <span class="summary-price"></span> руб.</p>
-                            </div>
+                        <!-- Сводка бронирования -->
+                        <div class="booking-summary">
+                            <h6>Ваше бронирование:</h6>
+                            <p>Дата: <span class="summary-date"></span></p>
+                            <p>Время: <span class="summary-time"></span></p>
+                            <p>Стоимость: <span class="summary-price"></span> руб.</p>
+                        </div>
 
-                            <button type="submit" class="btn btn-primary">Забронировать</button>
-                        </form>
+                        <button type="submit" class="btn btn-primary">Забронировать</button>
+                    </form>
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h2 class="card-title mb-2">{{ model.teacher.name }}</h2>
+                        <p class="card-text text-muted mb-3">{{ model.teacher.description }}</p>
 
-                    <a href="/enroll/{{ model.teacher.id }}" class="btn btn-success btn-lg mt-3">
-                        ✅ Записаться на занятие
-                    </a>
+                        <ul class="card-text list-unstyled">
+                            <li>
+                                <h4>Телефон</h4>
+                                <p>{{ model.teacher.phone }}</p>
+                            </li>
+                            <li>
+                                <h4>Стоимость</h4>
+                                <p>{{ model.teacher.price }}</p>
+                            </li>
+                            <li>
+                                <h4>Опыт преподавания</h4>
+                                <p>
+                                    {{ model.teacher.experience }}
+                                    {% if model.teacher.experience % 10 == 1 and model.teacher.experience % 100 != 11 %}
+                                    год
+                                    {% elseif model.teacher.experience % 10 >= 2 and model.teacher.experience % 10 <= 4
+                                        and (model.teacher.experience % 100 < 10 or model.teacher.experience % 100>= 20)
+                                        %}
+                                        года
+                                        {% else %}
+                                        лет
+                                        {% endif %}
+                                </p>
+                            </li>
+                            <li>
+                                <h4>Инструменты</h4>
+                                <p>
+                                    {% if model.abilityNames is not empty %}
+                                    {{ model.abilityNames }}
+                                    {% else %}
+                                    <span class="text-muted">Не указаны</span>
+                                    {% endif %}
+                                </p>
+                            </li>
+                            <li>
+                                <h4>Адрес</h4>
+                                <p>{{ model.teacher.address }}</p>
+                            </li>
+                            <li>
+                                <h4>Район</h4>
+                                <p>{{ model.teacher.district.district }}</p>
+                            </li>
+                        </ul>
+
+
+
+
+
+
+                        <a href="/enroll/{{ model.teacher.id }}" class="btn btn-success btn-lg mt-3">
+                            ✅ Записаться на занятие
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,7 +137,7 @@
 
 {% block script %}
 <script>
-    window.userId = {{ model.user | default("null") }};
+    window.userId = {{ model.user | default ("null") }};
 </script>
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/Teacher.js"></script>

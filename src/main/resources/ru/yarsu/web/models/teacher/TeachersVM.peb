@@ -40,9 +40,14 @@
         {{teacher.avatarFileName[0]}}
         <div class="col-md-4">
             <div class="card1 h-100">
-                <a href="/teacher/{{ teacher.id }}"><img
-                        src="../img/{{ teacher.images[0] | default('defaultTeacher.webp') }}"
-                        class="img-fluid" alt="Фото студии"></a>
+                <a href="/teacher/{{ teacher.id }}">
+                    {% if teacher.images.size > 0 %}
+                    <img src="/image/{{ teacher.images[0] }}" class="img-fluid rounded-start" alt="Фото преподавателя">
+                    {% else %}
+                    <img src="/img/defaultTeacher.webp" class="img-fluid rounded-start" alt="Фото преподавателя">
+                    {% endif %}
+
+                </a>
                 <div class="card-info1 flex-grow-1">
                     <p><strong>Имя</strong><br>{{ teacher.name }}</p>
                     <p><strong>О себе</strong><br>{{ teacher.description }}</p>

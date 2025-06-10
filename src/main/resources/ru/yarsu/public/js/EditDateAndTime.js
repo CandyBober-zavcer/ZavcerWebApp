@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const availableDates = {
+    const blockedDates = {
         '2025-06-15': ['10:00', '11:00', '12:00'],
         '2025-06-16': ['14:00', '15:00', '16:00'],
+    };
+    const freeDates = {
+        '2025-06-17': ['10:00', '11:00', '12:00'],
+        '2025-06-18': ['14:00', '15:00', '16:00'],
     };
     const calendarDays = document.getElementById('calendarDays');
     const currentMonthYear = document.getElementById('currentMonthYear');
@@ -68,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dayEl.className = `calendar-day ${date < today ? 'past' : 'available'}`;
             dayEl.textContent = i;
 
-            if (availableDates[dateStr]) {
+            if (blockedDates[dateStr] || freeDates[dateStr]) {
                 dayEl.classList.add('has-slots');
             }
 
@@ -89,24 +93,46 @@ document.addEventListener('DOMContentLoaded', function () {
     function generateTimeSlots() {
         timeSlots.innerHTML = '';
 
-        const currentSlots = availableDates[selectedDate] || [];
+        const blockedSlots = blockedDates[selectedDate] || [];
+        const freeSlots = freeDates[selectedDate] || [];
 
         timeRange.forEach(time => {
             const slot = document.createElement('div');
-            slot.className = `time-slot ${currentSlots.includes(time) ? 'selected' : ''}`;
+            slot.className = 'time-slot';
             slot.textContent = time;
 
+            if (blockedSlots.includes(time)) {
+                slot.classList.add('blocked');
+                slot.style.cursor = 'not-allowed';
+                slot.style.backgroundColor = '#dc3545';
+                slot.style.color = 'white';
+            } else if (freeSlots.includes(time)) {
+                slot.classList.add('free');
+                slot.style.cursor = 'pointer';
+                slot.style.backgroundColor = '#0d6efd';
+                slot.style.color = 'white';
+            } else {
+                slot.classList.add('available');
+                slot.style.cursor = 'pointer';
+                slot.style.backgroundColor = '#0d6efd';
+                slot.style.color = 'white';
+            }
+
             slot.addEventListener('click', () => {
-                let updatedSlots = availableDates[selectedDate] || [];
+                if (blockedSlots.includes(time)) return;
 
-                if (updatedSlots.includes(time)) {
-                    updatedSlots = updatedSlots.filter(t => t !== time);
+                if (freeSlots.includes(time)) {
+                    freeDates[selectedDate] = freeDates[selectedDate].filter(t => t !== time);
+                    if (freeDates[selectedDate].length === 0) {
+                        delete freeDates[selectedDate];
+                    }
                 } else {
-                    updatedSlots.push(time);
-                    updatedSlots.sort();
+                    if (!freeDates[selectedDate]) {
+                        freeDates[selectedDate] = [];
+                    }
+                    freeDates[selectedDate].push(time);
+                    freeDates[selectedDate].sort();
                 }
-
-                availableDates[selectedDate] = updatedSlots;
                 generateTimeSlots();
             });
 
@@ -115,19 +141,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     resetTimeBtn.addEventListener('click', () => {
-        if (selectedDate) {
-            availableDates[selectedDate] = [];
+        if (selectedDate && freeDates[selectedDate]) {
+            delete freeDates[selectedDate];
             generateTimeSlots();
         }
     });
 
     saveScheduleBtn.addEventListener('click', () => {
-        console.log('Отправляемые свободные слоты:', availableDates);
+        console.log('Отправляемые свободные слоты:', freeDates);
 
-        fetch('http://localhost:8080/teacher/schedule', {
+        fetch('http://localhost:8080/teacher/куда?', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(availableDates)
+            body: JSON.stringify(freeDates)
         })
             .then(res => {
                 if (!res.ok) throw new Error("Ошибка отправки");

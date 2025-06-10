@@ -55,34 +55,51 @@
                         <p><strong>Район:</strong> {{ model.teacher.district.district }}</p>
                     </div>
 
-                    <div class="mb-4">
-                        <h5 class="text-primary">🕒 Расписание</h5>
-                        <div class="calendar mb-3">
-                            <div class="calendar-header">
-                                <button class="calendar-nav" id="prevMonth">❮</button>
-                                <div class="calendar-title" id="currentMonthYear"></div>
-                                <button class="calendar-nav" id="nextMonth">❯</button>
-                            </div>
-                            <div class="calendar-weekdays">
-                                <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
-                            </div>
-                            <div class="calendar-days" id="calendarDays"></div>
-                        </div>
-                        <div class="time-slots-container" style="display: none;">
-                            <h6>Доступное время:</h6>
-                            <div class="time-slots" id="timeSlots"></div>
-                            <div class="reset-time">Сбросить выбор времени</div>
-                        </div>
-                        <div class="mt-3">
-                            <strong>Выбранное время:</strong>
-                            <p>Дата: <span id="summaryDate">не выбрано</span></p>
-                            <p>Время: <span id="summaryTime">не выбрано</span></p>
-                        </div>
-                    </div>
+                    <div class="row justify-content-center mt-5">
+                        <form id="bookingForm">
+                            <!-- Календарь -->
+                            <div class="mb-3">
 
-                    <a href="/enroll/{{ model.teacher.id }}" class="btn btn-success btn-lg mt-3">
-                        ✅ Записаться на занятие
-                    </a>
+
+                                <div id="calendarCollapse">
+                                    <div class="calendar">
+                                        <div class="calendar-header">
+                                            <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                                            <div class="calendar-title" id="currentMonthYear"></div>
+                                            <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+                                        </div>
+                                        <div class="calendar-weekdays">
+                                            <div>Пн</div>
+                                            <div>Вт</div>
+                                            <div>Ср</div>
+                                            <div>Чт</div>
+                                            <div>Пт</div>
+                                            <div>Сб</div>
+                                            <div>Вс</div>
+                                        </div>
+                                        <div class="calendar-days" id="calendarDays"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Таймпикер -->
+                            <div class="time-picker">
+                                <label class="form-label">Выберите время</label>
+                                <div class="time-slots"></div>
+                                <div class="reset-time">Сбросить выбор времени</div>
+                            </div>
+
+                            <!-- Сводка бронирования -->
+                            <div class="booking-summary">
+                                <h6>Ваше бронирование:</h6>
+                                <p>Дата: <span class="summary-date"></span></p>
+                                <p>Время: <span class="summary-time"></span></p>
+                                <p>Стоимость: <span class="summary-price"></span> руб.</p>
+                            </div>
+
+                        </form>
+                        <button type="submit" form="bookingForm" class="btn btn-primary">Забронировать</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -94,6 +111,5 @@
 <script>
     window.userId = {{ model.user | default("null") }};
 </script>
-<script src="../js/bootstrap.bundle.min.js"></script>
 <script src="../js/Teacher.js"></script>
 {% endblock %}

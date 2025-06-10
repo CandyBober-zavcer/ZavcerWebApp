@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeSlots = document.querySelector('.time-slots');
     const bookingSummary = document.querySelector('.booking-summary');
     const pricePerHour = 500;
-
+    if (!calendarDays || !currentMonthYear || !prevMonthBtn || !nextMonthBtn) {
+    console.error("Один из элементов календаря не найден!");
+    return;
+}
     // 3. Инициализация переменных
     const today = new Date();
     today.setHours(0, 0, 0, 0);

@@ -1,0 +1,33 @@
+
+.filter-card {
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto 40px auto;
+    transition: all 0.3s ease;
+}
+
+.filter-card .form-label {
+    font-weight: 500;
+}
+
+.filter-card .form-control,
+.filter-card .form-select {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.filter-card .btn-primary {
+    background-color: #f8f8f8;
+    color: #333;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 0;
+}
+
+.filter-card .btn-primary:hover {
+
+    color: #f8f8f8;
+    background-color: #333;
+}

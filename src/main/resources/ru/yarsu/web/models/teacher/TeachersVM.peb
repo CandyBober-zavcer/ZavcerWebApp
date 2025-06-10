@@ -29,13 +29,106 @@
             <button class="btn btn-link text-secondary p-0">
                 <i class="bi bi-arrow-down-up" style="font-size: 1.5rem;"></i>
             </button>
-            <button class="btn btn-link text-secondary p-0">
+            <button class="btn btn-link text-secondary p-0" data-bs-toggle="collapse" data-bs-target="#filter-panel"
+                aria-expanded="false" aria-controls="filter-panel">
                 <i class="bi bi-funnel" style="font-size: 1.5rem;"></i>
             </button>
         </div>
     </section>
 
-    <div class="row g-4">
+
+    <div class="collapse" id="filter-panel">
+        <div class="filter-card card-body p-0">
+            <form id="filter-form" method="post" class="p-3">
+                <div class="mb-3">
+                    <label for="experience" class="form-label">Стаж</label>
+                    <select id="experience" name="experience"
+                        class="form-select border-secondary focus-ring focus-ring-secondary">
+                        <option value="">Любой</option>
+                        <option value="1">От 1 года</option>
+                        <option value="3">От 3 лет</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Инструменты</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="гитара" id="instrument-guitar" name="instruments">
+                            <label class="form-check-label" for="instrument-guitar">Гитара</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="фортепиано" id="instrument-piano" name="instruments">
+                            <label class="form-check-label" for="instrument-piano">Фортепиано</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="скрипка" id="instrument-violin" name="instruments">
+                            <label class="form-check-label" for="instrument-violin">Скрипка</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="барабаны" id="instrument-drums" name="instruments">
+                            <label class="form-check-label" for="instrument-drums">Барабаны</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Районы</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="Дзержинский" id="district-dzerzhinsky" name="districts">
+                            <label class="form-check-label" for="district-dzerzhinsky">Дзержинский</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="Ленинский" id="district-leninsky" name="districts">
+                            <label class="form-check-label" for="district-leninsky">Ленинский</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="Кировский" id="district-kirovsky" name="districts">
+                            <label class="form-check-label" for="district-kirovsky">Кировский</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="Заволжский" id="district-zavolzhsky" name="districts">
+                            <label class="form-check-label" for="district-zavolzhsky">Заволжский</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="Красноперекопский" id="district-krasnoperekopsky"
+                                name="districts">
+                            <label class="form-check-label" for="district-krasnoperekopsky">Красноперекопский</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="Фрунзенский" id="district-frunzensky" name="districts">
+                            <label class="form-check-label" for="district-frunzensky">Фрунзенский</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Цена (руб/час)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" id="price-min" name="priceMin"
+                            class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от">
+                        <input type="number" id="price-max" name="priceMax"
+                            class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-2">Применить фильтры</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row g-4 ">
         {% for teacher in model.teachers %}
         {{teacher.avatarFileName[0]}}
         <div class="col-md-4">

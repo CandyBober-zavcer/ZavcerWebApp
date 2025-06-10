@@ -1,3 +1,5 @@
+@import url('filter.css');
+
 
 .for_admin p a,
 .for_admin p a:visited,
@@ -6,6 +8,7 @@
     color: #333;
     text-decoration: none;
 }
+
 .card1 {
     width: 300px;
     height: 100%;
@@ -28,14 +31,5 @@
 }
 
 .card-info1 p {
-  margin-bottom: 10px;
-}
-
-
-.container-custom-margin{
-    margin-bottom: 70px;
-}
-
-.filter-custom-margin{
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }

@@ -1,3 +1,6 @@
+@import url('filter.css');
+
+
 
 
 .for_admin p a,
@@ -34,14 +37,3 @@
 }
 
 
-/* .row-custom-margin {
-    margin-bottom: 40px;
-} */
-
-.container-custom-margin{
-    margin-bottom: 70px;
-}
-
-.filter-custom-margin{
-    margin-bottom: 40px;
-}

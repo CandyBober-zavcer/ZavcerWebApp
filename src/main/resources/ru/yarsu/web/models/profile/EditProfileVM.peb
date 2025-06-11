@@ -1,7 +1,7 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.EditProfileVM" #}
 
     {% extends "../DesignedLayout.peb" %}
-    {% block style %}../css/Teacher.css{% endblock %}
+    {% block style %}Teacher.css{% endblock %}
 
     {% block content %}
 <section style="background-color: #eee;">

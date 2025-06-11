@@ -1,9 +1,7 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.auth.SignupVM" #}
 
-    {% block style %}
-        <link rel="stylesheet" href="/css/Auth.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-    {% endblock %}
+{% extends "../DesignedLayout.peb" %}
+    {% block style %}Auth.css{% endblock %}
 
 {% block content %}
 <div class="bg-img">
@@ -51,6 +49,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 {% endblock %}
-
-
-

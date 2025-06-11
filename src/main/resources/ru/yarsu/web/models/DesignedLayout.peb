@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAVCER</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/{% block style %}{% endblock %}">
 </head>
@@ -30,7 +31,7 @@
             <a class="nav-link fs-4" href="/teachers">Преподаватели</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/profile/1">
+            <a class="nav-link" href="{% if user is not null %}/profile/1{% else %}/auth/signin{% endif %}">
               <img src="/img/user-icon.png" alt="Профиль" class="img-fluid" style="max-width: 50px;">
             </a>
           </li>

@@ -1,10 +1,6 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.auth.AuthVM" #}
-
-    {% block style %}
-        <link rel="stylesheet" href="/css/Auth.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
-    {% endblock %}
+{% extends "../DesignedLayout.peb" %}
+    {% block style %}Auth.css{% endblock %}
 
     {% block content %}
 <div class="bg-img">
@@ -63,6 +59,7 @@
 {% endblock %}
 
 {% block script %}
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -151,4 +148,5 @@
         );
     };
 </script>
+
 {% endblock %}

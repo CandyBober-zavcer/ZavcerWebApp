@@ -2,6 +2,24 @@ package ru.yarsu.web.domain.article
 
 import ru.yarsu.web.domain.enums.DistrictEnums
 
+/**
+ * Класс, представляющий место (спот) для репетиций или выступлений.
+ *
+ * @property id Уникальный идентификатор места
+ * @property name Название места
+ * @property price Стоимость аренды места
+ * @property hasDrums Наличие барабанной установки
+ * @property guitarAmps Количество гитарных усилителей
+ * @property bassAmps Количество басовых усилителей
+ * @property description Описание места
+ * @property address Адрес места
+ * @property district Район, в котором находится место
+ * @property images Список URL-адресов изображений места
+ * @property schedule Словарь, отражающий занятость места,
+ *                   где ключ — дата в формате "дд-мм-гггг",
+ *                   а значение — список занятых временных слотов в формате "чч:мм"
+ * @property owners Список идентификаторов владельцев места
+ */
 data class Spot(
     var id: Int = -1,
     var name: String = "",
@@ -13,6 +31,6 @@ data class Spot(
     var address: String = "",
     var district: DistrictEnums = DistrictEnums.UNKNOWN,
     var images: List<String> = emptyList(),
-    var twoWeekOccupation: List<Int> = emptyList(),
+    var schedule: Map<Int, List<Int>> = emptyMap(),
     var owners: List<Int> = emptyList(),
 )

@@ -8,6 +8,7 @@ import org.http4k.lens.*
 import org.http4k.routing.path
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.enums.AbilityEnums
+import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
@@ -25,6 +26,7 @@ class EditTeacherPostHandler(
     private val descriptionLens = MultipartFormField.string().required("description")
     private val imageLens = MultipartFormFile.optional("photo")
     private val addressLens = MultipartFormField.string().required("address")
+    private val districtLens = MultipartFormField.string().required("district")
     private val experienceLens = MultipartFormField.string().required("experience")
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
@@ -37,6 +39,7 @@ class EditTeacherPostHandler(
                 descriptionLens,
                 imageLens,
                 addressLens,
+                districtLens,
                 experienceLens,
                 phoneLens,
                 priceLens,
@@ -71,6 +74,7 @@ class EditTeacherPostHandler(
         val experience = lensOrDefault(experienceLens, form) { existingTeacher.experience.toString() }.toInt()
         val phone = lensOrDefault(phoneLens, form) { existingTeacher.phone }
         val price = lensOrDefault(priceLens, form) { existingTeacher.price.toString() }.toInt()
+        val district = DistrictEnums.entries.find { it.name == districtLens(form) } ?: DistrictEnums.UNKNOWN
 
         val updatedImages = existingTeacher.images.toMutableList()
 
@@ -99,9 +103,9 @@ class EditTeacherPostHandler(
                 price = price,
                 description = description,
                 address = address,
-                district = existingTeacher.district,
+                district = district,
                 images = updatedImages,
-                twoWeekOccupation = existingTeacher.twoWeekOccupation,
+                schedule = existingTeacher.schedule,
             )
 
         teachers.update(teacherId, updatedTeacher)

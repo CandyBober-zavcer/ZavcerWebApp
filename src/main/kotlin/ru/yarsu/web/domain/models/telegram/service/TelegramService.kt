@@ -42,4 +42,57 @@ object TelegramService {
         val text = "🚫 К сожалению, ваша заявка на роль преподавателя была отклонена. Вы можете попробовать снова позже."
         send(chatId, text)
     }
+
+    fun teacherNotification(teacherId: Long, studentId: Long) {
+        if (teacherId <= 0L) return
+
+        val text = if (studentId > 0L) {
+            "Запись на занятие. Ученик: $studentId"
+        } else {
+            "Запись на занятие. Ученик не указан."
+        }
+        send(teacherId, text)
+    }
+
+    fun studentNotification(teacherId: Long, studentId: Long) {
+        if (studentId <= 0L) return
+
+        val text = if (teacherId > 0L) {
+            "Запись на занятие. Учитель: $teacherId"
+        } else {
+            "Запись на занятие. Учитель не указан."
+        }
+        send(studentId, text)
+    }
+
+    fun spotOwnerNotification(ownerIds: List<Long>, spotId: Long, studentId: Long) {
+        if (ownerIds.isEmpty()) return
+
+        val text = if (studentId > 0L) {
+            "Запись на репетиционную точку №$spotId. Ученик: $studentId"
+        } else {
+            "Запись на репетиционную точку №$spotId. Ученик не указан."
+        }
+
+        ownerIds.forEach { ownerId ->
+            if (ownerId > 0L) {
+                send(ownerId, text)
+            }
+        }
+    }
+
+    fun studentSpotNotification(ownerIds: List<Long>, spotId: Long, studentId: Long) {
+        if (studentId <= 0L) return
+
+        val validOwners = ownerIds.filter { it > 0L }
+        val text = if (validOwners.isNotEmpty()) {
+            "Запись на репетиционную точку №$spotId. Владелец(и): ${validOwners.joinToString(", ")}"
+        } else {
+            "Запись на репетиционную точку №$spotId. Владелец не указан."
+        }
+
+        send(studentId, text)
+    }
+
+
 }

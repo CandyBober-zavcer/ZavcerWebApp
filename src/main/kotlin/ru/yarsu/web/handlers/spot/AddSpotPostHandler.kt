@@ -105,7 +105,7 @@ class AddSpotPostHandler(
                     address = address,
                     district = district,
                     images = imageList,
-                    twoWeekOccupation = emptyList(),
+                    schedule = emptyMap(),
                     owners = listOf(user.id),
                 )
             val viewModel = AddSpotVM(spot, form)
@@ -125,7 +125,7 @@ class AddSpotPostHandler(
                 address = address,
                 district = district,
                 images = imageList,
-                twoWeekOccupation = emptyList(),
+                schedule = emptyMap(),
                 owners = listOf(user.id),
             )
 

@@ -1,75 +1,39 @@
 package ru.yarsu.web.handlers.teacher
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.http4k.client.OkHttp
-import org.http4k.core.*
-import org.http4k.core.Method.POST
+import org.http4k.core.HttpHandler
+import org.http4k.core.Request
+import org.http4k.core.Response
+import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.FOUND
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.UNAUTHORIZED
+import org.http4k.routing.path
+import ru.yarsu.db.UserData
+import ru.yarsu.web.context.UserModelLens
+import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
-class TeacherPostHandler(
-    private val telegramBotToken: String,
-    private val teacherUserId: String,
-) : HttpHandler {
-    override fun invoke(request: Request): Response =
-        try {
-            val body = request.bodyString()
-            val mapper = jacksonObjectMapper()
-            val data = mapper.readValue<FormData>(body)
+class TeacherPostHandler(private val users: UserData) : HttpHandler {
+    override fun invoke(request: Request): Response {
+        val user = UserModelLens(request)
+            ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
 
-            val userMessage =
-                buildString {
-                    appendLine("🎵 Вы записались на занятие:")
-                    appendLine("📅 Дата: ${data.date}")
-                    appendLine("⏰ Время: ${data.time}")
-                    appendLine("🎸 Инструмент: ${data.instrument}")
-                    appendLine("👨‍🏫 Преподаватель ID: $teacherUserId")
-                }
+        val teacherId = request.path("id")?.toIntOrNull()
+            ?: return Response(BAD_REQUEST).body("Некорректный ID")
 
-            val teacherMessage =
-                buildString {
-                    appendLine("🆕 Новая запись на занятие:")
-                    appendLine("📅 Дата: ${data.date}")
-                    appendLine("⏰ Время: ${data.time}")
-                    appendLine("🎸 Инструмент: ${data.instrument}")
-                    appendLine("👤 Имя: ${data.name}")
-                    appendLine("📞 Телефон: ${data.phone}")
-                    appendLine("🧑‍🎓 Ученик ID: ${data.userId}")
-                }
+        val teacher = users.getTeacherById(teacherId)
+            ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
-            val client = OkHttp()
+        val teacherHasTelegram = teacher.tg_id > 0L
+        val studentHasTelegram = user.tg_id > 0L
 
-            fun sendMessage(
-                chatId: String,
-                message: String,
-            ): Response =
-                client(
-                    Request(POST, "https://api.telegram.org/bot$telegramBotToken/sendMessage")
-                        .header("Content-Type", "application/json")
-                        .body(
-                            mapper.writeValueAsString(
-                                mapOf("chat_id" to chatId, "text" to message),
-                            ),
-                        ),
-                )
-
-            val userResponse = sendMessage(data.userId, userMessage)
-            val adminResponse = sendMessage(teacherUserId, teacherMessage)
-
-            if (userResponse.status.successful && adminResponse.status.successful) {
-                Response(Status.OK).body("""{"status":"ok"}""")
-            } else {
-                Response(Status.BAD_GATEWAY).body("""{"error":"Telegram send failed"}""")
-            }
-        } catch (e: Exception) {
-            Response(Status.BAD_REQUEST).body("""{"error":"${e.message}"}""")
+        if (teacherHasTelegram) {
+            TelegramService.teacherNotification(teacher.tg_id, user.tg_id)
         }
 
-    data class FormData(
-        val name: String,
-        val phone: String,
-        val date: String,
-        val time: String,
-        val instrument: String,
-        val userId: String,
-    )
+        if (studentHasTelegram) {
+            TelegramService.studentNotification(teacher.tg_id, user.tg_id)
+        }
+
+        return Response(FOUND).header("Location", "/teachers")
+    }
 }

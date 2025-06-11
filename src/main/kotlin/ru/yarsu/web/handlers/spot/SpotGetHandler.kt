@@ -17,7 +17,7 @@ class SpotGetHandler(
             ?: return Response(NOT_FOUND).body("Неверный ID")
 
         val spot = spotData.getById(id)
-            ?: return Response(NOT_FOUND).body("Спот не найден")
+            ?: return Response(NOT_FOUND).body("Репетиционная точка не найдена")
 
         val viewModel = SpotVM(spot)
         return Response(OK).with(htmlView(request) of viewModel)

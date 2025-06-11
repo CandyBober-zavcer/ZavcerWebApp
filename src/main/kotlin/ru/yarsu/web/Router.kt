@@ -26,6 +26,7 @@ import ru.yarsu.web.handlers.spot.DeleteSpotPostHandler
 import ru.yarsu.web.handlers.spot.EditSpotGetHandler
 import ru.yarsu.web.handlers.spot.EditSpotPostHandler
 import ru.yarsu.web.handlers.spot.SpotGetHandler
+import ru.yarsu.web.handlers.spot.SpotPostHandler
 import ru.yarsu.web.handlers.spot.SpotsListHandler
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
@@ -90,15 +91,16 @@ fun router(
         "/upgrade/teacher/profiles/{id}" bind Method.GET to UpgradeProfileGetHandler(htmlView, users),
         "/upgrade/teacher/accept/{id}" bind Method.POST to AcceptTeacherPostHandler(users),
         "/upgrade/teacher/reject/{id}" bind Method.POST to RejectTeacherPostHandler(users),
-//        "/teacher" bind Method.POST to TeacherPostHandler(config.telegramConfig.botToken, 1831874252.toString()),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView, users),
         "/teacher/{id}" bind Method.GET to TeacherGetHandler(htmlView, users),
+        "/teacher/{id}" bind Method.POST to TeacherPostHandler(users),
         "/edit/teacher/edit-{id}" bind Method.GET to EditTeacherGetHandler(htmlView, users),
         "/edit/teacher/edit-{id}" bind Method.POST to EditTeacherPostHandler(htmlView, users),
         "/edit/teacher/delete-{id}" bind Method.GET to DeleteTeacherGetHandler(htmlView, users),
         "/edit/teacher/delete-{id}" bind Method.POST to DeleteTeacherPostHandler(users),
         "/spots" bind Method.GET to SpotsListHandler(htmlView, spots),
         "/spot/{id}" bind Method.GET to SpotGetHandler(htmlView, spots),
+        "/spot/{id}" bind Method.POST to SpotPostHandler(spots, users),
         "/edit/spot/add" bind Method.GET to AddSpotGetHandler(htmlView),
         "/edit/spot/add" bind Method.POST to AddSpotPostHandler(htmlView, spots),
         "/edit/spot/edit-{id}" bind Method.GET to EditSpotGetHandler(htmlView, spots),

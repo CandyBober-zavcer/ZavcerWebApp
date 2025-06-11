@@ -36,13 +36,13 @@
             <select class="form-select" id="district" name="district" required>
                 <option value="" disabled>Выберите район</option>
                 {% for district in model.allDistricts %}
-    {% if district.name != 'UNKNOWN' %}
+                    {% if district.name != 'UNKNOWN' %}
                         <option value="{{ district.name }}"
                             {% if district.name == model.spot.district.name %}selected{% endif %}>
                             {{ district.district }}
                         </option>
                     {% endif %}
-{% endfor %}
+                {% endfor %}
             </select>
             {% for error in model.form.fields("district").errors %}
                 <div class="text-danger">{{ error }}</div>

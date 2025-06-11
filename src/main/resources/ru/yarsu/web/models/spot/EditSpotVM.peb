@@ -1,6 +1,6 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.spot.EditSpotVM" #}
 
-    {% extends "../Layout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
 
 {% block content %}
 <div class="container mt-5">

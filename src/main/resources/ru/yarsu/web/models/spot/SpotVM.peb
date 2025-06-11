@@ -1,8 +1,6 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.spot.SpotVM" #}
-{% extends "../Layout.peb" %}
-{% block style %}
-<link href="/css/Studio.css" rel="stylesheet">
-{% endblock %}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}Studio.css{% endblock %}
 {% block content %}
 <div class="container mt-5">
     <h2>{{ model.spot.name | escape }}</h2>

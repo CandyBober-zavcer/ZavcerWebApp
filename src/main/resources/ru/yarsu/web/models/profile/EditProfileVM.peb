@@ -1,6 +1,7 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.EditProfileVM" #}
 
-    {% extends "../Layout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
+    {% block style %}../css/Teacher.css{% endblock %}
 
     {% block content %}
 <section style="background-color: #eee;">
@@ -69,8 +70,4 @@
         </div>
     </div>
 </section>
-{% endblock %}
-
-{% block script %}
-<script src="/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

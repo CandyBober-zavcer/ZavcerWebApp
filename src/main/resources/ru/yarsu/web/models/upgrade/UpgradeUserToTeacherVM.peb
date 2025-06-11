@@ -1,5 +1,5 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM" #}
-    {% extends "../Layout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
 
     {% block content %}
 <div class="container mt-5">
@@ -89,8 +89,4 @@
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </div>
-{% endblock %}
-
-{% block script %}
-    <script src="../js/bootstrap.bundle.min.js"></script>
 {% endblock %}

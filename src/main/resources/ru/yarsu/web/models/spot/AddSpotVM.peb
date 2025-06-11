@@ -1,5 +1,5 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.spot.AddSpotVM" #}
-    {% extends "../Layout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
 
 {% block content %}
 <style>

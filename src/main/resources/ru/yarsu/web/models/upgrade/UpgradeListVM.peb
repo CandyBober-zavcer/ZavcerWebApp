@@ -1,9 +1,7 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeListVM" #}
-    {% extends "../Layout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
 
-    {% block style %}
-        <link href="/css/Teachers.css" rel="stylesheet">
-    {% endblock %}
+    {% block style %}/css/Teachers.css{% endblock %}
 
 {% block content %}
 

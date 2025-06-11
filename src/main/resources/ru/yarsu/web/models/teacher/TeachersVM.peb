@@ -1,6 +1,4 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
-
-
 {% extends "../DesignedLayout.peb" %}
 {% block style %}teachers_list.css{% endblock %}
 {% block content %}

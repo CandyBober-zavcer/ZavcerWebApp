@@ -22,5 +22,14 @@
             {% endfor %}
         </div>
     {% endif %}
+
+    {% if user is not null %}
+        <form method="POST">
+            <button type="submit" class="btn btn-success btn-lg mt-3">
+                ✅ Забронировать точку
+            </button>
+        </form>
+    {% endif %}
+
 </div>
 {% endblock %}

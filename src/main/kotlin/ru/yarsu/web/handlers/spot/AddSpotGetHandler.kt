@@ -33,7 +33,7 @@ class AddSpotGetHandler(
                 address = "",
                 district = DistrictEnums.UNKNOWN,
                 images = listOf("defaultStudio.jpg"),
-                twoWeekOccupation = emptyList(),
+                schedule = emptyMap(),
                 owners = emptyList(),
             )
 

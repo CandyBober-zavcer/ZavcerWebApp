@@ -51,11 +51,14 @@
         <div class="mb-3">
             <label for="district" class="form-label">Район</label>
             <select class="form-select" id="district" name="district" required>
+                <option value="" disabled>Выберите район</option>
                 {% for district in model.allDistricts %}
-                    <option value="{{ district.name }}"
-                        {% if district.name == model.teacher.district.name %}selected{% endif %}>
-                        {{ district.district }}
-                    </option>
+                    {% if district.name != 'UNKNOWN' %}
+                        <option value="{{ district.name }}"
+                            {% if district.name == model.spot.district.name %}selected{% endif %}>
+                            {{ district.district }}
+                        </option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>

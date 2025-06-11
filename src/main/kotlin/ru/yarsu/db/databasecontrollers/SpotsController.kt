@@ -7,7 +7,7 @@ import ru.yarsu.db.tables.DayOccupations
 import ru.yarsu.db.tables.SpotLine
 import ru.yarsu.db.tables.UserLine
 import ru.yarsu.db.tables.Users
-import ru.yarsu.web.domain.article.Spot
+import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.enums.DistrictEnums
 
 class SpotsController {

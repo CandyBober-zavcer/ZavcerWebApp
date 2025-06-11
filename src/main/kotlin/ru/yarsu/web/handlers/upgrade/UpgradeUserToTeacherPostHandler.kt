@@ -8,6 +8,7 @@ import org.http4k.lens.*
 import org.http4k.routing.path
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.enums.AbilityEnums
+import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM
@@ -26,6 +27,7 @@ class UpgradeUserToTeacherPostHandler(
     private val descriptionLens = MultipartFormField.string().required("description")
     private val imageLens = MultipartFormFile.optional("photo")
     private val addressLens = MultipartFormField.string().required("address")
+    private val districtLens = MultipartFormField.string().required("district")
     private val experienceLens = MultipartFormField.string().required("experience")
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
@@ -38,6 +40,7 @@ class UpgradeUserToTeacherPostHandler(
                 descriptionLens,
                 imageLens,
                 addressLens,
+                districtLens,
                 experienceLens,
                 phoneLens,
                 priceLens,
@@ -72,6 +75,7 @@ class UpgradeUserToTeacherPostHandler(
         val experience = lensOrDefault(experienceLens, form) { existingUser.experience.toString() }.toInt()
         val phone = lensOrDefault(phoneLens, form) { existingUser.phone }
         val price = lensOrDefault(priceLens, form) { existingUser.price.toString() }.toInt()
+        val district = DistrictEnums.entries.find { it.name == districtLens(form) } ?: DistrictEnums.UNKNOWN
 
         val updatedImages = existingUser.images.toMutableList()
 
@@ -98,7 +102,7 @@ class UpgradeUserToTeacherPostHandler(
                 price = price,
                 description = description,
                 address = address,
-                district = existingUser.district,
+                district = district,
                 images = updatedImages,
                 roles = existingUser.roles + RoleEnums.PENDING_TEACHER,
             )

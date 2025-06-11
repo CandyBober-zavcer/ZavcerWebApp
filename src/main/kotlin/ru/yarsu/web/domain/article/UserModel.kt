@@ -37,7 +37,7 @@ data class UserModel(
     var address: String = "",
     var district: DistrictEnums = DistrictEnums.UNKNOWN,
     var images: List<String> = listOf(),
-    var schedule: Map<String, List<String>> = emptyMap(),  // DayOccupation
+    var schedule: Map<Int, List<Int>> = emptyMap(),
     var spots: List<Int> = listOf(),
     var roles: Set<RoleEnums> = setOf(RoleEnums.ANONYMOUS),
     var isConfirmed: Boolean = true,

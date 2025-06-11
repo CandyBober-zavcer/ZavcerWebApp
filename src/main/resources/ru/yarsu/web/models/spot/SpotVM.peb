@@ -1,6 +1,8 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.spot.SpotVM" #}
-    {% extends "../Layout.peb" %}
-
+{% extends "../Layout.peb" %}
+{% block style %}
+<link href="/css/Studio.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <div class="container mt-5">
     <h2>{{ model.spot.name | escape }}</h2>
@@ -16,11 +18,56 @@
     </ul>
 
     {% if model.spot.images != null and model.spot.images.size > 0 %}
-        <div class="mt-4 d-flex gap-2 flex-wrap">
-            {% for file in model.spot.images %}
-                <img src="/image/{{ file }}" alt="Фото" class="img-thumbnail" style="max-width: 200px;">
-            {% endfor %}
-        </div>
+    <div class="mt-4 d-flex gap-2 flex-wrap">
+        {% for file in model.spot.images %}
+        <img src="/image/{{ file }}" alt="Фото" class="img-thumbnail" style="max-width: 200px;">
+        {% endfor %}
+    </div>
     {% endif %}
 </div>
+
+<form id="bookingForm">
+
+    <div class="mb-3">
+
+        <div id="calendarCollapse">
+            <div class="calendar">
+                <div class="calendar-header">
+                    <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                    <div class="calendar-title" id="currentMonthYear"></div>
+                    <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+                </div>
+                <div class="calendar-weekdays">
+                    <div>Пн</div>
+                    <div>Вт</div>
+                    <div>Ср</div>
+                    <div>Чт</div>
+                    <div>Пт</div>
+                    <div>Сб</div>
+                    <div>Вс</div>
+                </div>
+                <div class="calendar-days" id="calendarDays"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="time-picker">
+        <label class="form-label">Выберите время</label>
+        <div class="time-slots"></div>
+        <div class="reset-time">Сбросить выбор времени</div>
+    </div>
+
+    <div class="booking-summary">
+        <h6>Ваше бронирование:</h6>
+        <p>Дата: <span class="summary-date"></span></p>
+        <p>Время: <span class="summary-time"></span></p>
+        <p>Стоимость: <span class="summary-price"></span> руб.</p>
+    </div>
+<button type="submit" class="btn btn-primary">Забронировать</button>
+</form>
+
+
+{% endblock %}
+{% block script %}
+<script src="/js/Studio.js"></script>
 {% endblock %}

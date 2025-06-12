@@ -1,45 +1,44 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeOwnerListVM" #}
-    {% extends "../Layout.peb" %}
 
-    {% block style %}
-        <link href="/css/Teachers.css" rel="stylesheet">
-    {% endblock %}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}teachers_list.css{% endblock %}
 
 {% block content %}
+<div class="container container-custom-margin">
 
-    <div class="container mt-5">
-        <h1 class="mb-4">Список заявок</h1>
-        <div class="row">
-            {% for owner in model.users %}
-                <div class="col-md-4 mb-4">
-                    <div class="card-body">
-                        <div class="col-md-5">
-                        {% if owner.images is not empty %}
-                            <div class="mb-2">
-                                <img id="teacher-photo-preview" src="/image/{{ owner.images[0] }}" alt="Фото владельца"
-                                     class="img-thumbnail" style="max-width: 200px;">
-                            </div>
-                        {% else %}
-                            <div class="mb-2">
-                                <img src="/img/defaultTeacher.webp" alt="Фото владельца по умолчанию"
-                                     class="img-thumbnail" style="max-width: 200px;">
-                            </div>
-                        {% endif %}
-                        </div>
-                        <h5 class="card-title">{{ owner.name }}</h5>
-                        <p class="card-text">{{ owner.description }}</p>
-                        <a href="/upgrade/owner/profiles/{{ owner.id }}" class="btn btn-primary">Просмотреть профиль</a>
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <button class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </button>
+    </section>
 
-                        <form action="/upgrade/owner/accept/{{ owner.id }}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-success">Принять заявку</button>
+    <div class="row g-4 mt-2">
+        {% for owner in model.users %}
+        <div class="col-md-4">
+            <div class="card1 h-100">
+                <a href="/upgrade/owner/profiles/{{ owner.id }}">
+                    {% if owner.images is not empty %}
+                    <img src="/image/{{ owner.images[0] }}" class="img-fluid rounded-start" alt="Фото преподавателя">
+                    {% else %}
+                    <img src="/img/defaultTeacher.webp" class="img-fluid rounded-start"
+                        alt="Фото преподавателя по умолчанию">
+                    {% endif %}
+                </a>
+                <div class="card-info1 flex-grow-1">
+                    <strong>Имя:</strong> {{ owner.name }}<br>
+                    <strong>Описание:</strong> {{ owner.description }}
+                    <div class="mt-2 d-flex gap-2">
+                        <form action="/upgrade/owner/accept/{{ owner.id }}" method="post">
+                            <button type="submit" class="btn btn-success btn-sm">Принять</button>
                         </form>
-
-                        <form action="/upgrade/owner/reject/{{ owner.id }}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-danger">Отклонить заявку</button>
+                        <form action="/upgrade/owner/reject/{{ owner.id }}" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Отклонить</button>
                         </form>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
+        {% endfor %}
     </div>
+</div>
 {% endblock %}

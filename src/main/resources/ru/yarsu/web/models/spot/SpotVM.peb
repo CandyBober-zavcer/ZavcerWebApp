@@ -3,78 +3,160 @@
 {% block style %}Studio.css{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <h2>{{ model.spot.name | escape }}</h2>
-    <p class="text-muted">{{ model.spot.address | escape }}</p>
-    <p><strong>Район:</strong> {{ model.spot.district.district }}</p>
-    <p><strong>Цена за час:</strong> {{ model.spot.price }} ₽</p>
-    <p><strong>Описание:</strong> {{ model.spot.description | escape }}</p>
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="/spots" class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
 
-    <ul>
-        <li>Есть ударная установка: {{ model.spot.hasDrums ? "Да" : "Нет" }}</li>
-        <li>Гитарных усилителей: {{ model.spot.guitarAmps }}</li>
-        <li>Басовых усилителей: {{ model.spot.bassAmps }}</li>
-    </ul>
+        <div class="d-flex gap-3">
+            <a href="/edit/spot/delete-{{ model.spot.id }}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-x" style="font-size: 1.5rem;"></i>
+            </a>
+            <a href="/edit/spot/edit-{{ model.spot.id }}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-gear" style="font-size: 1.5rem;"></i>
+            </a>
+        </div>
+    </section>
 
-    {% if model.spot.images != null and model.spot.images.size > 0 %}
-    <div class="mt-4 d-flex gap-2 flex-wrap">
-        {% for file in model.spot.images %}
-        <img src="/image/{{ file }}" alt="Фото" class="img-thumbnail" style="max-width: 200px;">
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if user is not null %}
-        <form method="POST">
-            <button type="submit" class="btn btn-success btn-lg mt-3">
-                ✅ Забронировать точку
-            </button>
-        </form>
-    {% endif %}
-
-</div>
-
-<form id="bookingForm">
-
-    <div class="mb-3">
-
-        <div id="calendarCollapse">
-            <div class="calendar">
-                <div class="calendar-header">
-                    <button type="button" class="calendar-nav" id="prevMonth">❮</button>
-                    <div class="calendar-title" id="currentMonthYear"></div>
-                    <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0 ">
+            <div class="col-lg-4 col-md-5">
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+                    {% if model.spot.images != null and model.spot.images.size > 0 %}
+                    <img src="/image/{{ model.spot.images[0] }}" alt="Фото студии" class="img-fluid rounded-3 shadow-sm"
+                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    {% else %}
+                    <img src="/img/defaultStudio.webp" alt="Нет фото" class="img-fluid rounded-3 shadow-sm"
+                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    {% endif %}
                 </div>
-                <div class="calendar-weekdays">
-                    <div>Пн</div>
-                    <div>Вт</div>
-                    <div>Ср</div>
-                    <div>Чт</div>
-                    <div>Пт</div>
-                    <div>Сб</div>
-                    <div>Вс</div>
+
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div class="card-body p-4 p-lg-5">
+                    <h1 class="display-6 fw-bold mb-3">{{ model.spot.name | escape }}</h1>
+                    <p class="lead text-muted mb-4">{{ model.spot.description | escape }}</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="fs-4 me-3">📍</div>
+                                <div>
+                                    <div class="fw-semibold text-muted small">Адрес</div>
+                                    <div class="fw-bold">{{ model.spot.address | escape }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="fs-4 text-success me-3">💰</div>
+                                <div>
+                                    <div class="fw-semibold text-muted small">Цена за час</div>
+                                    <div class="fw-bold text-success">{{ model.spot.price }} ₽</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="fs-4 text-warning me-3">🏙️</div>
+                                <div>
+                                    <div class="fw-semibold text-muted small">Район</div>
+                                    <div class="fw-bold">{{ model.spot.district.district }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="fs-4 text-info me-3">🥁</div>
+                                <div>
+                                    <div class="fw-semibold text-muted small">Ударная установка</div>
+                                    <div class="fw-bold">{{ model.spot.hasDrums ? "Есть" : "Нет" }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="fs-4 text-primary me-3">🎸</div>
+                                <div>
+                                    <div class="fw-semibold text-muted small">Гитарные усилители</div>
+                                    <div class="fw-bold">{{ model.spot.guitarAmps }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                <div class="fs-4 text-dark me-3">🎵</div>
+                                <div>
+                                    <div class="fw-semibold text-muted small">Басовые усилители</div>
+                                    <div class="fw-bold">{{ model.spot.bassAmps }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    {% if model.spot.images != null and model.spot.images.size > 1 %}
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% for file in model.spot.images %}
+                        <img src="/image/{{ file }}" alt="Фото студии" class="img-thumbnail" style="max-width: 120px;">
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" id="bookingForm">
+                        <div class="mb-3">
+                            <div id="calendarCollapse">
+                                <div class="calendar">
+                                    <div class="calendar-header">
+                                        <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                                        <div class="calendar-title" id="currentMonthYear"></div>
+                                        <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+                                    </div>
+                                    <div class="calendar-weekdays">
+                                        <div>Пн</div>
+                                        <div>Вт</div>
+                                        <div>Ср</div>
+                                        <div>Чт</div>
+                                        <div>Пт</div>
+                                        <div>Сб</div>
+                                        <div>Вс</div>
+                                    </div>
+                                    <div class="calendar-days" id="calendarDays"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="time-picker mb-3">
+                            <label class="form-label">Выберите время</label>
+                            <div class="time-slots"></div>
+                            <div class="reset-time">Сбросить выбор времени</div>
+                        </div>
+
+                        <div class="booking-summary mb-3">
+                            <h6>Ваше бронирование:</h6>
+                            <p>Дата: <span class="summary-date"></span></p>
+                            <p>Время: <span class="summary-time"></span></p>
+                            <p>Стоимость: <span class="summary-price"></span> руб.</p>
+                        </div>
+
+                        {% if user is not null %}
+                        <button type="submit" class="btn btn-success btn-lg">✅ Забронировать точку</button>
+                        {% endif %}
+                    </form>
                 </div>
-                <div class="calendar-days" id="calendarDays"></div>
             </div>
         </div>
     </div>
-
-    <div class="time-picker">
-        <label class="form-label">Выберите время</label>
-        <div class="time-slots"></div>
-        <div class="reset-time">Сбросить выбор времени</div>
-    </div>
-
-    <div class="booking-summary">
-        <h6>Ваше бронирование:</h6>
-        <p>Дата: <span class="summary-date"></span></p>
-        <p>Время: <span class="summary-time"></span></p>
-        <p>Стоимость: <span class="summary-price"></span> руб.</p>
-    </div>
-<button type="submit" class="btn btn-primary">Забронировать</button>
-</form>
-
-
+</div>
 {% endblock %}
+
 {% block script %}
 <script src="/js/Studio.js"></script>
 {% endblock %}

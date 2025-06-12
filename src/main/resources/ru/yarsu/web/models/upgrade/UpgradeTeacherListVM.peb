@@ -1,15 +1,6 @@
-<<<<<<< HEAD:src/main/resources/ru/yarsu/web/models/upgrade/UpgradeListVM.peb
 {# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeListVM" #}
 {% extends "../DesignedLayout.peb" %}
 {% block style %}teachers_list.css{% endblock %}
-=======
-{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeTeacherListVM" #}
-    {% extends "../Layout.peb" %}
-
-    {% block style %}
-        <link href="/css/Teachers.css" rel="stylesheet">
-    {% endblock %}
->>>>>>> origin/develop:src/main/resources/ru/yarsu/web/models/upgrade/UpgradeTeacherListVM.peb
 
 {% block content %}
 <div class="container container-custom-margin">

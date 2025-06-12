@@ -3,20 +3,16 @@
 {% extends "../DesignedLayout.peb" %}
 {% block style %}studios_list.css{% endblock %}
 {% block content %}
-
-    <div class="upgrade-button-container">
-        <a href="/upgrade/owner/{{ user.id }}" class="upgrade-button">
-            Стать владельцем точки
-        </a>
-        <a href="/upgrade/owners" class="upgrade-button">
-            Приём владельцев точек
-        </a>
-    </div>
-<div class="container mt-5 mb-5">
-    <h1 class="mb-4">Репетиционные точки</h1>
-    <a href="/edit/spot/add" class="btn btn-outline-primary mb-4">Добавить</a>
-    <div class="row">
-
+{% if user is not null %}
+<div class="upgrade-button-container">
+    <a href="/upgrade/owner/{{ user.id }}" class="upgrade-button">
+        Стать владельцем точки
+    </a>
+    <a href="/upgrade/owners" class="upgrade-button">
+        Приём владельцев точек
+    </a>
+</div>
+{% endif %}
 <div class="container container-custom-margin">
 
     <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">

@@ -1,5 +1,5 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeOwnerProfileVM" #}
-    {% extends "../Layout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
 
     {% block style %}
     <link href="/css/Teacher.css" rel="stylesheet">

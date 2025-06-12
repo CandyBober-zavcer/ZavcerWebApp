@@ -1,63 +1,90 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.home.HomePageVM" #}
-
 <!DOCTYPE html>
 <html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/index.css">
+
     <title>Zavcer</title>
 </head>
 
 <body>
 
-    <section class="first-section">
-        <img src="../img/vinyl.png" alt="vinyl" class="vinyl-image">
-        <div class="first-section-content">
-            <div class="name">
-                <h1 class="thin-text">CandyБобер</h1>
+    <div class="container-fluid py-5 px-0 position-relative">
+        <div class="row align-items-center text-center mx-0">
+            <div class="col-12 col-md-4 px-0 d-none d-md-block">
+                <img src="../img/vinyl.png" alt="vinyl" class="img-fluid w-100">
             </div>
-            <div class="slogan">
-                <h1 class="bold-text">Найди свой звук!</h1>
-            </div>
-            <div class="buttons">
-                <button class="btn btn-outline"><a href="/spots">реп. точки</a></button>
-                <button class="btn btn-red"> <a href="/teachers">репетиторы</a></button>
+            <div class="col-12 col-md-8 d-flex flex-column justify-content-center align-items-center">
+                <h1 class="custom-thin-text text-center">CandyБобер</h1>
+                <h2 class="custom-bold-text text-center mt-3">Найди свой звук!</h2>
+                <div class="d-grid gap-3 d-md-flex justify-content-center mt-4">
+                    <a href="/spots" class="btn btn-outline-dark btn-xl">Реп. точки</a>
+                    <a href="/teachers" class="btn btn-danger btn-xl">Репетиторы</a>
+                </div>
             </div>
         </div>
-    </section>
-    <header>
-        <h2><a href="/">CandyБобер</a></h2>
-        <nav>
-            <ul>
-                <li><a href="/spots">Реп точки</a></li>
-                <li><a href="/teachers">Преподаватели</a></li>
-                <li><a href="/profile/1"><img src="../img/user-icon.png" alt="Профиль"></a></li>
-            </ul>
-        </nav>
+    </div>
+
+
+    <header class="border-bottom sticky-top bg-white">
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand fs-1" href="/">CandyБобер</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav align-items-lg-center">
+                        <li class="nav-item">
+                            <a class="nav-link fs-4" href="/spots">Реп точки</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fs-4" href="/teachers">Преподаватели</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link"
+                                href="{% if user is not null %}/profile/1{% else %}/auth/signin{% endif %}">
+                                <img src="/img/user-icon.png" alt="Профиль" class="img-fluid" style="max-width: 50px;">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
     </header>
-    <section class="other-section">
-        <div class="other-section-content">
-            <div class="other-name">
-                <h2>Репетиционные точки</h2>
+    <div class="container py-5">
+        <div class="row justify-content-center align-items-center text-center text-md-start">
+            <div class="col-12 col-md-6 order-md-2 mb-4 mb-md-0">
+                <img src="../img/guitar.jpg" alt="guitar" class="img-fluid rounded-circle shadow">
             </div>
-            <p>Крутейшие реп точки по всему Ярославлю !</p>
-            <button class="btn btn-outline"><a href="/spots">Арендовать</a></button>
+            <div class="col-12 col-md-6 order-md-1">
+                <h2 class="fw-bold display-5">Репетиционные точки</h2>
+                <p class="lead mt-3">Крутейшие реп точки по всему Ярославлю!</p>
+                <a href="/spots" class="btn btn-outline-dark btn-lg mt-3">Арендовать</a>
+            </div>
         </div>
-        <img src="../img/guitar.jpg" alt="">
-
-    </section>
-    <section class="other-section">
-        <img src="../img/guitar.jpg" alt="">
-        <div class="other-section-content">
-            <h2>Преподаватели</h2>
-            <p>А преподаватели просто сок !</p>
-            <button class="btn btn-outline"><a href="/teachers">Научиться</a></button>
+    </div>
+    <div class="container py-5">
+        <div class="row justify-content-center align-items-center text-center text-md-start">
+            <div class="col-12 col-md-6 mb-4 mb-md-0">
+                <img src="../img/guitar.jpg" alt="teacher" class="img-fluid rounded-circle shadow">
+            </div>
+            <div class="col-12 col-md-6 text-md-end">
+                <h2 class="fw-bold display-5">Преподаватели</h2>
+                <p class="lead mt-3">А преподаватели просто сок!</p>
+                <a href="/teachers" class="btn btn-outline-dark btn-lg mt-3">Научиться</a>
+            </div>
         </div>
-
-
-    </section>
+    </div>
+    <script src="/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

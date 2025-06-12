@@ -1,10 +1,5 @@
-<<<<<<< HEAD:src/main/resources/ru/yarsu/web/models/upgrade/UpgradeProfileVM.peb
 {# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeProfileVM" #}
     {% extends "../DesignedLayout.peb" %}
-=======
-{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeTeacherProfileVM" #}
-    {% extends "../Layout.peb" %}
->>>>>>> origin/develop:src/main/resources/ru/yarsu/web/models/upgrade/UpgradeTeacherProfileVM.peb
 
     {% block style %}/css/Teacher.css{% endblock %}
 

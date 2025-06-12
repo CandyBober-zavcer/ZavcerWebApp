@@ -1,0 +1,69 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeTeacherProfileVM" #}
+    {% extends "../Layout.peb" %}
+
+    {% block style %}
+    <link href="/css/Teacher.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <a href="/upgrade/teachers" class="btn btn-outline-secondary mb-4">← Назад к списку заявок</a>
+
+    <div class="card shadow-lg">
+        <div class="row g-0">
+            <div class="col-md-5">
+            {% if model.user.images is not empty %}
+                <div class="mb-2">
+                    <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}" alt="Фото преподавателя"
+                         class="img-thumbnail" style="max-width: 200px;">
+                </div>
+            {% else %}
+                <div class="mb-2">
+                    <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                         class="img-thumbnail" style="max-width: 200px;">
+                </div>
+            {% endif %}
+            </div>
+
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h2 class="card-title mb-2">{{ model.user.name }}</h2>
+                    <p class="card-text text-muted mb-3">{{ model.user.description }}</p>
+
+                    <p class="card-text"><strong>📞 Телефон:</strong> {{ model.user.phone }}</p>
+                    <p class="card-text"><strong>👩‍🏫 Опыт преподавания:</strong> {{ model.user.experience }} лет</p>
+                    <p class="card-text"><strong>👛 Стоимость за час:</strong> {{ model.user.price }}</p>
+
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>🎸 Инструменты:</strong></div>
+                        <div class="col-sm-9">
+                            {% if model.abilityNames is not empty %}
+                                {{ model.abilityNames }}
+                            {% else %}
+                                <span class="text-muted">Не указаны</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="mb-3">
+                        <h5 class="text-primary">📍 Адрес</h5>
+                        <p>{{ model.user.address }}</p>
+                        <p><strong>Район:</strong> {{ model.user.district.district }}</p>
+                    </div>
+
+                    <div class="d-flex gap-3 mt-4">
+                        <form method="post" action="/upgrade/teacher/accept/{{ model.user.id }}">
+                            <button class="btn btn-success btn-lg" type="submit">✅ Принять заявку</button>
+                        </form>
+                        <form method="post" action="/upgrade/teacher/reject/{{ model.user.id }}">
+                            <button class="btn btn-outline-danger btn-lg" type="submit">✖️ Отклонить заявку</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

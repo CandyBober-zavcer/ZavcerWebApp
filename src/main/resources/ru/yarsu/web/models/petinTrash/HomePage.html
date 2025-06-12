@@ -1,0 +1,49 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.studio.StudiosVM" #}
+
+{% extends "../Layout.peb" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1 class="mb-4">Наши репетиционные студии</h1>
+                <p class="lead">
+                    Выберите студию с нужным вам оборудованием и удобным местоположением.
+                </p>
+
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <img src="https://sun9-44.userapi.com/impf/c624729/v624729015/2c0ea/KBnerY80oBU.jpg?size=1278x750&quality=96&sign=d86e1e3a5faa5d8161df15858c7948e3&c_uniq_tag=XMYLzsQKHwzGPhBk4OS_QoJ4FvA4rP20vi8wt7ELAdI&type=album" class="card-img-top" alt="Студия Мелодия">
+                            <div class="card-body">
+                                <h5 class="card-title">Студия "Мелодия"</h5>
+                                <p class="card-text">
+                                    <strong>Адрес:</strong> пр. Ленина, 42<br>
+                                    <strong>Оборудование:</strong> Фортепиано, микрофоны<br>
+                                    <strong>Цена:</strong> 400 руб/час
+                                </p>
+                                <a href="Studio.html" class="btn btn-primary">Забронировать</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <img src="https://sun9-44.userapi.com/impf/c624729/v624729015/2c0ea/KBnerY80oBU.jpg?size=1278x750&quality=96&sign=d86e1e3a5faa5d8161df15858c7948e3&c_uniq_tag=XMYLzsQKHwzGPhBk4OS_QoJ4FvA4rP20vi8wt7ELAdI&type=album" class="card-img-top" alt="Студия Гром">
+                            <div class="card-body">
+                                <h5 class="card-title">Студия "Гром"</h5>
+                                <p class="card-text">
+                                    <strong>Адрес:</strong> ул. Гагарина, 7<br>
+                                    <strong>Оборудование:</strong> Полный набор для рок-группы<br>
+                                    <strong>Цена:</strong> 800 руб/час
+                                </p>
+                                <a href="Studio.html" class="btn btn-primary">Забронировать</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

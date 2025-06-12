@@ -1,0 +1,49 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.spot.SpotsVM" #}
+
+    {% extends "../Layout.peb" %}
+
+{% block content %}
+
+    <div class="upgrade-button-container">
+        <a href="/upgrade/owner/{{ user.id }}" class="upgrade-button">
+            Стать владельцем точки
+        </a>
+        <a href="/upgrade/owners" class="upgrade-button">
+            Приём владельцев точек
+        </a>
+    </div>
+<div class="container mt-5 mb-5">
+    <h1 class="mb-4">Репетиционные точки</h1>
+    <a href="/edit/spot/add" class="btn btn-outline-primary mb-4">Добавить</a>
+    <div class="row">
+
+        {% for spot in model.spots %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if spot.images.size > 0 %}
+                        <img src="/image/{{ spot.images[0] }}" class="img-fluid rounded-start" alt="Фото студии">
+                    {% else %}
+                        <img src="/img/defaultStudio.jpg" class="img-fluid rounded-start" alt="Фото студии">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ spot.name }}</h5>
+                        <p class="card-text">
+                            <strong>Адрес:</strong> {{ spot.address }}<br>
+                            <strong>Район:</strong> {{ spot.district.district }}<br>
+                            <strong>Барабаны:</strong> {{ spot.hasDrums ? "Да" : "Нет" }}<br>
+                            <strong>Гитарных комбиков:</strong> {{ spot.guitarAmps }}<br>
+                            <strong>Басовых комбиков:</strong> {{ spot.bassAmps }}<br>
+                            <strong>Цена:</strong> {{ spot.price }} руб/час
+                        </p>
+                        <a href="/spot/{{ spot.id }}" class="btn btn-primary">Забронировать</a>
+                        <a href="/edit/spot/edit-{{spot.id}}" class="btn btn-secondary">Редактировать</a>
+                        <a href="/edit/spot/delete-{{ spot.id }}" class="btn btn-danger">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

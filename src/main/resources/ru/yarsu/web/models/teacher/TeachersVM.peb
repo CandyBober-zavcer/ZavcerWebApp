@@ -1,0 +1,45 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeachersVM" #}
+    {% extends "../Layout.peb" %}
+
+    {% block style %}
+        <link href="/css/Teachers.css" rel="stylesheet">
+    {% endblock %}
+
+{% block content %}
+    {% if user is not null %}
+        <div class="upgrade-button-container">
+            <a href="/upgrade/teacher/{{ user.id }}" class="upgrade-button">
+                Стать преподавателем
+            </a>
+            <a href="/upgrade/teachers" class="upgrade-button">
+                Приём преподавателей
+            </a>
+        </div>
+    {% endif %}
+
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Наши преподаватели</h1>
+        <div class="row">
+            {% for teacher in model.teachers %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if teacher.images | length > 0 %}
+                            <img src="/image/{{ teacher.images[0] }}" alt="Аватар преподавателя" class="img-thumbnail" style="max-width: 200px;">
+                        {% else %}
+                            <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию" class="img-thumbnail" style="max-width: 200px;">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ teacher.name }}</h5>
+                            <p class="card-text">{{ teacher.description }}</p>
+                            <a href="/teacher/{{ teacher.id }}" class="btn btn-primary">Записаться</a>
+                            <a href="/edit/teacher/edit-{{ teacher.id }}" class="btn btn-primary">Редактировать</a>
+                            <a href="/edit/teacher/delete-{{ teacher.id }}" class="btn btn-primary">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

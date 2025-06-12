@@ -1,12 +1,21 @@
 package ru.yarsu.web.handlers
 
-import org.http4k.core.HttpHandler
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status
+import org.http4k.core.*
+import ru.yarsu.config.AppConfig
+import ru.yarsu.db.UserData
+import ru.yarsu.web.domain.models.telegram.AuthUtils
 
-class PingHandler: HttpHandler {
+class PingHandler(
+    private val users: UserData,
+) : HttpHandler {
     override fun invoke(request: Request): Response {
-        return Response(Status.OK).body("pong")
+        val config = AppConfig()
+        val user = AuthUtils.getUserFromCookie(request, authSalt = config.webConfig.authSalt, users)
+
+        return if (user != null) {
+            Response(Status.OK).body("Welcome, ${user.name}!")
+        } else {
+            Response(Status.FOUND).header("Location", "/login")
+        }
     }
 }

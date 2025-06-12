@@ -1,0 +1,45 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeTeacherListVM" #}
+    {% extends "../Layout.peb" %}
+
+    {% block style %}
+        <link href="/css/Teachers.css" rel="stylesheet">
+    {% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Список заявок</h1>
+        <div class="row">
+            {% for teacher in model.users %}
+                <div class="col-md-4 mb-4">
+                    <div class="card-body">
+                        <div class="col-md-5">
+                        {% if teacher.images is not empty %}
+                            <div class="mb-2">
+                                <img id="teacher-photo-preview" src="/image/{{ teacher.images[0] }}" alt="Фото преподавателя"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% else %}
+                            <div class="mb-2">
+                                <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ teacher.name }}</h5>
+                        <p class="card-text">{{ teacher.description }}</p>
+                        <a href="/upgrade/teacher/profiles/{{ teacher.id }}" class="btn btn-primary">Просмотреть профиль</a>
+
+                        <form action="/upgrade/teacher/accept/{{ teacher.id }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-success">Принять заявку</button>
+                        </form>
+
+                        <form action="/upgrade/teacher/reject/{{ teacher.id }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Отклонить заявку</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

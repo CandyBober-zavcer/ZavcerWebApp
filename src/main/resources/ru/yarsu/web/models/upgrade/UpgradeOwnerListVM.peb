@@ -1,4 +1,4 @@
-{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeListVM" #}
+{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeOwnerListVM" #}
     {% extends "../Layout.peb" %}
 
     {% block style %}
@@ -10,31 +10,31 @@
     <div class="container mt-5">
         <h1 class="mb-4">Список заявок</h1>
         <div class="row">
-            {% for teacher in model.users %}
+            {% for owner in model.users %}
                 <div class="col-md-4 mb-4">
                     <div class="card-body">
                         <div class="col-md-5">
-                        {% if teacher.images is not empty %}
+                        {% if owner.images is not empty %}
                             <div class="mb-2">
-                                <img id="teacher-photo-preview" src="/image/{{ teacher.images[0] }}" alt="Фото преподавателя"
+                                <img id="teacher-photo-preview" src="/image/{{ owner.images[0] }}" alt="Фото владельца"
                                      class="img-thumbnail" style="max-width: 200px;">
                             </div>
                         {% else %}
                             <div class="mb-2">
-                                <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                                <img src="/img/defaultTeacher.webp" alt="Фото владельца по умолчанию"
                                      class="img-thumbnail" style="max-width: 200px;">
                             </div>
                         {% endif %}
                         </div>
-                        <h5 class="card-title">{{ teacher.name }}</h5>
-                        <p class="card-text">{{ teacher.description }}</p>
-                        <a href="/upgrade/teacher/profiles/{{ teacher.id }}" class="btn btn-primary">Просмотреть профиль</a>
+                        <h5 class="card-title">{{ owner.name }}</h5>
+                        <p class="card-text">{{ owner.description }}</p>
+                        <a href="/upgrade/owner/profiles/{{ owner.id }}" class="btn btn-primary">Просмотреть профиль</a>
 
-                        <form action="/upgrade/teacher/accept/{{ teacher.id }}" method="post" style="display:inline;">
+                        <form action="/upgrade/owner/accept/{{ owner.id }}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-success">Принять заявку</button>
                         </form>
 
-                        <form action="/upgrade/teacher/reject/{{ teacher.id }}" method="post" style="display:inline;">
+                        <form action="/upgrade/owner/reject/{{ owner.id }}" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-danger">Отклонить заявку</button>
                         </form>
                     </div>

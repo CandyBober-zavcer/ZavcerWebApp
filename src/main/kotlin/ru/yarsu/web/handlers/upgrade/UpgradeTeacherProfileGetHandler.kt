@@ -3,10 +3,10 @@ package ru.yarsu.web.handlers.upgrade
 import org.http4k.core.*
 import org.http4k.routing.path
 import ru.yarsu.db.UserData
-import ru.yarsu.web.models.upgrade.UpgradeProfileVM
+import ru.yarsu.web.models.upgrade.UpgradeTeacherProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
-class UpgradeProfileGetHandler(
+class UpgradeTeacherProfileGetHandler(
     private val htmlView: ContextAwareViewRender,
     private val users: UserData,
 ) : HttpHandler {
@@ -19,7 +19,7 @@ class UpgradeProfileGetHandler(
             users.getTeacherByIdIfRolePendingTeacher(teacherId)
                 ?: return Response(Status.NOT_FOUND).body("Пользователь не найден или уже не в статусе ожидания")
 
-        val viewModel = UpgradeProfileVM(teacher)
+        val viewModel = UpgradeTeacherProfileVM(teacher)
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 }

@@ -105,6 +105,11 @@ class UserData {
             RoleEnums.PENDING_TEACHER in it.roles && it.isConfirmed
         }
 
+    fun getPendingOwner(): List<UserModel> =
+        users.filter {
+            RoleEnums.PENDING_OWNER in it.roles && it.isConfirmed
+        }
+
     fun getTeacherById(id: Int): UserModel? =
         users.find {
             it.id == id && RoleEnums.TEACHER in it.roles && it.isConfirmed
@@ -115,15 +120,36 @@ class UserData {
             it.id == id && RoleEnums.TEACHER !in it.roles && it.isConfirmed
         }
 
+    fun getUserIfNotOwner(id: Int): UserModel? =
+        users.find {
+            it.id == id && RoleEnums.OWNER !in it.roles && it.isConfirmed
+        }
+
     fun getTeacherByIdIfRolePendingTeacher(id: Int): UserModel? =
         users.find {
             it.id == id && RoleEnums.PENDING_TEACHER in it.roles && it.isConfirmed
+        }
+
+    fun getOwnerByIdIfRolePendingOwner(id: Int): UserModel? =
+        users.find {
+            it.id == id && RoleEnums.PENDING_OWNER in it.roles && it.isConfirmed
         }
 
     fun removeTeacherRoleById(id: Int): Boolean {
         val user = users.find { it.id == id }
         return if (user != null && RoleEnums.TEACHER in user.roles) {
             val updatedRoles = user.roles.toMutableSet().apply { remove(RoleEnums.TEACHER) }
+            val updatedUser = user.copy(roles = updatedRoles)
+            update(id, updatedUser)
+        } else {
+            false
+        }
+    }
+
+    fun removeOwnerRoleById(id: Int): Boolean {
+        val user = users.find { it.id == id }
+        return if (user != null && RoleEnums.TEACHER in user.roles) {
+            val updatedRoles = user.roles.toMutableSet().apply { remove(RoleEnums.OWNER) }
             val updatedUser = user.copy(roles = updatedRoles)
             update(id, updatedUser)
         } else {
@@ -207,12 +233,30 @@ class UserData {
         return update(user.id, updatedUser)
     }
 
+    fun rejectOwnerRequest(id: Int): Boolean {
+        val user = users.find { it.id == id } ?: return false
+        val newRoles = user.roles.toMutableSet().apply { remove(RoleEnums.PENDING_OWNER) }
+        val updatedUser = user.copy(roles = newRoles)
+        return update(user.id, updatedUser)
+    }
+
     fun acceptTeacherRequest(id: Int): Boolean {
         val user = users.find { it.id == id } ?: return false
         val newRoles =
             user.roles.toMutableSet().apply {
                 remove(RoleEnums.PENDING_TEACHER)
                 add(RoleEnums.TEACHER)
+            }
+        val updatedUser = user.copy(roles = newRoles)
+        return update(user.id, updatedUser)
+    }
+
+    fun acceptOwnerRequest(id: Int): Boolean {
+        val user = users.find { it.id == id } ?: return false
+        val newRoles =
+            user.roles.toMutableSet().apply {
+                remove(RoleEnums.PENDING_OWNER)
+                add(RoleEnums.OWNER)
             }
         val updatedUser = user.copy(roles = newRoles)
         return update(user.id, updatedUser)

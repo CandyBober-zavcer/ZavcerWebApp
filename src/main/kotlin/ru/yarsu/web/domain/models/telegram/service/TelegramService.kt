@@ -43,6 +43,16 @@ object TelegramService {
         send(chatId, text)
     }
 
+    fun notifyOwnerSuccess(chatId: Long) {
+        val text = "🎉 Ваша заявка на роль владельца точки одобрена! Добро пожаловать в команду!"
+        send(chatId, text)
+    }
+
+    fun notifyOwnerRejected(chatId: Long) {
+        val text = "🚫 К сожалению, ваша заявка на роль владельца точки была отклонена. Вы можете попробовать снова позже."
+        send(chatId, text)
+    }
+
     fun teacherNotification(teacherId: Long, studentId: Long) {
         if (teacherId <= 0L) return
 

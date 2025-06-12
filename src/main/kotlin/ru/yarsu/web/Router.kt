@@ -30,6 +30,7 @@ import ru.yarsu.web.handlers.spot.SpotPostHandler
 import ru.yarsu.web.handlers.spot.SpotsListHandler
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
+import ru.yarsu.web.models.upgrade.UpgradeOwnerProfileVM
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -87,8 +88,8 @@ fun router(
             ),
         "/upgrade/teacher/{id}" bind Method.GET to UpgradeUserToTeacherGetHandler(htmlView, users),
         "/upgrade/teacher/{id}" bind Method.POST to UpgradeUserToTeacherPostHandler(htmlView, users),
-        "/upgrade/teachers" bind Method.GET to UpgradeListGetHandler(htmlView, users),
-        "/upgrade/teacher/profiles/{id}" bind Method.GET to UpgradeProfileGetHandler(htmlView, users),
+        "/upgrade/teachers" bind Method.GET to UpgradeTeacherListGetHandler(htmlView, users),
+        "/upgrade/teacher/profiles/{id}" bind Method.GET to UpgradeTeacherProfileGetHandler(htmlView, users),
         "/upgrade/teacher/accept/{id}" bind Method.POST to AcceptTeacherPostHandler(users),
         "/upgrade/teacher/reject/{id}" bind Method.POST to RejectTeacherPostHandler(users),
         "/teachers" bind Method.GET to TeachersGetHandler(htmlView, users),
@@ -98,6 +99,12 @@ fun router(
         "/edit/teacher/edit-{id}" bind Method.POST to EditTeacherPostHandler(htmlView, users),
         "/edit/teacher/delete-{id}" bind Method.GET to DeleteTeacherGetHandler(htmlView, users),
         "/edit/teacher/delete-{id}" bind Method.POST to DeleteTeacherPostHandler(users),
+        "/upgrade/owner/{id}" bind Method.GET to UpgradeUserToOwnerGetHandler(htmlView, users),
+        "/upgrade/owner/{id}" bind Method.POST to UpgradeUserToOwnerPostHandler(htmlView, users),
+        "/upgrade/owners" bind Method.GET to UpgradeOwnerListGetHandler(htmlView, users),
+        "/upgrade/owner/profiles/{id}" bind Method.GET to UpgradeOwnerProfileGetHandler(htmlView, users),
+        "/upgrade/owner/accept/{id}" bind Method.POST to AcceptOwnerPostHandler(users),
+        "/upgrade/owner/reject/{id}" bind Method.POST to RejectOwnerPostHandler(users),
         "/spots" bind Method.GET to SpotsListHandler(htmlView, spots),
         "/spot/{id}" bind Method.GET to SpotGetHandler(htmlView, spots),
         "/spot/{id}" bind Method.POST to SpotPostHandler(spots, users),

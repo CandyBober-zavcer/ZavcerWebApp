@@ -1,79 +1,87 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.ProfileVM" #}
 
-    {% extends "../DesignedLayout.peb" %}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}Teacher.css{% endblock %}
 
-    {% block content %}
-<section class="main-section bg-light">
-    <div class="container py-5">
-        <div class="row">
-            <!-- Левая колонка -->
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <img src="{{ model.user.images | length > 0 ? '/image/' ~ model.user.images[0] : '/img/defaultProfile.webp' }}" alt="Аватар пользователя"
-                            class="rounded-circle img-fluid" style="width: 150px;">
-                        <h5 class="my-3">{{ model.user.name }}</h5>
-                        <div class="d-flex justify-content-center mb-2">
-                            <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-primary">Редактировать</a>
-                        </div>
-                    </div>
+{% block content %}
+<div class="container mt-5">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="#" class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <div class="d-flex gap-3">
+
+            <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-gear" style="font-size: 1.5rem;"></i>
+            </a>
+        </div>
+    </section>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-lg-4 col-md-5">
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+                    {% if model.user.images | length > 0 %}
+                        <img src="/image/{{ model.user.images[0] }}" alt="Аватар пользователя"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    {% else %}
+                        <img src="/img/defaultProfile.webp" alt="Фото пользователя по умолчанию"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    {% endif %}
                 </div>
             </div>
 
-            <!-- Правая колонка -->
-            <div class="col-lg-8">
-                <div class="card mb-4 position-relative">
-                    <div class="card-body">
-
-                        <!-- Telegram кнопка -->
-                        <div class="d-flex justify-content-end mb-3">
-                            {% if model.user.tg_id != 0 %}
-                                <span class="badge bg-success p-2">Telegram привязан</span>
-                            {% else %}
-                                <script async src="https://telegram.org/js/telegram-widget.js?22"
-                                        data-telegram-login="Zavcer_bot"
-                                        data-size="large"
-                                        data-userpic="false"
-                                        data-request-access="write"
-                                        data-auth-url="https://zavcer.ru.tuna.am/auth/attach-telegram?userId={{ model.user.id }}"
-                                        data-lang="ru">
-                                </script>
-                            {% endif %}
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-3"><p class="mb-0">Имя</p></div>
-                            <div class="col-sm-9"><p class="text-muted mb-0">{{ model.user.name }}</p></div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3"><p class="mb-0">Описание</p></div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">
-                                    {{ model.user.description | default("Описание отсутствует") }}
-                                </p>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3"><p class="mb-0">Инструменты</p></div>
-                            <div class="col-sm-9">
-                                <p class="text-muted mb-0">
-                                    {% if model.abilityNames is not empty %}
-                                        {{ model.abilityNames }}
-                                    {% else %}
-                                        Не указаны
-                                    {% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        <hr>
+            <div class="col-lg-8 col-md-7">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="mb-4">
+                        <h1 class="display-6 fw-bold mb-2">{{ model.user.name }}</h1>
+                        <p class="lead text-muted">
+                            {{ model.user.description | default("Описание отсутствует") }}
+                        </p>
                     </div>
+
+                    <div class="container">
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-12">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Инструменты</div>
+                                        <div class="fw-bold">
+                                            {% if model.abilityNames is not empty %}
+                                                {{ model.abilityNames }}
+                                            {% else %}
+                                                <span class="text-muted">Не указаны</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {% if model.user.tg_id != 0 %}
+                            <span class="badge bg-success p-2">Telegram привязан</span>
+                        {% else %}
+                            <script async src="https://telegram.org/js/telegram-widget.js?22"
+                                    data-telegram-login="Zavcer_bot"
+                                    data-size="large"
+                                    data-userpic="false"
+                                    data-request-access="write"
+                                    data-auth-url="https://zavcer.ru.tuna.am/auth/attach-telegram?userId={{ model.user.id }}"
+                                    data-lang="ru">
+                            </script>
+                        {% endif %}
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 {% endblock %}
 
 {% block script %}

@@ -1,38 +1,50 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-family: Arial, sans-serif; 
 }
 body {
     display: flex;
     flex-direction: column;
+    background-color: #fff; 
 }
 .content {
     flex: 1 0 auto;
+    padding: 20px; 
 }
 footer {
     flex-shrink: 0;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #dc3545; 
+    color: white; 
 }
 .calendar {
     width: 100%;
     max-width: 400px;
     margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    background-color: #f8f9fa; 
 }
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    padding: 10px;
 }
 .calendar-title {
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
+    color: #dc3545; 
 }
 .calendar-nav {
     background: none;
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
+    color: #dc3545; 
 }
 .calendar-weekdays {
     display: grid;
@@ -40,6 +52,7 @@ footer {
     text-align: center;
     font-weight: bold;
     margin-bottom: 10px;
+    color: #dc3545; 
 }
 .calendar-days {
     display: grid;
@@ -53,6 +66,7 @@ footer {
     justify-content: center;
     border-radius: 50%;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 .calendar-day.available {
     background-color: #f8f9fa;
@@ -60,16 +74,16 @@ footer {
 }
 .calendar-day.available:hover, 
 .calendar-day.selected {
-    background-color: #0d6efd;
+    background-color: #dc3545; 
     color: white;
 }
 .calendar-day.unavailable {
-    background-color: #6c757d;
+    background-color: #6c757d; 
     color: white;
     cursor: not-allowed;
 }
 .calendar-day.other-month {
-    color: #adb5bd;
+    color: #adb5bd; 
 }
 .time-picker {
     display: none;
@@ -86,6 +100,7 @@ footer {
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease; 
 }
 .time-slot.available {
     background-color: #f8f9fa;
@@ -93,9 +108,8 @@ footer {
 }
 .time-slot.available:hover, 
 .time-slot.selected {
-    background-color: #0d6efd;
-    color: white;
-    border-color: #0d6efd;
+    background-color: #dc3545; 
+    border-color: #dc3545;
 }
 .time-slot.unavailable {
     background-color: #6c757d;
@@ -111,8 +125,8 @@ footer {
 }
 .reset-time {
     cursor: pointer;
-    color: #0d6efd;
-    text-decoration: underline;
+    color: #dc3545; 
+    text-decoration: underline; 
     font-size: 0.9em;
     margin-top: 5px;
     display: none;

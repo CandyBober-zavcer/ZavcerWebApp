@@ -1,24 +1,32 @@
 @import url('filter.css');
 
-
-
-
 .for_admin p a,
 .for_admin p a:visited,
 .for_admin p a:hover,
 .for_admin p a:active {
-    color: #333;
+    color: #555; 
     text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.for_admin p a:hover {
+    color: #ff5f5f; 
 }
 
 .card1 {
-    width: 300px;
-    height: 100%;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; 
+    max-width: 300px; 
+    height: auto; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
     overflow: hidden;
-    background-color: #f8f8f8;
-    margin: 0 auto;
+    background-color: #ffffff; 
+    margin: 20px auto;
+    transition: transform 0.3s ease; 
+}
+
+.card1:hover {
+    transform: translateY(-5px); 
 }
 
 .card1 img {
@@ -28,12 +36,17 @@
 }
 
 .card-info1 {
-    padding: 15px;
-    font-size: 14px;
+    padding: 20px;
+    font-size: 15px; 
+    color: #333; 
 }
 
 .card-info1 p {
-  margin-bottom: 10px;
+    margin-bottom: 12px; 
+    line-height: 1.5; 
 }
 
+.card-info1 p:last-child {
+    margin-bottom: 0; 
+}
 

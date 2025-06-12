@@ -16,6 +16,8 @@ import ru.yarsu.db.tables.manyToMany.UsersSpots
 import ru.yarsu.web.domain.article.Spot
 import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.classes.User
+import ru.yarsu.web.domain.enums.AbilityEnums
+import ru.yarsu.web.domain.enums.DistrictEnums
 
 class DataBaseController {
     /**
@@ -25,6 +27,8 @@ class DataBaseController {
         transaction {
             SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
         }
+        val id = insertSpot(Spot(name = "ohuel"))
+        println(getSpotById(id).name)
     }
 
     /**
@@ -40,7 +44,13 @@ class DataBaseController {
     fun getUserByPage(
         page: Int,
         limit: Int,
-    ): List<User> = UsersController().getUsersByPage(page, limit)
+        abilityIds: List<Int> = AbilityEnums.entries.map { it.id },
+        districtIds: List<Int> = DistrictEnums.entries.map { it.id },
+        priceMin: Int = 0,
+        priceMax: Int = Int.MAX_VALUE,
+        experienceMin: Int = 0,
+        sortByNearest: Boolean = false
+    ): List<User> = UsersController().getUsersByPage(page, limit, abilityIds, districtIds, priceMin, priceMax, experienceMin, sortByNearest)
 
     fun getUserById(id: Int): User = UsersController().getUserById(id)
 
@@ -95,7 +105,14 @@ class DataBaseController {
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-    ): List<Spot> = SpotsController().getSpotsByPage(page, limit)
+        drums: Boolean? = null,
+        guitarAmps: Int = 0,
+        bassAmps: Int = 0,
+        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        priceLow: Int = 0,
+        priceHigh: Int = Int.MAX_VALUE,
+        sortByNearest: Boolean = false
+    ): List<Spot> = SpotsController().getSpotsByPage(page, limit, drums, guitarAmps, bassAmps, districtList, priceLow, priceHigh, sortByNearest)
 
     fun getSpotById(id: Int): Spot = SpotsController().getSpotById(id)
 

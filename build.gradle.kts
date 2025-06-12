@@ -1,9 +1,11 @@
 import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.SourceSet
 
 plugins {
     kotlin("jvm") version "2.1.20"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     application
 }
 
@@ -40,6 +42,19 @@ tasks.withType<KotlinCompile>().configureEach {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.shadowJar {
+    archiveBaseName.set("web-application")
+    archiveVersion.set("1.0")
+    archiveClassifier.set("")
+    from(sourceSets.main.get().output)
+    configurations = listOf(project.configurations.runtimeClasspath.get())
+
+    manifest {
+        attributes["Main-Class"] = "ru.yarsu.WebApplicationKt"
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
 }
 
 java {

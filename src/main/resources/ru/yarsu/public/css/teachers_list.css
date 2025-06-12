@@ -9,7 +9,20 @@
     transition: color 0.3s ease;
 }
 
+.upgrade-button-container  a,
+.upgrade-button-container  a:visited,
+.upgrade-button-container  a:hover,
+.upgrade-button-container  a:active {
+    color: #4a4a4a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
 .for_admin p a:hover {
+    color: #ff5f5f;
+}
+
+.upgrade-button-container a:hover {
     color: #ff5f5f;
 }
 

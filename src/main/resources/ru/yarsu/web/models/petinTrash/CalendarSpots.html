@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="F:\zavcer\ZavcerWebApp\src/main/resources/ru/yarsu/public/css/edit-teacher.css">
+    <title>Календарь записи</title>
+</head>
+
+<body>
+    <form id="bookingForm">
+        <select id="locationSelect"></select>
+
+        <label class="form-label">Выберите дату</label>
+        <div class="calendar">
+            <div class="calendar-header">
+                <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                <div class="calendar-title" id="currentMonthYear"></div>
+                <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+            </div>
+            <div class="calendar-weekdays">
+                <div>Пн</div>
+                <div>Вт</div>
+                <div>Ср</div>
+                <div>Чт</div>
+                <div>Пт</div>
+                <div>Сб</div>
+                <div>Вс</div>
+            </div>
+            <div class="calendar-days" id="calendarDays"></div>
+            <button id="saveScheduleBtn"
+                style="margin-top: 20px; display: block; width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Сохранить расписание
+            </button>
+        </div>
+        <div id="blockedSlotsInfo"
+            style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
+        </div>
+        <div class="time-picker">
+            <label class="form-label">Выберите время</label>
+            <div class="time-slots"></div>
+            <div class="reset-time">Сбросить выбор времени</div>
+        </div>
+    </form>
+
+    <script src="F:\zavcer\ZavcerWebApp\src\main\resources\ru\yarsu\public\js\EditDateAndTimeSpots.js"></script>
+</body>
+
+</html>

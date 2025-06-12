@@ -220,3 +220,10 @@ footer {
     background-color: #f8f9fa !important;
     border-color: #0d6efd !important;
 }
+
+
+.blocked-date {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+}

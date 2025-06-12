@@ -1,22 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedDates = {
-        '2025-06-15': [
-            { time: '10:00', user: 'Иван Иванов' },
-            { time: '11:00', user: 'Мария Петрова' },
-            { time: '12:00', user: 'Сергей Смирнов' }
-        ],
-        '2025-06-16': [
-            { time: '14:00', user: 'Анна Кузнецова' },
-            { time: '15:00', user: 'Дмитрий Орлов' },
-            { time: '16:00', user: 'Елена Федорова' }
-        ],
+    const blockedData = {
+        'Точка 1': {
+            '2025-06-15': [
+                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
+                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
+            ],
+            '2025-06-18': [
+                { start: '10:00', end: '11:30', user: 'Иван Иванов' }
+            ]
+        },
+        'Точка 2': {
+            '2025-06-16': [
+                { start: '9:00', end: '12:00', user: 'Елена Федорова' }
+            ]
+        }
     };
 
     const freeDates = {
-        '2025-06-17': ['10:00', '11:00', '12:00'],
-        '2025-06-18': ['14:00', '15:00', '16:00'],
+        'Точка 1': {
+            '2025-06-15': ['13:00', '14:00', '17:00'],
+            '2025-06-18': ['12:00', '13:00']
+        },
+        'Точка 2': {
+            '2025-06-16': ['13:00', '14:00'],
+        }
     };
 
+    const locationSelect = document.getElementById('locationSelect');
     const calendarDays = document.getElementById('calendarDays');
     const currentMonthYear = document.getElementById('currentMonthYear');
     const prevMonthBtn = document.getElementById('prevMonth');
@@ -44,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentDate = new Date();
     currentDate.setDate(1);
     let selectedDate = null;
+    let currentLocation = null;
 
     const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
 
@@ -54,17 +65,34 @@ document.addEventListener('DOMContentLoaded', function () {
         return `${year}-${month}-${day}`;
     }
 
+    function populateLocations() {
+        locationSelect.innerHTML = '';
+        const locations = Object.keys(blockedData);
+        locations.forEach(loc => {
+            const option = document.createElement('option');
+            option.value = loc;
+            option.textContent = loc;
+            locationSelect.appendChild(option);
+        });
+        currentLocation = locationSelect.value;
+    }
+
+    locationSelect.addEventListener('change', () => {
+        currentLocation = locationSelect.value;
+        renderCalendar();
+        resetSelection();
+    });
+
     function initCalendar() {
+        populateLocations();
         renderCalendar();
         prevMonthBtn.addEventListener('click', () => {
             currentDate.setMonth(currentDate.getMonth() - 1);
-            currentDate.setDate(1);
             renderCalendar();
             resetSelection();
         });
         nextMonthBtn.addEventListener('click', () => {
             currentDate.setMonth(currentDate.getMonth() + 1);
-            currentDate.setDate(1);
             renderCalendar();
             resetSelection();
         });
@@ -107,9 +135,9 @@ document.addEventListener('DOMContentLoaded', function () {
             dayEl.className = `calendar-day ${date < today ? 'past' : 'available'}`;
             dayEl.textContent = i;
 
-            if (blockedDates[dateStr]) {
+            if (blockedData[currentLocation]?.[dateStr]) {
                 dayEl.classList.add('blocked-date');
-            } else if (freeDates[dateStr]) {
+            } else if (freeDates[currentLocation]?.[dateStr]) {
                 dayEl.classList.add('has-slots');
             }
 
@@ -120,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     dayEl.classList.add('selected');
                     selectedDate = dateStr;
 
-                    if (blockedDates[selectedDate]) {
+                    if (blockedData[currentLocation]?.[selectedDate]) {
                         showBlockedSlotsInfo(selectedDate);
                     } else {
                         hideBlockedSlotsInfo();
@@ -137,49 +165,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function generateTimeSlots() {
         timeSlots.innerHTML = '';
-
-        const blockedSlots = blockedDates[selectedDate] || [];
-        const freeSlots = freeDates[selectedDate] || [];
+        const blocked = blockedData[currentLocation]?.[selectedDate] || [];
+        const free = freeDates[currentLocation]?.[selectedDate] || [];
 
         timeRange.forEach(time => {
             const slot = document.createElement('div');
             slot.className = 'time-slot';
             slot.textContent = time;
 
-            const isBlocked = blockedSlots.some(slotObj => slotObj.time === time);
+            const isBlocked = blocked.some(({ start, end }) => {
+                const [sh, sm] = start.split(':').map(Number);
+                const [eh, em] = end.split(':').map(Number);
+                const slotTime = parseInt(time.split(':')[0], 10);
+                return slotTime >= sh && slotTime < eh;
+            });
+
             if (isBlocked) {
                 slot.classList.add('blocked');
-                slot.style.cursor = 'not-allowed';
-                slot.style.backgroundColor = '#dc3545';
-                slot.style.color = 'white';
-            } else if (freeSlots.includes(time)) {
+            } else if (free.includes(time)) {
                 slot.classList.add('free');
-                slot.style.cursor = 'pointer';
-                slot.style.backgroundColor = '#0d6efd';
-                slot.style.color = 'white';
             } else {
                 slot.classList.add('available');
-                slot.style.cursor = 'pointer';
-                slot.style.backgroundColor = 'white';
-                slot.style.color = 'black';
-                slot.style.border = '1px solid #dee2e6';
             }
 
             slot.addEventListener('click', () => {
                 if (isBlocked) return;
+                const times = freeDates[currentLocation] ||= {};
+                const list = times[selectedDate] ||= [];
 
-                if (freeSlots.includes(time)) {
-                    freeDates[selectedDate] = freeDates[selectedDate].filter(t => t !== time);
-                    if (freeDates[selectedDate].length === 0) {
-                        delete freeDates[selectedDate];
-                    }
-                } else {
-                    if (!freeDates[selectedDate]) {
-                        freeDates[selectedDate] = [];
-                    }
-                    freeDates[selectedDate].push(time);
-                    freeDates[selectedDate].sort();
-                }
+                const idx = list.indexOf(time);
+                if (idx > -1) list.splice(idx, 1);
+                else list.push(time);
+
+                if (list.length === 0) delete times[selectedDate];
                 generateTimeSlots();
             });
 
@@ -188,18 +206,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     resetTimeBtn.addEventListener('click', () => {
-        if (selectedDate && freeDates[selectedDate]) {
-            delete freeDates[selectedDate];
+        if (selectedDate && freeDates[currentLocation]?.[selectedDate]) {
+            delete freeDates[currentLocation][selectedDate];
             generateTimeSlots();
         }
     });
 
     saveScheduleBtn.addEventListener('click', (e) => {
         e.preventDefault();
-
         console.log('Отправляемые свободные слоты:', freeDates);
 
-        fetch('http://localhost:8080/teacher/куда?', {
+        fetch('http://localhost:8080/teacher/schedule', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(freeDates)
@@ -208,9 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!res.ok) throw new Error("Ошибка отправки");
                 return res.json();
             })
-            .then(data => {
-                alert('Расписание сохранено успешно!');
-            })
+            .then(() => alert('Расписание сохранено успешно!'))
             .catch(err => {
                 alert('Ошибка при сохранении расписания');
                 console.error(err);
@@ -218,10 +233,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function showBlockedSlotsInfo(dateStr) {
-        const slots = blockedDates[dateStr];
+        const slots = blockedData[currentLocation]?.[dateStr] || [];
         let html = '<strong>Забронированные часы:</strong><ul>';
         slots.forEach(slot => {
-            html += `<li>${slot.time} — ${slot.user}</li>`;
+            html += `<li>${slot.start}–${slot.end} — ${slot.user}</li>`;
         });
         html += '</ul>';
         blockedSlotsInfo.innerHTML = html;

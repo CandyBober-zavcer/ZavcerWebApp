@@ -21,15 +21,27 @@
     <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
         <div class="row g-0 ">
             <div class="col-lg-4 col-md-5">
-                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light flex-column">
                     {% if model.spot.images != null and model.spot.images.size > 0 %}
-                    <img src="/image/{{ model.spot.images[0] }}" alt="Фото студии" class="img-fluid rounded-3 shadow-sm"
-                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    <div class="position-relative">
+                        <button id="prevPhoto" class="btn btn-link position-absolute top-50 start-0 translate-middle-y"
+                            style="z-index:10; font-size: 1.5rem; color: inherit;">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <img id="mainPhoto" src="/image/{{ model.spot.images[0] }}" alt="Фото студии"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                        <button id="nextPhoto" class="btn btn-link position-absolute top-50 end-0 translate-middle-y"
+                            style="z-index:10; font-size: 1.5rem; color: inherit;">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
                     {% else %}
                     <img src="/img/defaultStudio.webp" alt="Нет фото" class="img-fluid rounded-3 shadow-sm"
                         style="max-width: 280px; max-height: 350px; object-fit: cover;">
                     {% endif %}
                 </div>
+
 
             </div>
 
@@ -102,13 +114,13 @@
                     </div>
 
 
-                    {% if model.spot.images != null and model.spot.images.size > 1 %}
+                    <!-- {% if model.spot.images != null and model.spot.images.size > 1 %}
                     <div class="d-flex flex-wrap gap-2 mb-4">
                         {% for file in model.spot.images %}
                         <img src="/image/{{ file }}" alt="Фото студии" class="img-thumbnail" style="max-width: 120px;">
                         {% endfor %}
                     </div>
-                    {% endif %}
+                    {% endif %} -->
 
                     <form method="POST" id="bookingForm">
                         <div class="mb-3">
@@ -158,5 +170,39 @@
 {% endblock %}
 
 {% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const images = [
+            {% for file in model.spot.images %}
+        '/image/{{ file }}',
+        {% endfor %}
+    ];
+
+    let currentIndex = 0;
+    const mainPhoto = document.getElementById('mainPhoto');
+    const prevBtn = document.getElementById('prevPhoto');
+    const nextBtn = document.getElementById('nextPhoto');
+
+    if (images.length > 0) {
+        function updatePhoto() {
+            mainPhoto.src = images[currentIndex];
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            updatePhoto();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % images.length;
+            updatePhoto();
+        });
+    } else {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+    }
+});
+</script>
+
 <script src="/js/Studio.js"></script>
 {% endblock %}

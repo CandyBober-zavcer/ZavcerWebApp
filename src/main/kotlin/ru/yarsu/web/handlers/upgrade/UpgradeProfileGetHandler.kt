@@ -2,13 +2,13 @@ package ru.yarsu.web.handlers.upgrade
 
 import org.http4k.core.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.models.upgrade.UpgradeProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
 class UpgradeProfileGetHandler(
     private val htmlView: ContextAwareViewRender,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
         val teacherId =
@@ -16,7 +16,7 @@ class UpgradeProfileGetHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Некорректный ID")
 
         val teacher =
-            users.getTeacherByIdIfRolePendingTeacher(teacherId)
+            databaseController.getTeacherByIdIfRolePendingTeacher(teacherId)
                 ?: return Response(Status.NOT_FOUND).body("Пользователь не найден или уже не в статусе ожидания")
 
         val viewModel = UpgradeProfileVM(teacher)

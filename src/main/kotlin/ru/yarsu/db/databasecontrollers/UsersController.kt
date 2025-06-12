@@ -3,22 +3,22 @@ package ru.yarsu.db.databasecontrollers
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inSubQuery
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.tables.*
 import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
-import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import ru.yarsu.db.tables.manyToMany.UsersDays
+import ru.yarsu.web.domain.models.email.hashPassword
+import ru.yarsu.web.domain.models.email.verifyPassword
+import ru.yarsu.web.domain.models.telegram.TelegramUser
 
 class UsersController {
     /**
@@ -81,10 +81,10 @@ class UsersController {
 
     /**
      * Собирает объект класса User из строчки базы данных по выбранному ID.
-     * @return класс User (duh). При неудаче класс будет с ID, равным -1.
+     * @return класс User (duh). При неудаче будет null.
      */
-    fun getUserById(id: Int): User {
-        var user = User()
+    fun getUserById(id: Int): User? {
+        var user: User? = null
 
         transaction {
             val userLine = UserLine.findById(id)
@@ -93,6 +93,176 @@ class UsersController {
             }
         }
         return user
+    }
+
+    fun getUserByEmail(email: String): User? {
+        var user: User? = null
+
+        transaction {
+            val userLine = UserLine.find { Users.login eq email }.firstOrNull()
+            userLine?.let {
+                user = packUser(it)
+            }
+        }
+        return user
+    }
+
+    fun getUserByLogin(login: String): User? {
+        var user: User? = null
+
+        transaction {
+            val userLine = UserLine.find { Users.login eq login }.firstOrNull()
+            userLine?.let {
+                user = packUser(it)
+            }
+        }
+        return user
+    }
+
+    fun getTeacherById(id: Int): User? {
+        var user: User? = null
+
+        transaction {
+            val userLine = UserLine.findById(id)
+            userLine?.let {
+                val roles = stringToRoles(it.roles)
+                if (roles.contains(RoleEnums.TEACHER)) {
+                    user = packUser(it)
+                }
+            }
+        }
+        return user
+    }
+
+    fun getTeacherByIdIfRolePendingTeacher(id: Int): User? =
+        transaction {
+            UserLine.find {
+                (Users.id eq id) and
+                (Users.roles.substring(5, 1) eq "1" ) and
+                (Users.isConfirmed eq true)
+            }.firstOrNull()?.let { packUser(it) }
+        }
+
+    fun getUserIfNotTeacher(id: Int): User? =
+        transaction {
+            UserLine.find {
+                (Users.id eq id) and
+                        (not(Users.roles.substring(5, 1) eq "1" ))
+            }.firstOrNull()?.let { packUser(it) }
+        }
+
+    fun getAllUsersByRole(role: Int): List<User>
+        = transaction {
+            UserLine.find { Users.roles.substring(role, 1) eq "1" }.map { packUser(it) }.toList()
+        }
+
+    fun updateTeacherRequest(id: Int, accept: Boolean): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val newRoles = stringToRoles(it.roles)
+                newRoles.remove(RoleEnums.PENDING_TEACHER)
+                if (accept) {
+                    newRoles.add(RoleEnums.TEACHER)
+                }
+                it.roles = rolesToString(newRoles)
+                result = true
+            }
+        }
+        return result
+    }
+
+    fun removeTeacherRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                var roles = stringToRoles(it.roles)
+                if (roles.contains(RoleEnums.TEACHER)) {
+                    roles.remove(RoleEnums.TEACHER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun confirmUser(userId: Int): Boolean {
+        var result = false
+        transaction {
+            val user = UserLine.findById(userId)
+            user?.let {
+                it.isConfirmed = true
+                result = true
+            }
+        }
+        return result
+    }
+
+    fun updateUserPassword(
+        userId: Int,
+        newPassword: String,
+    ): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(userId)
+            user?.let {
+                it.password = hashPassword(newPassword)
+                result = true
+            }
+        }
+        return result
+    }
+
+    fun findOrCreateTelegramUser(telegramData: TelegramUser): User {
+        val existing = getUserByTelegramId(telegramData.id)
+        if (existing != null) return existing
+
+        val name =
+            listOfNotNull(telegramData.first_name, telegramData.last_name)
+                .joinToString(" ")
+                .ifBlank { telegramData.username ?: "TelegramUser" }
+
+        val login = telegramData.username ?: "tg_user_${telegramData.id}"
+
+        return getUserById(insertUser(
+            User(
+                name = name,
+                login = login,
+                tg_id = telegramData.id,
+                password = "",
+                experience = 0,
+                abilities = mutableSetOf(),
+                price = 0,
+                description = "",
+                address = "",
+                district = DistrictEnums.UNKNOWN,
+                images = emptyList(),
+                roles = mutableSetOf(RoleEnums.USER),
+                isConfirmed = true,
+            ),
+        )) ?: User()
+    }
+
+    fun attachTelegram(
+        userId: Int,
+        telegramId: Long,
+    ): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(userId)
+            user?.let {
+                it.tg_id = telegramId
+                result = true
+            }
+        }
+        return result
     }
 
     /**
@@ -108,7 +278,8 @@ class UsersController {
             UserLine
                 .new {
                     name = user.name
-                    tg_name = user.tg_name
+                    tg_id = user.tg_id
+                    login = user.login
                     password = user.password
                     phone = user.phone
                     experience = user.experience
@@ -118,6 +289,7 @@ class UsersController {
                     district = user.district.id
                     images = user.images.toTypedArray()
                     roles = rolesToString(user.roles)
+                    isConfirmed = user.isConfirmed
                 }.withAbilities(user.abilities.map { it.id })
             id = userLine.id.value
         }
@@ -138,7 +310,8 @@ class UsersController {
             UserLine.findById(id)?.let { user ->
                 user.apply {
                     name = data.name
-                    tg_name = data.tg_name
+                    tg_id = data.tg_id
+                    login = data.login
                     password = data.password
                     phone = data.phone
                     experience = data.experience
@@ -148,8 +321,8 @@ class UsersController {
                     district = data.district.id
                     images = data.images.toTypedArray()
                     roles = rolesToString(data.roles)
+                    isConfirmed = data.isConfirmed
                 }
-
                 user.updateAbilities(data.abilities.map { it.id })
 
                 true
@@ -340,6 +513,11 @@ class UsersController {
         return result
     }
 
+    fun verifyPassword(
+        user: User,
+        password: String,
+    ): Boolean = verifyPassword(password, user.password)
+
     /**
      * 1000 - ADMIN
      * 0100 - OWNER
@@ -426,7 +604,8 @@ class UsersController {
 
         user.id = line.id.value
         user.name = line.name
-        user.tg_name = line.tg_name
+        user.tg_id = line.tg_id
+        user.login = line.login
         user.password = line.password
         user.phone = line.phone
         user.experience = line.experience
@@ -439,7 +618,20 @@ class UsersController {
         user.twoWeekOccupation = line.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
         user.spots = line.spots.map { spot -> spot.id.value }.toMutableList()
         user.roles = stringToRoles(line.roles)
+        user.isConfirmed = line.isConfirmed
 
+        return user
+    }
+
+    private fun getUserByTelegramId(tgId: Long): User? {
+        var user: User? = null
+
+        transaction {
+            val userLine = UserLine.find { Users.tg_id eq tgId }.firstOrNull()
+            userLine?.let {
+                user = packUser(it)
+            }
+        }
         return user
     }
 }

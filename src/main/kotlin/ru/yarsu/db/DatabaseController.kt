@@ -13,13 +13,14 @@ import ru.yarsu.db.tables.Users
 import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
-import ru.yarsu.web.domain.article.Spot
+import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
+import ru.yarsu.web.domain.models.telegram.TelegramUser
 
-class DataBaseController {
+class DatabaseController {
     /**
      * Создаёт таблицы в базе данных.
      */
@@ -27,8 +28,6 @@ class DataBaseController {
         transaction {
             SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
         }
-        val id = insertSpot(Spot(name = "ohuel"))
-        println(getSpotById(id).name)
     }
 
     /**
@@ -52,7 +51,37 @@ class DataBaseController {
         sortByNearest: Boolean = false
     ): List<User> = UsersController().getUsersByPage(page, limit, abilityIds, districtIds, priceMin, priceMax, experienceMin, sortByNearest)
 
-    fun getUserById(id: Int): User = UsersController().getUserById(id)
+    fun getUserById(id: Int): User? = UsersController().getUserById(id)
+
+    fun getUserByEmail(email: String): User? = UsersController().getUserByEmail(email)
+
+    fun getUserByLogin(login: String): User? = UsersController().getUserByLogin(login)
+
+    fun getTeacherById(id: Int): User? = UsersController().getTeacherById(id)
+
+    fun getTeacherByIdIfRolePendingTeacher(id: Int): User? = UsersController().getTeacherByIdIfRolePendingTeacher(id)
+
+    fun getUserIfNotTeacher(id: Int): User? = UsersController().getUserIfNotTeacher(id)
+
+    fun getAllUsersByRole(role: Int): List<User> = UsersController().getAllUsersByRole(role)
+
+    fun updateTeacherRequest(id: Int, accept: Boolean): Boolean = UsersController().updateTeacherRequest(id, accept)
+
+    fun removeTeacherRoleById(id: Int): Boolean = UsersController().removeTeacherRoleById(id)
+
+    fun confirmUser(userId: Int): Boolean = UsersController().confirmUser(userId)
+
+    fun updateUserPassword(
+        userId: Int,
+        newPassword: String,
+    ): Boolean = UsersController().updateUserPassword(userId, newPassword)
+
+    fun findOrCreateTelegramUser(telegramData: TelegramUser): User = UsersController().findOrCreateTelegramUser(telegramData)
+
+    fun attachTelegram(
+        userId: Int,
+        telegramId: Long,
+    ): Boolean = UsersController().attachTelegram(userId, telegramId)
 
     fun insertUser(user: User): Int = UsersController().insertUser(user)
 
@@ -101,6 +130,11 @@ class DataBaseController {
         daysId: List<Int>,
     ): Boolean = UsersController().removeDayOccupation(userId, daysId)
 
+    fun verifyPassword(
+        user: User,
+        password: String,
+    ): Boolean = UsersController().verifyPassword(user, password)
+
     // Работа со Spots
     fun getSpotsByPage(
         page: Int,
@@ -114,9 +148,13 @@ class DataBaseController {
         sortByNearest: Boolean = false
     ): List<Spot> = SpotsController().getSpotsByPage(page, limit, drums, guitarAmps, bassAmps, districtList, priceLow, priceHigh, sortByNearest)
 
-    fun getSpotById(id: Int): Spot = SpotsController().getSpotById(id)
+    fun getAllSpots(): List<Spot> = SpotsController().getAllSpots()
+
+    fun getSpotById(id: Int): Spot? = SpotsController().getSpotById(id)
 
     fun insertSpot(spot: Spot): Int = SpotsController().insertSpot(spot)
+
+    fun deleteSpot(id: Int): Boolean = SpotsController().deleteSpot(id)
 
     fun updateSpotInfo(
         id: Int,

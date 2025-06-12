@@ -2,13 +2,13 @@ package ru.yarsu.web.models.teacher
 
 import org.http4k.lens.MultipartForm
 import org.http4k.template.ViewModel
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import kotlin.enums.EnumEntries
 
 class EditTeacherVM(
-    val teacher: UserModel,
+    val teacher: User,
     private val ability: EnumEntries<AbilityEnums>,
     val form: MultipartForm,
 ) : ViewModel {

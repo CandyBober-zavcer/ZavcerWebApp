@@ -6,15 +6,15 @@ import org.http4k.core.cookie.SameSite
 import org.http4k.core.cookie.cookie
 import org.http4k.lens.*
 import ru.yarsu.config.AppConfig
-import ru.yarsu.db.UserData
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.db.DatabaseController
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.models.telegram.AuthUtils
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
 class EmailAuthPostHandler(
-    private val users: UserData,
+    private val databaseController: DatabaseController,
     private val config: AppConfig,
 ) : HttpHandler {
     private val loginLens = FormField.nonEmptyString().required("login")
@@ -58,10 +58,10 @@ class EmailAuthPostHandler(
         val password = passwordLens(form)
 
         val user =
-            login.let { users.findByLogin(it) }
+            login.let { databaseController.getUserByLogin(it) }
                 ?: return Response(Status.UNAUTHORIZED).body("Пользователь не найден")
 
-        if (!users.verifyPassword(user, password)) {
+        if (!databaseController.verifyPassword(user, password)) {
             return Response(Status.UNAUTHORIZED).body("Неверный пароль")
         }
 
@@ -71,7 +71,7 @@ class EmailAuthPostHandler(
     }
 
     private fun createAuthCookie(
-        user: UserModel,
+        user: User,
         salt: String,
     ): Cookie {
         val login = user.login ?: "unknown"

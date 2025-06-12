@@ -1,6 +1,7 @@
 package ru.yarsu.db
 
 import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.*
 import ru.yarsu.web.domain.models.email.hashPassword
 import ru.yarsu.web.domain.models.email.verifyPassword
@@ -152,7 +153,7 @@ class UserData {
     fun getByEmail(email: String): UserModel? = users.find { it.login.equals(email, ignoreCase = true) }
 
     fun verifyPassword(
-        user: UserModel,
+        user: User,
         password: String,
     ): Boolean = verifyPassword(password, user.password)
 

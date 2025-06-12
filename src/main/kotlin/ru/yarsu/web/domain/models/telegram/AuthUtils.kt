@@ -2,8 +2,8 @@ package ru.yarsu.web.domain.models.telegram
 
 import org.http4k.core.Request
 import org.http4k.core.cookie.cookies
-import ru.yarsu.db.UserData
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.db.DatabaseController
+import ru.yarsu.web.domain.classes.User
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -11,8 +11,8 @@ object AuthUtils {
     fun getUserFromCookie(
         request: Request,
         authSalt: String,
-        users: UserData,
-    ): UserModel? {
+        databaseController: DatabaseController,
+    ): User? {
         val tgAuthCookie = request.cookies().find { it.name == "auth" } ?: return null
         val parts = tgAuthCookie.value.split(":")
         if (parts.size != 3) return null
@@ -26,7 +26,7 @@ object AuthUtils {
 
         if (signature != expectedSignature) return null
 
-        val user = users.getById(userId) ?: return null
+        val user = databaseController.getUserById(userId) ?: return null
         return user
     }
 

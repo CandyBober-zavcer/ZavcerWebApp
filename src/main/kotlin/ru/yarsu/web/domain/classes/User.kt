@@ -7,7 +7,8 @@ import ru.yarsu.web.domain.enums.RoleEnums
 data class User(
     var id: Int = -1,
     var name: String = "",
-    var tg_name: String = "",
+    var tg_id: Long = 0L,
+    var login: String = "",
     var password: String = "",
     var phone: String = "+7 (4852) 73-88-15",
     var experience: Int = 0,
@@ -20,4 +21,5 @@ data class User(
     var twoWeekOccupation: List<Int> = listOf(),
     var spots: List<Int> = listOf(),
     var roles: MutableSet<RoleEnums> = mutableSetOf(RoleEnums.ANONYMOUS),
+    var isConfirmed: Boolean = true,
 )

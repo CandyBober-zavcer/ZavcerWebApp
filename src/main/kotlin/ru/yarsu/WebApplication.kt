@@ -30,25 +30,23 @@ fun main() {
             .withContentType(renderer, ContentType.TEXT_HTML)
             .associateContextLens("user", UserModelLens)
 
-    val users = UserData()
-    val spots = SpotData()
+    val databaseController = DatabaseController()
     val sessionStorage = SessionStorage()
 
     val app =
         requestContextFilter
-            .then(combinedUserFilter(appConfig.webConfig.authSalt, users, sessionStorage))
+            .then(combinedUserFilter(appConfig.webConfig.authSalt, databaseController, sessionStorage))
             .then(NotFoundFilter(htmlView))
             .then(ServerErrorFilter(htmlView))
             .then(
                 routes(
-                    router(renderer, htmlView, appConfig, users, spots, sessionStorage),
+                    router(renderer, htmlView, appConfig, databaseController, sessionStorage),
                     static(ResourceLoader.Classpath("/ru/yarsu/public")),
                     "/image" bind static(ResourceLoader.Directory("public/image")),
                 ),
             )
-    println("beda")
     Database.connect("jdbc:mysql://localhost/test", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
-    DataBaseController().init()
+    DatabaseController().init()
 //    val appWithStaticResources =
 //        routes(
 //            router,
@@ -57,8 +55,8 @@ fun main() {
 
     val server = app.asServer(Netty(appConfig.webConfig.port)).start()
 
-//    println("Server started on http://localhost:${server.port()}")
-//    println("Press Ctrl+C to stop the application.")
+    println("Server started on http://localhost:${server.port()}")
+    println("Press Ctrl+C to stop the application.")
 
     Runtime.getRuntime().addShutdownHook(
         Thread {

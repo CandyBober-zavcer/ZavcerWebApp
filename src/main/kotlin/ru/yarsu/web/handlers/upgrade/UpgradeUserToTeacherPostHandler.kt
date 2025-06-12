@@ -6,7 +6,7 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.funs.lensOrDefault
@@ -19,7 +19,7 @@ import java.nio.file.Paths
 
 class UpgradeUserToTeacherPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
@@ -49,7 +49,7 @@ class UpgradeUserToTeacherPostHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Неверный ID пользоватя")
 
         val existingUser =
-            users.getUserIfNotTeacher(userId)
+            databaseController.getUserIfNotTeacher(userId)
                 ?: return Response(NOT_FOUND).body("Пользователь не найден")
 
         val form = formLens(request)
@@ -100,10 +100,10 @@ class UpgradeUserToTeacherPostHandler(
                 address = address,
                 district = existingUser.district,
                 images = updatedImages,
-                roles = existingUser.roles + RoleEnums.PENDING_TEACHER,
+                roles = (existingUser.roles + RoleEnums.PENDING_TEACHER).toMutableSet(),
             )
 
-        users.update(userId, updatedTeacher)
+        databaseController.updateUserInfo(userId, updatedTeacher)
         return Response(FOUND).header("Location", "/teachers")
     }
 }

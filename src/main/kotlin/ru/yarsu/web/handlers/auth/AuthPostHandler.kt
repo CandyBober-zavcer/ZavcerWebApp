@@ -3,11 +3,11 @@ package ru.yarsu.web.handlers.auth
 import org.http4k.core.*
 import org.http4k.core.cookie.cookie
 import org.http4k.lens.*
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.article.SessionStorage
 
 class AuthPostHandler(
-    private val userData: UserData,
+    private val databaseController: DatabaseController,
     private val sessionStorage: SessionStorage,
 ) : HttpHandler {
     private val emailLens = FormField.nonEmptyString().map({ it.trim() }, { it }).required("email")
@@ -52,10 +52,10 @@ class AuthPostHandler(
         val password = passwordLens(form)
 
         val user =
-            userData.getByEmail(email)
+            databaseController.getUserByEmail(email)
                 ?: return Response(Status.UNAUTHORIZED).body("Неверный email или пароль")
 
-        if (!userData.verifyPassword(user, password)) {
+        if (!databaseController.verifyPassword(user, password)) {
             return Response(Status.UNAUTHORIZED).body("Неверный email или пароль")
         }
 

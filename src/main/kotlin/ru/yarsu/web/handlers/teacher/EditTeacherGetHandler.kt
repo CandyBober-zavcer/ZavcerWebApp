@@ -3,14 +3,14 @@ package ru.yarsu.web.handlers.teacher
 import org.http4k.core.*
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
 class EditTeacherGetHandler(
     private val htmlView: ContextAwareViewRender,
-    private val teachers: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val pathLens = Path.long().of("id")
 
@@ -31,7 +31,7 @@ class EditTeacherGetHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
         val teacher =
-            teachers.getTeacherById(teacherId)
+            databaseController.getTeacherById(teacherId)
                 ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
 
         val allAbility = AbilityEnums.entries

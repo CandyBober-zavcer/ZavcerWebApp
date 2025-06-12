@@ -5,9 +5,9 @@ import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.lens.*
-import ru.yarsu.db.SpotData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.context.UserModelLens
-import ru.yarsu.web.domain.article.Spot
+import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.spot.AddSpotVM
@@ -19,7 +19,7 @@ import java.nio.file.Paths
 
 class AddSpotPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val spots: SpotData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
@@ -54,7 +54,7 @@ class AddSpotPostHandler(
         val form = formLens(request)
         val errors = form.errors.map { it.meta.name }
 
-        val newId = spots.getNextId()
+        val newId = databaseController.insertSpot(Spot())
 
         val name = lensOrDefault(nameLens, form) { "" }
         val description = lensOrDefault(descriptionLens, form) { "" }
@@ -105,7 +105,7 @@ class AddSpotPostHandler(
                     address = address,
                     district = district,
                     images = imageList,
-                    twoWeekOccupation = emptyList(),
+                    twoWeekOccupation = mutableListOf(),
                     owners = listOf(user.id),
                 )
             val viewModel = AddSpotVM(spot, form)
@@ -125,11 +125,10 @@ class AddSpotPostHandler(
                 address = address,
                 district = district,
                 images = imageList,
-                twoWeekOccupation = emptyList(),
+                twoWeekOccupation = mutableListOf(),
                 owners = listOf(user.id),
             )
-
-        spots.add(spot)
+        databaseController.updateSpotInfo(newId, spot)
 
         return Response(FOUND).header("Location", "/spots")
     }

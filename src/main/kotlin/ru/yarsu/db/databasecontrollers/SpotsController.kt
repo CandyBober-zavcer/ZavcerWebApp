@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.tables.*
 import ru.yarsu.db.tables.manyToMany.*
-import ru.yarsu.web.domain.article.Spot
+import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.enums.DistrictEnums
 import kotlinx.datetime.*
 import org.jetbrains.exposed.sql.*
@@ -75,29 +75,22 @@ class SpotsController {
         }
     }
 
+    fun getAllSpots(): List<Spot> =
+        transaction {
+            SpotLine.all().map { packSpot(it) }
+        }
+
     /**
      * Собирает класс Spot из строчки базы данных по выбранному ID.
      * @return класс Spot (duh). При неудаче класс будет с ID, равным -1.
      */
-    fun getSpotById(id: Int): Spot {
-        var spot = Spot()
+    fun getSpotById(id: Int): Spot? {
+        var spot: Spot? = null
 
         transaction {
             val spotLine = SpotLine.findById(id)
             spotLine?.let {
                 spot = packSpot(it)
-//                spot.id = it.id.value
-//                spot.name = it.name
-//                spot.price = it.price
-//                spot.hasDrums = it.hasDrums
-//                spot.guitarAmps = it.guitarAmps
-//                spot.bassAmps = it.bassAmps
-//                spot.description = it.description
-//                spot.address = it.address
-//                spot.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
-//                spot.images = it.images.toList()
-//                spot.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
-//                spot.owners = it.owners.map { user -> user.id.value }.toMutableList()
             }
         }
         return spot
@@ -127,6 +120,19 @@ class SpotsController {
             id = spotLine.id.value
         }
         return id
+    }
+
+    fun deleteSpot(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val spot = getSpotById(id)
+            spot?.let {
+                Spots.deleteWhere { Spots.id eq id }
+                result = true
+            }
+        }
+        return result
     }
 
     /**

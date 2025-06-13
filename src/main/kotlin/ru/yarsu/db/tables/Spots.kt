@@ -8,7 +8,7 @@ import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
 
 object Spots : IntIdTable() {
-    val name = varchar("name", 50)
+    val name = text("name")
     val price = integer("price")
     val hasDrums = bool("hasDrums")
     val guitarAmps = integer("guitarAmps")

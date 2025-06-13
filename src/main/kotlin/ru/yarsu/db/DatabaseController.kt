@@ -204,6 +204,8 @@ class DatabaseController {
     // Работа с DayOccupations и HourOccupations
     fun getDayOccupationById(id: Int): DayOccupation = OccupationsController().getDayOccupationById(id)
 
+    fun getListDayOccupation(ids: List<Int>): List<DayOccupation> = OccupationsController().getListDayOccupation(ids)
+
     fun insertDayOccupation(date: LocalDate): Int = OccupationsController().insertDayOccupation(date)
 
     fun insertHourOccupation(

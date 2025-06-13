@@ -16,18 +16,22 @@ class OccupationsController {
      * @return класс DayOccupation (duh). При неудаче класс будет с ID, равным -1.
      */
     fun getDayOccupationById(id: Int): DayOccupation {
-        val dayOccupation = DayOccupation()
+        var dayOccupation = DayOccupation()
 
         transaction {
             addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(id)
             day?.let { line ->
-                dayOccupation.id = id
-                dayOccupation.occupation = line.hours.associateBy({ it.hour }, { it.occupation?.id?.value }).toMutableMap()
+                dayOccupation = packDayOccupation(line)
             }
         }
         return dayOccupation
     }
+
+    fun getListDayOccupation(ids: List<Int>): List<DayOccupation> =
+        transaction {
+            DayOccupationLine.find { DayOccupations.id inList ids }.map { packDayOccupation(it) }
+        }
 
     /**
      * Пользователь задаёт день для записи.
@@ -208,5 +212,13 @@ class OccupationsController {
             }
         }
         return inputRes
+    }
+
+    private fun packDayOccupation(line: DayOccupationLine): DayOccupation {
+        val dayOccupation = DayOccupation()
+
+        dayOccupation.id = line.id.value
+        dayOccupation.occupation = line.hours.associateBy({ it.hour }, { it.occupation?.id?.value }).toMutableMap()
+        return dayOccupation
     }
 }

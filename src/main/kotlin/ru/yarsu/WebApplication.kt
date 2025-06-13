@@ -24,6 +24,9 @@ fun main() {
     val requestContextFilter = ServerFilters.InitialiseRequestContext(contexts)
     val appConfig = AppConfig()
 
+    Database.connect("jdbc:mysql://localhost/test", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
+    DatabaseController().init()
+
     val renderer = rendererProvider(false)
     val htmlView =
         ContextAwareViewRender
@@ -37,7 +40,6 @@ fun main() {
         requestContextFilter
             .then(combinedUserFilter(appConfig.webConfig.authSalt, databaseController, sessionStorage))
             .then(NotFoundFilter(htmlView))
-            .then(ServerErrorFilter(htmlView))
             .then(
                 routes(
                     router(renderer, htmlView, appConfig, databaseController, sessionStorage),
@@ -45,8 +47,6 @@ fun main() {
                     "/image" bind static(ResourceLoader.Directory("public/image")),
                 ),
             )
-    Database.connect("jdbc:mysql://localhost/test", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
-    DatabaseController().init()
 //    val appWithStaticResources =
 //        routes(
 //            router,

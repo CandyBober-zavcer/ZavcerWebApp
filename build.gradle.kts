@@ -6,6 +6,7 @@ plugins {
     kotlin("jvm") version "2.1.20"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    kotlin("plugin.serialization") version "1.9.0"
     application
 }
 
@@ -63,6 +64,7 @@ java {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("org.http4k:http4k-client-okhttp:$http4kVersion")
     implementation("org.http4k:http4k-cloudnative:$http4kVersion")
     implementation("org.http4k:http4k-core:$http4kVersion")

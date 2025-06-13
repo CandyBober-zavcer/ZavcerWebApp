@@ -25,11 +25,9 @@ import ru.yarsu.web.handlers.spot.DeleteSpotPostHandler
 import ru.yarsu.web.handlers.spot.EditSpotGetHandler
 import ru.yarsu.web.handlers.spot.EditSpotPostHandler
 import ru.yarsu.web.handlers.spot.SpotGetHandler
-import ru.yarsu.web.handlers.spot.SpotPostHandler
 import ru.yarsu.web.handlers.spot.SpotsListHandler
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
-import ru.yarsu.web.models.upgrade.UpgradeOwnerProfileVM
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 

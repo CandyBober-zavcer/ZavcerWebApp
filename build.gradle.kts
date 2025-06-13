@@ -2,13 +2,6 @@ import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
-plugins {
-    kotlin("jvm") version "2.1.20"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    application
-}
-
 val http4kVersion: String by project
 val http4kConnectVersion: String by project
 val junitVersion: String by project
@@ -16,6 +9,20 @@ val kotlinVersion: String by project
 val slf4jVersion: String by project
 val ktlintVersion: String by project
 val exposedVersion: String by project
+
+
+plugins {
+    kotlin("jvm") version "2.1.20"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    application
+    jacoco
+}
+
+
+jacoco {
+    toolVersion = "0.8.11"
+}
 
 application {
     mainClass = "ru.yarsu.WebApplicationKt"
@@ -39,10 +46,31 @@ tasks.withType<KotlinCompile>().configureEach {
         freeCompilerArgs += "-Xjvm-default=all"
     }
 }
-
 tasks.withType<Test> {
     useJUnitPlatform()
+    finalizedBy("jacocoTestReport")
+
 }
+tasks.named<JacocoReport>("jacocoTestReport") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = true
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
+
+    classDirectories.setFrom(
+        files(
+            fileTree("build/classes/kotlin/main").apply {
+                exclude("**/*Test.class", "**/test/**")
+            }
+        )
+    )
+}
+
 
 tasks.shadowJar {
     archiveBaseName.set("web-application")
@@ -54,13 +82,17 @@ tasks.shadowJar {
     manifest {
         attributes["Main-Class"] = "ru.yarsu.WebApplicationKt"
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     }
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
-}
+
+    }
+
+
 
 dependencies {
     implementation("org.http4k:http4k-client-okhttp:$http4kVersion")
@@ -97,7 +129,13 @@ dependencies {
     testImplementation("org.http4k:http4k-testing-approval:$http4kVersion")
     testImplementation("org.http4k:http4k-testing-hamkrest:$http4kVersion")
     testImplementation("org.http4k:http4k-testing-kotest:$http4kVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
-    testImplementation("org.slf4j:slf4j-simple:$slf4jVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testImplementation("org.slf4j:slf4j-simple:${slf4jVersion}")
+    testImplementation(kotlin("test-junit5"))
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.10.2")
+    testImplementation("org.testcontainers:testcontainers:1.19.3")
+    testImplementation("org.testcontainers:junit-jupiter:1.19.3")
+    testImplementation("org.testcontainers:mysql:1.19.3")
+    testImplementation("org.jacoco:org.jacoco.agent:0.8.11")
 }

@@ -20,11 +20,14 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.models.telegram.TelegramUser
 
+import ru.yarsu.db.DatabaseFactory
+
 class DatabaseController {
     /**
      * Создаёт таблицы в базе данных.
      */
     fun init() {
+        DatabaseFactory.init()
         transaction {
             SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
         }

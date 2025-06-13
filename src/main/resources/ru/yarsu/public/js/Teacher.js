@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-
     const availableDates = {
         '2025-06-15': ['10:00', '11:00', '12:00'],
         '2025-06-16': ['14:00', '15:00', '16:00'],
@@ -15,11 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeSlots = document.querySelector('.time-slots');
     const bookingSummary = document.querySelector('.booking-summary');
     const pricePerHour = 500;
+
     if (!calendarDays || !currentMonthYear || !prevMonthBtn || !nextMonthBtn) {
-    console.error("Один из элементов календаря не найден!");
-    return;
-}
-    // 3. Инициализация переменных
+        console.error("Один из элементов календаря не найден!");
+        return;
+    }
+
+    // Текущая дата
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -28,13 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedDate = null;
     let selectedTime = null;
 
-    // 4. Основные функции
-
     // Инициализация календаря
     function initCalendar() {
         renderCalendar();
 
-        // Обработчики для кнопок переключения месяцев
         prevMonthBtn.addEventListener('click', () => {
             if (!prevMonthBtn.classList.contains('disabled')) {
                 currentDate.setMonth(currentDate.getMonth() - 1);
@@ -55,32 +53,26 @@ document.addEventListener('DOMContentLoaded', function () {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
 
-        // Установка заголовка (месяц и год)
         currentMonthYear.textContent = new Intl.DateTimeFormat('ru-RU', {
             month: 'long',
             year: 'numeric'
         }).format(currentDate);
 
-        // Первый день месяца
         const firstDay = new Date(year, month, 1);
-        // Последний день месяца
         const lastDay = new Date(year, month + 1, 0);
-        // День недели первого дня месяца (0 - воскресенье, 1 - понедельник и т.д.)
         const firstDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-        // Количество дней в месяце
         const daysInMonth = lastDay.getDate();
 
-        // Очищаем календарь
         calendarDays.innerHTML = '';
 
-        // Добавляем пустые ячейки для дней предыдущего месяца
+        // Пустые ячейки предыдущего месяца
         for (let i = 0; i < firstDayOfWeek; i++) {
             const dayElement = document.createElement('div');
             dayElement.className = 'calendar-day other-month';
             calendarDays.appendChild(dayElement);
         }
 
-        // Добавляем дни текущего месяца
+        // Дни текущего месяца
         for (let i = 1; i <= daysInMonth; i++) {
             const dayDate = new Date(year, month, i);
             dayDate.setHours(0, 0, 0, 0);
@@ -105,14 +97,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedDate = dateStr;
                     selectedTime = null;
 
-                    // Показываем таймпикер
                     timePicker.style.display = 'block';
                     bookingSummary.style.display = 'none';
-
-                    // Обновляем сводку
                     updateSummary();
-
-                    // Генерируем временные слоты
                     generateTimeSlots();
                 });
             }
@@ -120,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
             calendarDays.appendChild(dayElement);
         }
 
-        // Добавляем пустые ячейки для дней следующего месяца
+        // Пустые ячейки следующего месяца
         const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
         const remainingCells = totalCells - (firstDayOfWeek + daysInMonth);
 
@@ -130,35 +117,21 @@ document.addEventListener('DOMContentLoaded', function () {
             calendarDays.appendChild(dayElement);
         }
 
-        // Блокируем кнопку "предыдущий месяц", если это прошедший месяц
+        // Блокировка кнопок навигации
         const prevMonth = new Date(year, month - 1, 1);
         const isPrevMonthPast = prevMonth < new Date(today.getFullYear(), today.getMonth(), 1);
+        prevMonthBtn.classList.toggle('disabled', isPrevMonthPast);
 
-        if (isPrevMonthPast) {
-            prevMonthBtn.classList.add('disabled');
-        } else {
-            prevMonthBtn.classList.remove('disabled');
-        }
-
-        // Блокируем кнопку "следующий месяц", если это месяц через год
         const maxAllowedDate = new Date();
         maxAllowedDate.setFullYear(today.getFullYear() + 1);
         const nextMonth = new Date(year, month + 1, 1);
         const isNextMonthTooFar = nextMonth > maxAllowedDate;
-
-        if (isNextMonthTooFar) {
-            nextMonthBtn.classList.add('disabled');
-        } else {
-            nextMonthBtn.classList.remove('disabled');
-        }
+        nextMonthBtn.classList.toggle('disabled', isNextMonthTooFar);
     }
 
-    // Форматирование даты в YYYY-MM-DD
+    // Форматирование даты
     function formatDate(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return date.toISOString().split('T')[0];
     }
 
     // Генерация временных слотов
@@ -171,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         availableTimesForDate.forEach(time => {
             const isBooked = bookedTimesForDate.includes(time);
-
             const timeSlot = document.createElement('div');
             timeSlot.className = `time-slot ${isBooked ? 'unavailable' : 'available'}`;
             timeSlot.textContent = time;
@@ -181,8 +153,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.querySelectorAll('.time-slot').forEach(el => el.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedTime = time;
-
-                    // Показываем сводку
                     bookingSummary.style.display = 'block';
                     updateSummary();
                 });
@@ -192,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Обновление сводки
     function updateSummary() {
         if (selectedDate) {
             const date = new Date(selectedDate);
@@ -217,9 +188,17 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Проверка авторизации
+        const isAuthorized = !!window.userId;
+        if (!isAuthorized) {
+            alert("Необходима авторизация");
+            return;
+        }
+
         const formData = {
             date: selectedDate,
-            time: selectedTime
+            time: selectedTime,
+            userId: window.userId // Добавляем ID пользователя
         };
 
         console.log('Отправляемые данные:', formData);
@@ -230,19 +209,29 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(formData)
         })
-            .then(response => {
-                if (!response.ok) throw new Error("Ошибка при отправке");
-                return response.json();
-            })
-            .then(data => {
-                alert(`Студия успешно забронирована на ${selectedDate} в ${selectedTime}`);
-            })
-            .catch(error => {
-                alert("Ошибка при бронировании.");
-                console.error(error);
-            });
+        .then(response => {
+            if (!response.ok) throw new Error("Ошибка при отправке");
+            return response.json();
+        })
+        .then(data => {
+            alert(`Студия успешно забронирована на ${selectedDate} в ${selectedTime}`);
+
+            // Обновляем локальный список бронирований
+            if (!bookedDates[selectedDate]) {
+                bookedDates[selectedDate] = [];
+            }
+            bookedDates[selectedDate].push(selectedTime);
+
+            // Обновляем интерфейс
+            generateTimeSlots();
+            renderCalendar();
+        })
+        .catch(error => {
+            alert("Ошибка при бронировании.");
+            console.error(error);
+        });
     });
 
-    // Запускаем календарь
+    // Запуск календаря
     initCalendar();
 });

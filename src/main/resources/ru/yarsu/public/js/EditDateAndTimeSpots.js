@@ -2,17 +2,37 @@ document.addEventListener('DOMContentLoaded', function () {
     const blockedData = {
         'Точка 1': {
             '2025-06-15': [
-                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
-                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
+                { time: '9:00', user: 'Анна Кузнецова' },
+                { time: '10:00', user: 'Анна Кузнецова' },
+                { time: '11:00', user: 'Анна Кузнецова' },
+                { time: '12:00', user: 'Анна Кузнецова' },
+                { time: '15:00', user: 'Дмитрий Орлов' },
+                { time: '16:00', user: 'Дмитрий Орлов' },
+                { time: '17:00', user: 'Дмитрий Орлов' },
+                { time: '18:00', user: 'Дмитрий Орлов' },
             ],
             '2025-06-18': [
-                { start: '10:00', end: '11:30', user: 'Иван Иванов' }
+                { time: '10:00', user: 'Иван Иванов' },
+                { time: '11:00', user: 'Иван Иванов' },
+                { time: '12:00', user: 'Иван Иванов' },
             ]
         },
         'Точка 2': {
             '2025-06-16': [
-                { start: '9:00', end: '12:00', user: 'Елена Федорова' }
-            ]
+                { time: '9:00', user: 'Елена Федорова' },
+                { time: '10:00', user: 'Елена Федорова' },
+                { time: '11:00', user: 'Елена Федорова' },
+                { time: '12:00', user: 'Елена Федорова' }
+            ],
+            '2025-06-15': [
+                { time: '9:00', user: 'Анна Кузнецова' },
+                { time: '10:00', user: 'Анна Кузнецова' },
+                { time: '11:00', user: 'Анна Кузнецова' },
+                { time: '12:00', user: 'Анна Кузнецова' },
+                { time: '15:00', user: 'Дмитрий Орлов' },
+                { time: '16:00', user: 'Дмитрий Орлов' },
+                { time: '17:00', user: 'Дмитрий Орлов' },
+            ],
         }
     };
 
@@ -56,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedDate = null;
     let currentLocation = null;
 
-    const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+    const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 
     function formatDate(date) {
         const year = date.getFullYear();
@@ -173,12 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
             slot.className = 'time-slot';
             slot.textContent = time;
 
-            const isBlocked = blocked.some(({ start, end }) => {
-                const [sh, sm] = start.split(':').map(Number);
-                const [eh, em] = end.split(':').map(Number);
-                const slotTime = parseInt(time.split(':')[0], 10);
-                return slotTime >= sh && slotTime < eh;
-            });
+            const isBlocked = blocked.some(slot => slot.time === time);
 
             if (isBlocked) {
                 slot.classList.add('blocked');
@@ -214,12 +229,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     saveScheduleBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Отправляемые свободные слоты:', freeDates);
+
+
+        const dataToSend = {
+            userId: window.userId,
+            location: currentLocation,
+            freeSlots: freeDates[currentLocation] || {}
+        };
+
+        console.log('Отправляемые данные:', dataToSend);
 
         fetch('http://localhost:8080/teacher/schedule', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(freeDates)
+            body: JSON.stringify(dataToSend) 
         })
             .then(res => {
                 if (!res.ok) throw new Error("Ошибка отправки");
@@ -235,9 +258,22 @@ document.addEventListener('DOMContentLoaded', function () {
     function showBlockedSlotsInfo(dateStr) {
         const slots = blockedData[currentLocation]?.[dateStr] || [];
         let html = '<strong>Забронированные часы:</strong><ul>';
+
+        // Группируем слоты по пользователям
+        const slotsByUser = {};
         slots.forEach(slot => {
-            html += `<li>${slot.start}–${slot.end} — ${slot.user}</li>`;
+            if (!slotsByUser[slot.user]) {
+                slotsByUser[slot.user] = [];
+            }
+            slotsByUser[slot.user].push(slot.time);
         });
+
+        // Формируем список для каждого пользователя
+        for (const user in slotsByUser) {
+            const times = slotsByUser[user].join(', ');
+            html += `<li>${times} — ${user}</li>`;
+        }
+
         html += '</ul>';
         blockedSlotsInfo.innerHTML = html;
         blockedSlotsInfo.style.display = 'block';

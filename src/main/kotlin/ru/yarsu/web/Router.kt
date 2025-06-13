@@ -19,18 +19,10 @@ import ru.yarsu.web.handlers.auth.*
 import ru.yarsu.web.handlers.home.HomePageHandler
 import ru.yarsu.web.handlers.profile.*
 import ru.yarsu.web.handlers.profile.AttachTelegramGetHandler
-import ru.yarsu.web.handlers.spot.AddSpotGetHandler
-import ru.yarsu.web.handlers.spot.AddSpotPostHandler
-import ru.yarsu.web.handlers.spot.DeleteSpotGetHandler
-import ru.yarsu.web.handlers.spot.DeleteSpotPostHandler
-import ru.yarsu.web.handlers.spot.EditSpotGetHandler
-import ru.yarsu.web.handlers.spot.EditSpotPostHandler
-import ru.yarsu.web.handlers.spot.SpotGetHandler
-import ru.yarsu.web.handlers.spot.SpotPostHandler
-import ru.yarsu.web.handlers.spot.SpotsListHandler
+import ru.yarsu.web.handlers.spot.*
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
-import ru.yarsu.web.models.upgrade.UpgradeOwnerProfileVM
+import ru.yarsu.web.handlers.teacher.TeacherCalendarGetHandler
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -51,6 +43,9 @@ fun router(
 
     return routes(
         "/" bind Method.GET to HomePageHandler(htmlView),
+        "/spotscalendar" bind Method.GET to SpotsCalendarGetHandler(htmlView),
+        "/spotscalendar2" bind Method.GET to SpotsCalendarGetHandler2(htmlView),
+        "/teachercalendar2" bind Method.GET to TeacherCalendarGetHandler(htmlView),
         "/test-error" bind Method.GET to TestErrorHandler(),
         "/ping" bind Method.GET to PingHandler(users),
         "/auth/signup" bind Method.GET to SignupGetHandler(htmlView),

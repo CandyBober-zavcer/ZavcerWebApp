@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-
     const availableDates = {
         '2025-06-15': ['10:00', '11:00', '12:00'],
         '2025-06-16': ['14:00', '15:00', '16:00'],
     };
+
+
     const bookedDates = {};
 
 
@@ -268,48 +269,65 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Обработка формы
-    document.getElementById('bookingForm').addEventListener('submit', function (e) {
-        e.preventDefault();
+    // Обработка формы
+document.getElementById('bookingForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-        if (!selectedDate || !startTime || !endTime) {
-            alert('Пожалуйста, выберите дату и время бронирования');
-            return;
+    if (!selectedDate || !startTime || !endTime) {
+        alert('Пожалуйста, выберите дату и время бронирования');
+        return;
+    }
+
+    // Проверяем, авторизован ли пользователь
+    const isAuthorized = !!window.userId;
+    if (!isAuthorized) {
+        alert("Необходима авторизация");
+        return;
+    }
+
+    const availableTimesForDate = availableDates[selectedDate] || [];
+    const startIndex = availableTimesForDate.indexOf(startTime);
+    const endIndex = availableTimesForDate.indexOf(endTime);
+
+    // Создаем массив занятых слотов
+    const bookedSlots = availableTimesForDate.slice(startIndex, endIndex + 1);
+
+    const formData = {
+        date: selectedDate,
+        bookedSlots: bookedSlots,
+        userId: window.userId 
+    };
+
+    console.log('Отправляемые данные:', formData);
+    fetch('http://localhost:8080/studio/1', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) throw new Error("Ошибка при отправке");
+        return response.json();
+    })
+    .then(data => {
+        alert(`Студия успешно забронирована на ${selectedDate} с ${startTime} до ${endTime}`);
+
+        // Обновляем список забронированных дат
+        if (!bookedDates[selectedDate]) {
+            bookedDates[selectedDate] = [];
         }
+        bookedDates[selectedDate].push(...bookedSlots);
 
-        // console.log('userId =', window.userId);
-        // console.log(selectedDate, startTime, endTime)
-        // const isAuthorized = !!window.userId;
-        // console.log('isAuthorized =', isAuthorized);
-        // if (!isAuthorized) {
-        //     alert("Необходима регистрация");
-        //     return;
-        // }
-
-        const formData = {
-            date: selectedDate,
-            startTime: startTime,
-            endTime: endTime,
-        };
-        console.log('Отправляемые данные:', formData);
-        fetch('http://localhost:8080/studio/1', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-            .then(response => {
-                if (!response.ok) throw new Error("Ошибка при отправке");
-                return response.json();
-            })
-            .then(data => {
-                alert(`Студия успешно забронирована на ${selectedDate} с ${startTime} до ${endTime}`);
-            })
-            .catch(error => {
-                alert("Ошибка при бронировании.");
-                console.error(error);
-            });
+        // Сбрасываем выбор и обновляем календарь
+        resetTimeSelection();
+        renderCalendar();
+    })
+    .catch(error => {
+        alert("Ошибка при бронировании.");
+        console.error(error);
     });
+});
 
     // Запускаем календарь
     initCalendar();

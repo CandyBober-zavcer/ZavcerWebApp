@@ -2,20 +2,36 @@ document.addEventListener('DOMContentLoaded', function () {
     const blockedData = {
         'Точка 1': {
             '2025-06-15': [
-                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
-                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
+                { time: '9:00', user: 'Анна Кузнецова' },
+                { time: '10:00', user: 'Анна Кузнецова' },
+                { time: '11:00', user: 'Анна Кузнецова' },
+                { time: '12:00', user: 'Анна Кузнецова' },
+                { time: '15:00', user: 'Дмитрий Орлов' },
+                { time: '16:00', user: 'Дмитрий Орлов' },
+                { time: '17:00', user: 'Дмитрий Орлов' },
+                { time: '18:00', user: 'Дмитрий Орлов' },
             ],
             '2025-06-18': [
-                { start: '10:00', end: '11:30', user: 'Иван Иванов' }
+                { time: '10:00', user: 'Иван Иванов' },
+                { time: '11:00', user: 'Иван Иванов' },
+                { time: '12:00', user: 'Иван Иванов' },
             ]
         },
         'Точка 2': {
             '2025-06-16': [
-                { start: '9:00', end: '12:00', user: 'Елена Федорова' }
+                { time: '9:00', user: 'Елена Федорова' },
+                { time: '10:00', user: 'Елена Федорова' },
+                { time: '11:00', user: 'Елена Федорова' },
+                { time: '12:00', user: 'Елена Федорова' }
             ],
             '2025-06-15': [
-                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
-                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
+                { time: '9:00', user: 'Анна Кузнецова' },
+                { time: '10:00', user: 'Анна Кузнецова' },
+                { time: '11:00', user: 'Анна Кузнецова' },
+                { time: '12:00', user: 'Анна Кузнецова' },
+                { time: '15:00', user: 'Дмитрий Орлов' },
+                { time: '16:00', user: 'Дмитрий Орлов' },
+                { time: '17:00', user: 'Дмитрий Орлов' },
             ],
         }
     };
@@ -34,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
     currentDate.setDate(1);
     let selectedDate = null;
 
-    const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+    const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
 
     function formatDate(date) {
         const year = date.getFullYear();
@@ -85,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
             dayEl.className = `calendar-day ${date < today ? 'past' : 'available'}`;
             dayEl.textContent = i;
 
-           
             let hasBlocked = false;
             for (const loc in blockedData) {
                 if (blockedData[loc][dateStr]) {
@@ -104,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('selected'));
                     dayEl.classList.add('selected');
                     selectedDate = dateStr;
-
                     showBlockedSlotsInfo(selectedDate);
                 });
             }
@@ -120,9 +134,22 @@ document.addEventListener('DOMContentLoaded', function () {
         for (const loc in blockedData) {
             if (blockedData[loc][dateStr]) {
                 html += `<p><strong>${loc}:</strong></p><ul>`;
+
+                // Группируем слоты по пользователям
+                const slotsByUser = {};
                 blockedData[loc][dateStr].forEach(slot => {
-                    html += `<li>${slot.start}–${slot.end} — ${slot.user}</li>`;
+                    if (!slotsByUser[slot.user]) {
+                        slotsByUser[slot.user] = [];
+                    }
+                    slotsByUser[slot.user].push(slot.time);
                 });
+
+                // Формируем список для каждого пользователя
+                for (const user in slotsByUser) {
+                    const times = slotsByUser[user].join(', ');
+                    html += `<li>${times} — ${user}</li>`;
+                }
+
                 html += `</ul>`;
                 hasData = true;
             }
@@ -133,7 +160,6 @@ document.addEventListener('DOMContentLoaded', function () {
         timePicker.style.display = 'none';
         timeSlots.innerHTML = '';
     }
-
 
     initCalendar();
 });

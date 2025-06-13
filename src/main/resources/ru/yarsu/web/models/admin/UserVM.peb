@@ -1,121 +1,166 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.admin.UserVM" #}
-    {% extends "../Layout.peb" %}
-
-    {% block style %}
-<link href="/css/Teacher.css" rel="stylesheet">
-{% endblock %}
-
+{% extends "../DesignedLayout.peb" %}
+{% block style %}Teacher.css{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <a href="/admin/users" class="btn btn-outline-secondary mb-4">← Назад к списку пользователей</a>
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="/admin/users" class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+    </section>
 
-    <div class="card shadow-lg">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
         <div class="row g-0">
-            <div class="col-md-5">
-                {% if model.user.images is not empty %}
-                    <div class="mb-2">
-                        <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}" alt="Фото пользователя"
-                             class="img-thumbnail" style="max-width: 200px;">
-                    </div>
-                {% else %}
-                    <div class="mb-2">
+            <div class="col-lg-4 col-md-5">
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+                    {% if model.user.images is not empty %}
+                        <img src="/image/{{ model.user.images[0] }}" alt="Фото пользователя"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    {% else %}
                         <img src="/img/defaultTeacher.webp" alt="Фото пользователя по умолчанию"
-                             class="img-thumbnail" style="max-width: 200px;">
-                    </div>
-                {% endif %}
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="col-md-7">
-                <div class="card-body">
-                    <h2 class="card-title mb-2">{{ model.user.name }}</h2>
-                    {% if model.user.description is not null and model.user.description != "" %}
-                        <p class="card-text text-muted mb-3">{{ model.user.description }}</p>
-                    {% else %}
-                        <p class="card-text text-muted mb-3">Описание отсутствует</p>
-                    {% endif %}
-
-                    <p class="card-text"><strong>📞 Телефон:</strong>
-                        {% if model.user.phone is not null and model.user.phone != "" %}
-                            {{ model.user.phone }}
+            <div class="col-lg-8 col-md-7">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="mb-4">
+                        <h1 class="display-6 fw-bold mb-2">{{ model.user.name }}</h1>
+                        {% if model.user.description is not null and model.user.description != "" %}
+                            <p class="lead text-muted">{{ model.user.description }}</p>
                         {% else %}
-                            Не указан
+                            <p class="lead text-muted">Описание отсутствует</p>
                         {% endif %}
-                    </p>
+                    </div>
 
-                    <p class="card-text"><strong>👩‍🏫 Опыт преподавания:</strong>
-                        {% if model.user.experience is not null %}
-                    {{ model.user.experience }} лет
-                        {% else %}
-                            Не указан
-                        {% endif %}
-                    </p>
+                    <div class="container">
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3"><img src="/img/phone.svg" width="35" height="35"></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Телефон</div>
+                                        <div class="fw-bold">
+                                            {% if model.user.phone is not null and model.user.phone != "" %}
+                                                {{ model.user.phone }}
+                                            {% else %}
+                                                Не указан
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <p class="card-text"><strong>👛 Стоимость за час:</strong>
-                        {% if model.user.price is not null and model.user.price != "" %}
-                            {{ model.user.price }}
-                        {% else %}
-                            Не указана
-                        {% endif %}
-                    </p>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3"><img src="/img/chalkboard-teacher.svg" width="35" height="35"></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Опыт преподавания</div>
+                                        <div class="fw-bold">
+                                            {% if model.user.experience is not null %}
+                                                {{ model.user.experience }} лет
+                                            {% else %}
+                                                Не указан
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-3"><strong>🎸 Инструменты:</strong></div>
-                        <div class="col-sm-9">
-                            {% if model.abilityNames is not null and model.abilityNames != "" %}
-                                {{ model.abilityNames }}
-                            {% else %}
-                                <span class="text-muted">Не указаны</span>
-                            {% endif %}
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3"><img src="/img/currency-rubel.svg" width="35" height="35"></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Стоимость за час</div>
+                                        <div class="fw-bold text-success">
+                                            {% if model.user.price is not null and model.user.price != "" %}
+                                                {{ model.user.price }} ₽
+                                            {% else %}
+                                                Не указана
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3"><img src="/img/piano.svg" width="35" height="35"></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Инструменты</div>
+                                        <div class="fw-bold">
+                                            {% if model.abilityNames is not null and model.abilityNames != "" %}
+                                                {{ model.abilityNames }}
+                                            {% else %}
+                                                <span class="text-muted">Не указаны</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <hr>
-
-                    <div class="mb-3">
-                        <h5 class="text-primary">📍 Адрес</h5>
-                        {% if model.user.address is not null and model.user.address != "" %}
-                            <p>{{ model.user.address }}</p>
-                        {% else %}
-                            <p>Адрес не указан</p>
-                        {% endif %}
-
-                        {% if model.user.district is not null %}
-                            <p><strong>Район:</strong> {{ model.user.district.district }}</p>
-                        {% else %}
-                            <p><strong>Район:</strong> <span class="text-muted">Не указан</span></p>
-                        {% endif %}
+                    <div class="card bg bg-opacity-10 border-opacity-25 mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text d-flex align-items-center mb-3">
+                                <span class="fs-4 me-2"><img src="/img/map-pin.svg" width="35" height="35"></span>
+                                Местоположение
+                            </h5>
+                            <p class="card-text mb-2"><strong>Адрес:</strong>
+                                {% if model.user.address is not null and model.user.address != "" %}
+                                    {{ model.user.address }}
+                                {% else %}
+                                    Не указан
+                                {% endif %}
+                            </p>
+                            <p class="card-text mb-0"><strong>Район:</strong>
+                                {% if model.user.district is not null %}
+                                    {{ model.user.district.district }}
+                                {% else %}
+                                    <span class="text-muted">Не указан</span>
+                                {% endif %}
+                            </p>
+                        </div>
                     </div>
 
                     <div class="d-flex gap-3 mt-4 flex-wrap">
-
-                        <!-- Удалить пользователя -->
                         <form method="post" action="/admin/user/delete/{{ model.user.id }}" onsubmit="return confirm('Вы точно хотите удалить пользователя {{ model.user.name }}? Это действие нельзя отменить.')">
-                            <button class="btn btn-danger btn-lg" type="submit">🗑️ Удалить пользователя</button>
+                            <button class="btn btn-danger btn-lg d-flex align-items-center" type="submit">
+                                <i class="bi bi-trash me-2"></i> Удалить пользователя
+                            </button>
                         </form>
 
-                        <!-- Роль Учитель -->
                         {% if not model.hasTeacherRole %}
                             <form method="post" action="/admin/user/roles/teacher/add/{{ model.user.id }}" style="display:inline;">
-                                <button class="btn btn-success btn-lg" type="submit">Добавить роль Учитель</button>
+                                <button class="btn btn-success btn-lg d-flex align-items-center" type="submit">
+                                    <i class="bi bi-person-plus me-2"></i> Добавить роль Учитель
+                                </button>
                             </form>
                         {% else %}
                             <form method="post" action="/admin/user/roles/teacher/remove/{{ model.user.id }}" style="display:inline;" onsubmit="return confirm('Удалить роль Учитель у пользователя {{ model.user.name }}?')">
-                                <button class="btn btn-warning btn-lg" type="submit">Удалить роль Учитель</button>
+                                <button class="btn btn-warning btn-lg d-flex align-items-center" type="submit">
+                                    <i class="bi bi-person-dash me-2"></i> Удалить роль Учитель
+                                </button>
                             </form>
                         {% endif %}
-
-                        <!-- Роль Владелец -->
                         {% if not model.hasOwnerRole %}
                             <form method="post" action="/admin/user/roles/owner/add/{{ model.user.id }}" style="display:inline;">
-                                <button class="btn btn-success btn-lg" type="submit">Добавить роль Владелец</button>
+                                <button class="btn btn-success btn-lg d-flex align-items-center" type="submit">
+                                    <i class="bi bi-person-plus me-2"></i> Добавить роль Владелец
+                                </button>
                             </form>
                         {% else %}
                             <form method="post" action="/admin/user/roles/owner/remove/{{ model.user.id }}" style="display:inline;" onsubmit="return confirm('Удалить роль Владелец у пользователя {{ model.user.name }}?')">
-                                <button class="btn btn-warning btn-lg" type="submit">Удалить роль Владелец</button>
+                                <button class="btn btn-warning btn-lg d-flex align-items-center" type="submit">
+                                    <i class="bi bi-person-dash me-2"></i> Удалить роль Владелец
+                                </button>
                             </form>
                         {% endif %}
                     </div>
-
                 </div>
             </div>
         </div>

@@ -526,7 +526,7 @@ class UsersController {
      * 0000 - ANONYMOUS
      */
     private fun rolesToString(roles: Set<RoleEnums>): String {
-        val result = StringBuilder("0000")
+        val result = StringBuilder("00000000")
 
         for (i in RoleEnums.entries) {
             if (i == RoleEnums.ANONYMOUS) {

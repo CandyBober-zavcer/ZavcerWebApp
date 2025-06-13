@@ -26,8 +26,8 @@ object Users : IntIdTable() {
 }
 
 object UsersAbilities : IntIdTable() {
-    val ability = integer("value")
-    val user = reference("spot_id", Users)
+    val ability = integer("ability")
+    val user = reference("user_id", Users)
 }
 
 class UserLine(
@@ -41,7 +41,7 @@ class UserLine(
     var password by Users.password
     var phone by Users.phone
     var experience by Users.experience
-    val abilities by UserAbility referrersOn UsersAbilities.ability
+    val abilities by UserAbility referrersOn UsersAbilities.user
     var price by Users.price
     var description by Users.description
     var address by Users.address

@@ -13,7 +13,7 @@ data class Spot(
     override var description: String = "",
     override var address: String = "",
     override var district: DistrictEnums = DistrictEnums.UNKNOWN,
-    override var images: List<String> = mutableListOf(),
+    override var images: List<String> = listOf(),
     override var twoWeekOccupation: MutableList<Int> = mutableListOf(),
     var owners: List<Int> = mutableListOf()
 ) : PaidPlace

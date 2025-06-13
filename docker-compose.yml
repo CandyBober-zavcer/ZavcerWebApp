@@ -6,11 +6,14 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./data/app.properties:/data/app.properties:ro  # Монтируем конфиг
+      - ./data/app.properties:/data/app.properties:ro
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
     environment:
-      APP_CONFIG_PATH: /data/app.properties  # Переопределяем путь при необходимости
+      APP_CONFIG_PATH: /data/app.properties
+      DB_RETRY_INTERVAL: "5000"
+      DB_MAX_RETRIES: "10"
 
   mysql-db:
     image: mysql:8.0
@@ -19,8 +22,15 @@ services:
       MYSQL_DATABASE: test
       MYSQL_USER: user
       MYSQL_PASSWORD: user
+    ports:
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   mysql_data:

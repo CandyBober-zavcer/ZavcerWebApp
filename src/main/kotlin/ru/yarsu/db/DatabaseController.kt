@@ -24,7 +24,7 @@ class DatabaseController {
      */
     fun init() {
         transaction {
-            SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
+            SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots, UsersAbilities)
         }
     }
 

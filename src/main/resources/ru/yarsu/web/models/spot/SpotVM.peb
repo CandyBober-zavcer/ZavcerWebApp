@@ -63,7 +63,7 @@
 
                         <div class="col-sm-6">
                             <div class="d-flex align-items-center p-3 bg-light rounded-3">
-                                <div class="fs-4 text-success me-3">💰</div>
+                                <div class="fs-4 text-success me-3"><img src="/img/currency-rubel.svg" width="35" height="35" ></div>
                                 <div>
                                     <div class="fw-semibold text-muted small">Цена за час</div>
                                     <div class="fw-bold text-success">{{ model.spot.price }} ₽</div>

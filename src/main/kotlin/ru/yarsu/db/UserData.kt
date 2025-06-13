@@ -63,6 +63,22 @@ class UserData {
                 roles = setOf(RoleEnums.TEACHER),
             ),
         )
+        add(
+            UserModel(
+                name = "Володя",
+                tg_id = 0L,
+                login = "admin",
+                password = "admin",
+                experience = 1,
+                abilities = emptySet(),
+                price = 1000,
+                description = "Талантище",
+                address = "Тута",
+                district = DistrictEnums.UNKNOWN,
+                images = emptyList(),
+                roles = setOf(RoleEnums.ADMIN),
+            ),
+        )
     }
 
     fun add(user: UserModel): UserModel {

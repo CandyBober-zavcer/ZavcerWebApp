@@ -40,7 +40,7 @@ fun main() {
             .then(ServerErrorFilter(htmlView))
             .then(
                 routes(
-                    router(renderer, htmlView, appConfig, users, spots, sessionStorage),
+                    router(renderer, htmlView, appConfig, users, spots, sessionStorage, UserModelLens),
                     static(ResourceLoader.Classpath("/ru/yarsu/public")),
                     "/image" bind static(ResourceLoader.Directory("public/image")),
                 ),

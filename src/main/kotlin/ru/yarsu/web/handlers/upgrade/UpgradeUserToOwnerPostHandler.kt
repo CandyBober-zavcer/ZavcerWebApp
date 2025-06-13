@@ -11,6 +11,7 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.funs.lensOrDefault
+import ru.yarsu.web.funs.lensOrDefaultAbilities
 import ru.yarsu.web.models.upgrade.UpgradeUserToOwnerVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
@@ -31,6 +32,7 @@ class UpgradeUserToOwnerPostHandler(
     private val experienceLens = MultipartFormField.string().required("experience")
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
+    private val abilitiesLens = MultipartFormField.multi.required("abilities[]")
 
     private val formLens =
         Body
@@ -44,18 +46,25 @@ class UpgradeUserToOwnerPostHandler(
                 experienceLens,
                 phoneLens,
                 priceLens,
+                abilitiesLens,
             ).toLens()
 
     override fun invoke(request: Request): Response {
         val userId =
             request.path("id")?.toIntOrNull()
-                ?: return Response(Status.BAD_REQUEST).body("Неверный ID пользоватя")
+                ?: return Response(Status.BAD_REQUEST).body("Неверный ID пользователя")
 
         val existingUser =
             users.getUserIfNotOwner(userId)
                 ?: return Response(NOT_FOUND).body("Пользователь не найден")
 
         val form = formLens(request)
+
+        val selectedAbilities =
+            lensOrDefaultAbilities(abilitiesLens, form) {
+                existingUser.abilities
+            }
+
         val errors = form.errors.map { it.meta.name }
         val allAbility = AbilityEnums.entries
 
@@ -98,7 +107,7 @@ class UpgradeUserToOwnerPostHandler(
                 name = name,
                 phone = phone,
                 experience = experience,
-                abilities = existingUser.abilities,
+                abilities = selectedAbilities,
                 price = price,
                 description = description,
                 address = address,

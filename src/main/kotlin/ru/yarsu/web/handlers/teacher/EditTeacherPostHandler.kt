@@ -10,12 +10,14 @@ import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.funs.lensOrDefault
+import ru.yarsu.web.funs.lensOrDefaultAbilities
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
 import ru.yarsu.web.utils.ImageUtils.saveImageAsPng
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.text.toIntOrNull
 
 class EditTeacherPostHandler(
     private val htmlView: ContextAwareViewRender,
@@ -31,6 +33,8 @@ class EditTeacherPostHandler(
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
 
+    private val abilitiesLens = MultipartFormField.multi.required("abilities[]")
+
     private val formLens =
         Body
             .multipartForm(
@@ -43,6 +47,7 @@ class EditTeacherPostHandler(
                 experienceLens,
                 phoneLens,
                 priceLens,
+                abilitiesLens,
             ).toLens()
 
     override fun invoke(request: Request): Response {
@@ -55,6 +60,12 @@ class EditTeacherPostHandler(
                 ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
         val form = formLens(request)
+
+        val selectedAbilities =
+            lensOrDefaultAbilities(abilitiesLens, form) {
+                existingTeacher.abilities
+            }
+
         val errors = form.errors.map { it.meta.name }
         val allAbility = AbilityEnums.entries
 
@@ -83,7 +94,6 @@ class EditTeacherPostHandler(
             val safeFilename = generateSafePngFilename("user", teacherId)
 
             val avatarPath = Paths.get("public/image").resolve(safeFilename)
-
             Files.createDirectories(avatarPath.parent)
 
             try {
@@ -99,7 +109,7 @@ class EditTeacherPostHandler(
                 name = name,
                 phone = phone,
                 experience = experience,
-                abilities = existingTeacher.abilities,
+                abilities = selectedAbilities,
                 price = price,
                 description = description,
                 address = address,
@@ -109,6 +119,7 @@ class EditTeacherPostHandler(
             )
 
         teachers.update(teacherId, updatedTeacher)
+
         return Response(FOUND).header("Location", "/teacher/$teacherId")
     }
 }

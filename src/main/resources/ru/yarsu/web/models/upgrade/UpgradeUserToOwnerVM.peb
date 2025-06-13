@@ -76,7 +76,7 @@
                         value="{{ model.user.price }}">
                 </div>
                 <div class="form-group mb-3">
-                    <label class="form-label">Инструменты</label>
+                    <label class="form-label">Специализации</label>
                     <div class="d-flex flex-wrap">
                         {% for ability in model.allAbilityWithNames %}
                         <div class="form-check me-3 mb-2">

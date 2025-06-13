@@ -14,7 +14,6 @@ import ru.yarsu.config.AppConfig
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.article.UserModel
 import ru.yarsu.web.domain.models.telegram.AuthUtils
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -27,11 +26,9 @@ class GmailAuthPostHandler(
     private val clientId = config.gmailConfig.clientId
     val jwkProvider =
         JwkProviderBuilder(
-            java.net.URI("https://www.googleapis.com/oauth2/v3/certs").toURL()
-        )
-            .cached(10, 24, TimeUnit.HOURS)
+            java.net.URI("https://www.googleapis.com/oauth2/v3/certs").toURL(),
+        ).cached(10, 24, TimeUnit.HOURS)
             .build()
-
 
     override fun invoke(request: Request): Response =
         try {

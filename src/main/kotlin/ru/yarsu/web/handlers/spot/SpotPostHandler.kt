@@ -16,24 +16,28 @@ import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
 class SpotPostHandler(
     private val spots: SpotData,
-    private val users: UserData
+    private val users: UserData,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
-        val user = UserModelLens(request)
-            ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
+        val user =
+            UserModelLens(request)
+                ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
 
-        val spotId = request.path("id")?.toIntOrNull()
-            ?: return Response(BAD_REQUEST).body("Некорректный ID")
+        val spotId =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(BAD_REQUEST).body("Некорректный ID")
 
-        val spot = spots.getById(spotId)
-            ?: return Response(NOT_FOUND).body("Репетиционная точка не найдена")
+        val spot =
+            spots.getById(spotId)
+                ?: return Response(NOT_FOUND).body("Репетиционная точка не найдена")
 
         val ownerIds = spot.owners
 
         // Получаем список пользователей по ID
-        val owners = ownerIds.mapNotNull { ownerId ->
-            users.getById(ownerId)
-        }
+        val owners =
+            ownerIds.mapNotNull { ownerId ->
+                users.getById(ownerId)
+            }
 
         // Берём список tg_id владельцев, фильтруя невалидные (<= 0)
         val ownerTgIds = owners.mapNotNull { it.tg_id.takeIf { id -> id > 0L } }

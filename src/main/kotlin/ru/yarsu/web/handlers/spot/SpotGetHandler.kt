@@ -13,11 +13,13 @@ class SpotGetHandler(
     private val spotData: SpotData,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
-        val id = request.path("id")?.toIntOrNull()
-            ?: return Response(NOT_FOUND).body("Неверный ID")
+        val id =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(NOT_FOUND).body("Неверный ID")
 
-        val spot = spotData.getById(id)
-            ?: return Response(NOT_FOUND).body("Репетиционная точка не найдена")
+        val spot =
+            spotData.getById(id)
+                ?: return Response(NOT_FOUND).body("Репетиционная точка не найдена")
 
         val viewModel = SpotVM(spot)
         return Response(OK).with(htmlView(request) of viewModel)

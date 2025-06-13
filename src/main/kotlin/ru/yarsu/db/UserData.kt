@@ -162,7 +162,6 @@ class UserData {
         }
     }
 
-
     fun removeTeacherRoleById(id: Int): Boolean {
         val user = users.find { it.id == id }
         return if (user != null && RoleEnums.TEACHER in user.roles) {

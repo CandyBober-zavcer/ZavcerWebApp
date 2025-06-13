@@ -12,16 +12,22 @@ object ImageUtils {
     private const val MAX_WIDTH = 1920
     private const val MAX_HEIGHT = 1080
 
-
-    fun generateSafePngFilename(prefix: String, id: Any): String {
+    fun generateSafePngFilename(
+        prefix: String,
+        id: Any,
+    ): String {
         val timestamp = Instant.now().epochSecond
         val uniqueId = UUID.randomUUID().toString().take(8)
         return "${prefix}_${id}_${timestamp}_$uniqueId.png"
     }
 
-    fun saveImageAsPng(inputStream: InputStream, outputPath: String) {
-        val originalImage = ImageIO.read(inputStream)
-            ?: throw IllegalArgumentException("Невозможно прочитать изображение")
+    fun saveImageAsPng(
+        inputStream: InputStream,
+        outputPath: String,
+    ) {
+        val originalImage =
+            ImageIO.read(inputStream)
+                ?: throw IllegalArgumentException("Невозможно прочитать изображение")
 
         val resizedImage = resizeIfNeeded(originalImage)
         val outputFile = File(outputPath)

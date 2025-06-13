@@ -15,8 +15,9 @@ class UserGetHandler(
             request.path("id")?.toIntOrNull()
                 ?: return Response(Status.BAD_REQUEST).body("Некорректный ID")
 
-        val user = users.getById(userId)
-            ?: return Response(Status.NOT_FOUND).body("Пользователь не найден")
+        val user =
+            users.getById(userId)
+                ?: return Response(Status.NOT_FOUND).body("Пользователь не найден")
 
         val hasTeacher = users.getTeacherById(userId) != null
         val hasOwner = users.getUserIfOwner(userId) != null

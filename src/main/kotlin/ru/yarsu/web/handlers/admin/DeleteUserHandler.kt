@@ -7,13 +7,16 @@ import org.http4k.core.Status
 import org.http4k.routing.path
 import ru.yarsu.db.SpotData
 import ru.yarsu.db.UserData
+import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
 class DeleteUserHandler(
     private val users: UserData,
-    private val spots: SpotData
+    private val spots: SpotData,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
         val userId = request.path("id")?.toIntOrNull() ?: return Response(Status.BAD_REQUEST)
+
+        val user = users.getById(userId)
 
         val allSpots = spots.getAll()
         allSpots.forEach { spot ->
@@ -33,6 +36,11 @@ class DeleteUserHandler(
         val deleted = users.deleteById(userId)
         if (!deleted) {
             return Response(Status.NOT_FOUND).body("Пользователь с id=$userId не найден")
+        }
+
+        val tgId = user?.tg_id ?: 0L
+        if (tgId > 0L) {
+            TelegramService.notifyUserDeleted(tgId, user?.name)
         }
 
         return Response(Status.FOUND).header("Location", "/admin/users")

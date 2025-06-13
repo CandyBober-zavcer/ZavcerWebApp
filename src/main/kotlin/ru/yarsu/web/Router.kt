@@ -127,5 +127,5 @@ fun router(
         "/admin/user/roles/teacher/remove/{id}" bind Method.POST to RemoveTeacherRoleHandler(users),
         "/admin/user/roles/owner/add/{id}" bind Method.POST to AddOwnerRoleHandler(users),
         "/admin/user/roles/owner/remove/{id}" bind Method.POST to RemoveOwnerRoleHandler(users),
-        )
+    )
 }

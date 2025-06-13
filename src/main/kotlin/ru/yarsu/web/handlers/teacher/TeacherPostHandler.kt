@@ -12,16 +12,21 @@ import ru.yarsu.db.UserData
 import ru.yarsu.web.context.UserModelLens
 import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
-class TeacherPostHandler(private val users: UserData) : HttpHandler {
+class TeacherPostHandler(
+    private val users: UserData,
+) : HttpHandler {
     override fun invoke(request: Request): Response {
-        val user = UserModelLens(request)
-            ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
+        val user =
+            UserModelLens(request)
+                ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
 
-        val teacherId = request.path("id")?.toIntOrNull()
-            ?: return Response(BAD_REQUEST).body("Некорректный ID")
+        val teacherId =
+            request.path("id")?.toIntOrNull()
+                ?: return Response(BAD_REQUEST).body("Некорректный ID")
 
-        val teacher = users.getTeacherById(teacherId)
-            ?: return Response(NOT_FOUND).body("Преподаватель не найден")
+        val teacher =
+            users.getTeacherById(teacherId)
+                ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
         val teacherHasTelegram = teacher.tg_id > 0L
         val studentHasTelegram = user.tg_id > 0L

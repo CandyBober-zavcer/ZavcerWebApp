@@ -12,7 +12,6 @@ import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.upgrade.UpgradeUserToOwnerVM
-import ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
 import ru.yarsu.web.utils.ImageUtils.saveImageAsPng

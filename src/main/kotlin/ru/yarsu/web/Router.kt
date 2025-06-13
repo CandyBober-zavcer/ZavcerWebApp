@@ -15,6 +15,13 @@ import ru.yarsu.web.domain.article.TokenStorage
 import ru.yarsu.web.domain.models.email.EmailService
 import ru.yarsu.web.domain.models.telegram.JsonLogger
 import ru.yarsu.web.handlers.PingHandler
+import ru.yarsu.web.handlers.admin.AddOwnerRoleHandler
+import ru.yarsu.web.handlers.admin.AddTeacherRoleHandler
+import ru.yarsu.web.handlers.admin.DeleteUserHandler
+import ru.yarsu.web.handlers.admin.RemoveOwnerRoleHandler
+import ru.yarsu.web.handlers.admin.RemoveTeacherRoleHandler
+import ru.yarsu.web.handlers.admin.UserGetHandler
+import ru.yarsu.web.handlers.admin.UserListHandler
 import ru.yarsu.web.handlers.auth.*
 import ru.yarsu.web.handlers.home.HomePageHandler
 import ru.yarsu.web.handlers.profile.*
@@ -30,7 +37,6 @@ import ru.yarsu.web.handlers.spot.SpotPostHandler
 import ru.yarsu.web.handlers.spot.SpotsListHandler
 import ru.yarsu.web.handlers.teacher.*
 import ru.yarsu.web.handlers.upgrade.*
-import ru.yarsu.web.models.upgrade.UpgradeOwnerProfileVM
 import ru.yarsu.web.templates.ContextAwareTemplateRenderer
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -114,5 +120,12 @@ fun router(
         "/edit/spot/edit-{id}" bind Method.POST to EditSpotPostHandler(htmlView, spots),
         "/edit/spot/delete-{id}" bind Method.GET to DeleteSpotGetHandler(htmlView, spots),
         "/edit/spot/delete-{id}" bind Method.POST to DeleteSpotPostHandler(spots),
-    )
+        "/admin/users" bind Method.GET to UserListHandler(htmlView, users),
+        "/admin/user/{id}" bind Method.GET to UserGetHandler(htmlView, users),
+        "/admin/user/delete/{id}" bind Method.POST to DeleteUserHandler(users, spots),
+        "/admin/user/roles/teacher/add/{id}" bind Method.POST to AddTeacherRoleHandler(users),
+        "/admin/user/roles/teacher/remove/{id}" bind Method.POST to RemoveTeacherRoleHandler(users),
+        "/admin/user/roles/owner/add/{id}" bind Method.POST to AddOwnerRoleHandler(users),
+        "/admin/user/roles/owner/remove/{id}" bind Method.POST to RemoveOwnerRoleHandler(users),
+        )
 }

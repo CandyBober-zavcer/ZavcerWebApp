@@ -13,8 +13,8 @@ object Spots : IntIdTable() {
     val hasDrums = bool("hasDrums")
     val guitarAmps = integer("guitarAmps")
     val bassAmps = integer("bassAmps")
-    val description = varchar("description", 50)
-    val address = varchar("address", 50)
+    val description = text("description")
+    val address = text("address")
     val district = integer("district")
     val images = text("images")
 }

@@ -153,7 +153,7 @@ class UsersController {
 
     fun getAllUsersByRole(role: Int): List<User>
         = transaction {
-            UserLine.find { Users.roles.substring(role, 1) eq "1" }.map { packUser(it) }.toList()
+            UserLine.find { Users.roles.substring(role + 1, 1) eq "1" }.map { packUser(it) }.toList()
         }
 
     fun updateTeacherRequest(id: Int, accept: Boolean): Boolean {

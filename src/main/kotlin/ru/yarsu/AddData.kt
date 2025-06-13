@@ -7,6 +7,7 @@ import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.*
+import ru.yarsu.web.domain.models.email.hashPassword
 
 val users = listOf(
     // Учителя (10)
@@ -400,10 +401,11 @@ val spots = listOf(
 )
 
 fun AddData(dbControl:DatabaseController, occupationsController: OccupationsController){
-    for (spot in spots){
+    for (spot in spots){  
         dbControl.insertSpot(spot)
     }
     for (user in users){
+        user.password = hashPassword(user.password)
         dbControl.insertUser(user)
     }
 

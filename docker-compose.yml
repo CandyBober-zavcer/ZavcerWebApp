@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    image: bedadima/zavser
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/app.properties:/data/app.properties:ro  # Монтируем конфиг
+    depends_on:
+      - mysql-db
+    environment:
+      APP_CONFIG_PATH: /data/app.properties  # Переопределяем путь при необходимости
+
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

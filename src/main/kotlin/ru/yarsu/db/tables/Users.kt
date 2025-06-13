@@ -10,18 +10,18 @@ import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
 
 object Users : IntIdTable() {
-    val name = varchar("name", 50)
-    val login = varchar("login", 50)
+    val name = text("name")
+    val login = text("login")
     val tg_id = long("tg_id")
-    val password = varchar("password", 50)
-    val phone = varchar("phone", 50)
+    val password = text("password")
+    val phone = text("phone")
     val experience = integer("experience")
     val price = integer("price")
-    val description = varchar("description", 50)
-    val address = varchar("address", 50)
+    val description = text("description")
+    val address = text("address")
     val district = integer("district")
     val images = text("images")
-    val roles = varchar("roles", 50)
+    val roles = text("roles")
     val isConfirmed = bool("isConfirmed")
 }
 

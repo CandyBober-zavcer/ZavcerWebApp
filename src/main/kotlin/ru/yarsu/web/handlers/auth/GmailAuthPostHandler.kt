@@ -11,17 +11,16 @@ import org.http4k.core.cookie.Cookie
 import org.http4k.core.cookie.SameSite
 import org.http4k.core.cookie.cookie
 import ru.yarsu.config.AppConfig
-import ru.yarsu.db.UserData
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.db.DatabaseController
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.models.telegram.AuthUtils
-import java.net.URL
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 
 class GmailAuthPostHandler(
-    private val users: UserData,
+    private val databaseController: DatabaseController,
     private val config: AppConfig,
 ) : HttpHandler {
     private val clientId = config.gmailConfig.clientId
@@ -45,11 +44,17 @@ class GmailAuthPostHandler(
 
             if (emailVerified != true) throw IllegalArgumentException("Email не подтверждён")
 
-            if (!users.existsByLogin(email)) {
-                users.add(UserModel(name = name, login = email, password = ""))
+            if (databaseController.getUserByLogin(email) == null) {
+                databaseController.insertUser(
+                    User(
+                        name = name,
+                        login = email,
+                        password = ""
+                    )
+                )
             }
 
-            val user = users.findByLogin(email)!!
+            val user = databaseController.getUserByLogin(email) ?: throw Exception()
 
             Response(Status.FOUND)
                 .header("Location", "/")
@@ -86,7 +91,7 @@ class GmailAuthPostHandler(
     }
 
     private fun createAuthCookie(
-        user: UserModel,
+        user: User,
         authSalt: String,
     ): Cookie {
         val rawData = "${user.id}:${user.login}"

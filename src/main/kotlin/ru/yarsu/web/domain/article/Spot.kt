@@ -31,6 +31,6 @@ data class Spot(
     var address: String = "",
     var district: DistrictEnums = DistrictEnums.UNKNOWN,
     var images: List<String> = emptyList(),
-    var schedule: Map<Int, List<Int>> = emptyMap(),
+    var twoWeekOccupation: MutableList<Int> = mutableListOf(),
     var owners: List<Int> = emptyList(),
 )

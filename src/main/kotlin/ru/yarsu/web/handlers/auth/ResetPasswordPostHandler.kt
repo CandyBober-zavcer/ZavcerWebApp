@@ -2,11 +2,11 @@ package ru.yarsu.web.handlers.auth
 
 import org.http4k.core.*
 import org.http4k.lens.*
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.article.TokenStorage
 
 class ResetPasswordPostHandler(
-    private val userData: UserData,
+    private val databaseController: DatabaseController,
     private val tokenStorage: TokenStorage,
 ) : HttpHandler {
     private val tokenLens = FormField.nonEmptyString().required("token")
@@ -54,10 +54,10 @@ class ResetPasswordPostHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Ссылка устарела или недействительна.")
 
         val user =
-            userData.getByEmail(email)
+            databaseController.getUserByEmail(email)
                 ?: return Response(Status.NOT_FOUND).body("Пользователь не найден.")
 
-        userData.updatePassword(user.id, newPassword)
+        databaseController.updateUserPassword(user.id, newPassword)
         tokenStorage.remove(token)
 
         return Response(Status.FOUND).header("Location", "/auth/signin")

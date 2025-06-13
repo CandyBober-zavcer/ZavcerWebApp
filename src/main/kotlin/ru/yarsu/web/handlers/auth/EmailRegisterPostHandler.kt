@@ -2,12 +2,13 @@ package ru.yarsu.web.handlers.auth
 
 import org.http4k.core.*
 import org.http4k.lens.*
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.article.*
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.models.email.EmailService
 
 class EmailRegisterPostHandler(
-    private val userData: UserData,
+    private val databaseController: DatabaseController,
     private val tokenStorage: TokenStorage,
     private val emailService: EmailService,
 ) : HttpHandler {
@@ -51,20 +52,20 @@ class EmailRegisterPostHandler(
         val login = loginLens(form)
         val password = passwordLens(form)
 
-        if (userData.existsByLogin(login)) {
+        if (databaseController.getUserByLogin(login) != null) {
             return Response(Status.CONFLICT).body("Пользователь с таким email уже существует")
         }
 
         val newUser =
-            userData.add(
-                UserModel(
+            databaseController.insertUser(
+                User(
                     login = login,
                     password = password,
                     isConfirmed = false,
-                ),
+                )
             )
 
-        val token = tokenStorage.generateConfirmationToken(newUser.id)
+        val token = tokenStorage.generateConfirmationToken(newUser)
         val confirmationLink = "https://zavcer.ru.tuna.am/auth/confirm?token=$token"
         val message =
             """

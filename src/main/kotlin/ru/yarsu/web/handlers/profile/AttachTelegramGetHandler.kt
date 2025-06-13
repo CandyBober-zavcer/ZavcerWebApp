@@ -4,12 +4,12 @@ import org.http4k.core.*
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.UNAUTHORIZED
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.context.UserModelLens
 import ru.yarsu.web.domain.models.telegram.JsonLogger
 
 class AttachTelegramGetHandler(
-    private val users: UserData,
+    private val databaseController: DatabaseController,
     private val jsonLogger: JsonLogger,
     private val botToken: String,
 ) : HttpHandler {
@@ -31,7 +31,7 @@ class AttachTelegramGetHandler(
                 return Response(BAD_REQUEST).body("Данные Telegram устарели")
             }
 
-            users.attachTelegram(user.id, telegramData.id)
+            databaseController.attachTelegram(user.id, telegramData.id)
             Response(FOUND).header("Location", "/profile/${user.id}")
         } catch (e: Exception) {
             e.printStackTrace()

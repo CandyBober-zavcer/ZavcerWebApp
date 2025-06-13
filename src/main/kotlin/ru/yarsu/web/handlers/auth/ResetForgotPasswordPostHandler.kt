@@ -2,13 +2,13 @@ package ru.yarsu.web.handlers.auth
 
 import org.http4k.core.*
 import org.http4k.lens.*
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.article.TokenStorage
 import ru.yarsu.web.domain.models.email.EmailService
 import java.util.*
 
 class ResetForgotPasswordPostHandler(
-    private val userData: UserData,
+    private val databaseController: DatabaseController,
     private val tokenStorage: TokenStorage,
     private val emailService: EmailService,
 ) : HttpHandler {
@@ -31,7 +31,7 @@ class ResetForgotPasswordPostHandler(
 
         val email = emailLens(form)
 
-        val user = userData.getByEmail(email)
+        val user = databaseController.getUserByEmail(email)
         if (user != null && user.isConfirmed) {
             val token = UUID.randomUUID().toString()
             tokenStorage.saveResetPasswordToken(email, token)

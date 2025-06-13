@@ -7,7 +7,7 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
 import ru.yarsu.web.models.profile.EditProfileVM
@@ -20,7 +20,7 @@ import java.util.*
 
 class EditProfilePostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
@@ -43,7 +43,7 @@ class EditProfilePostHandler(
                 ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
 
         val existingUser =
-            users.getById(userId)
+            databaseController.getUserById(userId)
                 ?: return Response(NOT_FOUND).body("Профиль не найден")
 
         val allAbility = AbilityEnums.entries
@@ -88,7 +88,7 @@ class EditProfilePostHandler(
                 images = updatedImages,
             )
 
-        users.update(userId, updatedUser)
+        databaseController.updateUserInfo(userId, updatedUser)
         return Response(FOUND).header("Location", "/profile/$userId")
     }
 }

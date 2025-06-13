@@ -12,6 +12,7 @@ import org.http4k.server.asServer
 import org.jetbrains.exposed.sql.Database
 import ru.yarsu.config.AppConfig
 import ru.yarsu.db.*
+import ru.yarsu.db.databasecontrollers.OccupationsController
 import ru.yarsu.web.context.UserModelLens
 import ru.yarsu.web.context.contexts
 import ru.yarsu.web.domain.article.SessionStorage
@@ -24,7 +25,18 @@ fun main() {
     val requestContextFilter = ServerFilters.InitialiseRequestContext(contexts)
     val appConfig = AppConfig()
 
-    Database.connect("jdbc:mysql://localhost/test", driver = "com.mysql.cj.jdbc.Driver", user = "root", password = "root")
+    Database.connect(
+        url = "jdbc:mysql://mysql-db:3306/test?" +
+                "useSSL=false&" +
+                "allowPublicKeyRetrieval=true&" +
+                "serverTimezone=UTC&" +
+                "autoReconnect=true&" +
+                "connectTimeout=5000&" +
+                "socketTimeout=30000",
+        driver = "com.mysql.cj.jdbc.Driver",
+        user = "user",
+        password = "user"
+    )
     DatabaseController().init()
 
     val renderer = rendererProvider(false)
@@ -35,6 +47,8 @@ fun main() {
 
     val databaseController = DatabaseController()
     val sessionStorage = SessionStorage()
+
+    AddData(databaseController, OccupationsController())
 
     val app =
         requestContextFilter

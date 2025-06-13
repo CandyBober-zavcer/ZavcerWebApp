@@ -6,7 +6,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object HourOccupations : IntIdTable() {
-    val hour = integer("hour").uniqueIndex()
+    val hour = integer("hour")
     val occupation = reference("user", Users).nullable()
     val day = reference("day", DayOccupations)
 }

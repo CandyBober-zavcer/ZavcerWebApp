@@ -9,6 +9,6 @@ interface PaidPlace {
     var description: String
     var address: String
     var district: DistrictEnums
-    var images: MutableList<String>
+    var images: List<String>
     var twoWeekOccupation: MutableList<Int>
 }

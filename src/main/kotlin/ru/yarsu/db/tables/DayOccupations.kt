@@ -10,7 +10,7 @@ import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 
 object DayOccupations : IntIdTable() {
-    val day = date("day").uniqueIndex()
+    val day = date("day")
 }
 
 class DayOccupationLine(

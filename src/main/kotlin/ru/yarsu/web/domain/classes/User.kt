@@ -18,7 +18,7 @@ data class User(
     override var description: String = "",
     override var address: String = "Ярославль, ул. Загородный Сад, 6",
     override var district: DistrictEnums = DistrictEnums.UNKNOWN,
-    override var images: MutableList<String> = mutableListOf(),
+    override var images: List<String> = listOf(),
     override var twoWeekOccupation: MutableList<Int> = mutableListOf(),
     var spots: List<Int> = listOf(),
     var roles: MutableSet<RoleEnums> = mutableSetOf(RoleEnums.ANONYMOUS),

@@ -2,7 +2,6 @@ package ru.yarsu.db.databasecontrollers
 
 import kotlinx.datetime.LocalDate
 import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.tables.DayOccupationLine
 import ru.yarsu.db.tables.DayOccupations
@@ -19,7 +18,6 @@ class OccupationsController {
         var dayOccupation = DayOccupation()
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(id)
             day?.let { line ->
                 dayOccupation = packDayOccupation(line)
@@ -41,7 +39,6 @@ class OccupationsController {
         var id = -1
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day =
                 DayOccupationLine.new {
                     day = date
@@ -62,7 +59,6 @@ class OccupationsController {
         var id = -1
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.findById(dateId)
             date?.let {
                 val hourLine =
@@ -88,7 +84,6 @@ class OccupationsController {
         val ids = mutableListOf<Int>()
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.findById(dateId)
             date?.let {
                 for (time in times) {
@@ -116,7 +111,6 @@ class OccupationsController {
         var id = -1
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.find { DayOccupations.day eq dateTarget }.singleOrNull()
             date?.let {
                 val hourLine =
@@ -142,7 +136,6 @@ class OccupationsController {
         val ids = mutableListOf<Int>()
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.find { DayOccupations.day eq dateTarget }.singleOrNull()
             date?.let {
                 for (time in times) {
@@ -171,7 +164,6 @@ class OccupationsController {
         var inputRes = false
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(dayId)
             day?.let {
                 val hour = day.hours.find { it.hour == targetHour }
@@ -200,7 +192,6 @@ class OccupationsController {
         var inputRes = false
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(dayId)
             day?.let {
                 val hour = day.hours.find { it.hour == targetHour }

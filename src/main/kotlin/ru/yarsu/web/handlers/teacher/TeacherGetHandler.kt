@@ -3,6 +3,7 @@ package ru.yarsu.web.handlers.teacher
 import org.http4k.core.*
 import org.http4k.routing.path
 import ru.yarsu.db.DatabaseController
+import ru.yarsu.db.databasecontrollers.JsonController
 import ru.yarsu.web.models.teacher.TeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -21,7 +22,7 @@ class TeacherGetHandler(
 
         val viewModel =
             TeacherVM(
-                teacher,
+                teacher, JsonController.getAvailableDatesForTeacherJson(teacherId)
             )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)

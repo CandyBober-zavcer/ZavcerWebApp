@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    const availableDates = {
-        '2025-06-15': ['10:00', '11:00', '12:00'],
-        '2025-06-16': ['14:00', '15:00', '16:00'],
-    };
+    const availableDates = JSON.parse(json);
     const bookedDates = {};
 
 
@@ -15,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeSlots = document.querySelector('.time-slots');
     const bookingSummary = document.querySelector('.booking-summary');
     const resetTimeBtn = document.querySelector('.reset-time');
-    const pricePerHour = 500;
 
     // Текущая дата без времени (для сравнения)
     const today = new Date();
@@ -26,6 +22,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedDate = null;
     let startTime = null;
     let endTime = null;
+
+
+    function addOneHour(timeStr) {
+        let [hours, minutes] = timeStr.split(':').map(Number);
+        hours = (hours + 1) % 24;
+
+        let hoursStr = hours.toString().padStart(2, '0');
+        return `${hoursStr}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+
 
     // Инициализация календаря
     function initCalendar() {
@@ -256,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const endIndex = availableTimesForDate.indexOf(endTime);
             const hours = endIndex - startIndex + 1;
 
-            document.querySelector('.summary-time').textContent = `${startTime} - ${endTime}`;
+            document.querySelector('.summary-time').textContent = `${startTime} - ${addOneHour(endTime)}`;
             document.querySelector('.summary-price').textContent = hours * pricePerHour;
         } else if (startTime) {
             document.querySelector('.summary-time').textContent = `${startTime} - (выберите время окончания)`;

@@ -401,7 +401,7 @@ val spots = listOf(
 )
 
 fun AddData(dbControl:DatabaseController, occupationsController: OccupationsController){
-    for (spot in spots){  
+    for (spot in spots){
         dbControl.insertSpot(spot)
     }
     for (user in users){

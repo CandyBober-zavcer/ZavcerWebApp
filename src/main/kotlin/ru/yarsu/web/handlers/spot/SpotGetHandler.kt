@@ -5,6 +5,7 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.routing.path
 import ru.yarsu.db.DatabaseController
+import ru.yarsu.db.databasecontrollers.JsonController
 import ru.yarsu.web.models.spot.SpotVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -19,7 +20,7 @@ class SpotGetHandler(
         val spot = databaseController.getSpotById(id)
             ?: return Response(NOT_FOUND).body("Спот не найден")
 
-        val viewModel = SpotVM(spot)
+        val viewModel = SpotVM(spot, JsonController.getAvailableDatesForSpotJson(id))
         return Response(OK).with(htmlView(request) of viewModel)
     }
 }

@@ -1,9 +1,12 @@
 import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+
 plugins {
     kotlin("jvm") version "2.1.20"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    kotlin("plugin.serialization") version "1.9.0"
     application
 }
 
@@ -42,12 +45,26 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.shadowJar {
+    archiveBaseName.set("web-application")
+    archiveVersion.set("1.0")
+    archiveClassifier.set("")
+    from(sourceSets.main.get().output)
+    configurations = listOf(project.configurations.runtimeClasspath.get())
+
+    manifest {
+        attributes["Main-Class"] = "ru.yarsu.WebApplicationKt"
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("org.http4k:http4k-client-okhttp:$http4kVersion")
     implementation("org.http4k:http4k-cloudnative:$http4kVersion")
     implementation("org.http4k:http4k-core:$http4kVersion")

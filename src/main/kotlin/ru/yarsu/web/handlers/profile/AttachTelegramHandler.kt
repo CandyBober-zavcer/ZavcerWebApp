@@ -1,13 +1,13 @@
 package ru.yarsu.web.handlers.profile
 
 import org.http4k.core.*
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.context.UserModelLens
 import ru.yarsu.web.domain.models.telegram.JsonLogger
 import java.lang.Exception
 
 class AttachTelegramHandler(
-    private val users: UserData,
+    private val databaseController: DatabaseController,
     private val jsonLogger: JsonLogger,
     private val botToken: String,
 ) : HttpHandler {
@@ -18,7 +18,7 @@ class AttachTelegramHandler(
 
             val user = UserModelLens(request) ?: return Response(Status.UNAUTHORIZED).body("Пользователь не авторизован")
 
-            users.attachTelegram(user.id, telegramData.id)
+            databaseController.attachTelegram(user.id, telegramData.id)
 
             Response(Status.OK).body("Telegram успешно привязан")
         } catch (e: Exception) {

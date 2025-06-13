@@ -2,10 +2,10 @@ package ru.yarsu.web.handlers.teacher
 
 import org.http4k.core.*
 import org.http4k.core.body.form
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 
 class DeleteTeacherPostHandler(
-    private val teachers: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
         val teacherId =
@@ -13,7 +13,7 @@ class DeleteTeacherPostHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Некорректный ID преподавателя")
 
         val existingTeacher =
-            teachers.getTeacherById(teacherId)
+            databaseController.getTeacherById(teacherId)
                 ?: return Response(Status.NOT_FOUND).body("Преподаватель не найден")
 
 //        existingTeacher.avatarFileName?.forEach { filename ->
@@ -24,7 +24,7 @@ class DeleteTeacherPostHandler(
 //            }
 //        }
 
-        teachers.removeTeacherRoleById(teacherId)
+        databaseController.removeTeacherRoleById(teacherId)
 
         return Response(Status.FOUND).header("Location", "/teachers")
     }

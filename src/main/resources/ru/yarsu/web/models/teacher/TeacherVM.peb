@@ -149,7 +149,7 @@
 
 {% block script %}
 <script>
-    window.userId = {{ user.id | default ("null") }};
+    window.userId = {{ model.user | default ("null") }};
 </script>
 <script src="../js/Teacher.js"></script>
 {% endblock %}

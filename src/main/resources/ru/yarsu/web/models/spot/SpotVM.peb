@@ -114,6 +114,13 @@
                     </div>
 
 
+                    <!-- {% if model.spot.images != null and model.spot.images.size > 1 %}
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        {% for file in model.spot.images %}
+                        <img src="/image/{{ file }}" alt="Фото студии" class="img-thumbnail" style="max-width: 120px;">
+                        {% endfor %}
+                    </div>
+                    {% endif %} -->
 
                     <form method="POST" id="bookingForm">
                         <div class="mb-3">
@@ -196,10 +203,6 @@
     }
 });
 </script>
-<script>
-    window.userId = {{ user.id | default ("null") }};
-</script>
+
 <script src="/js/Studio.js"></script>
-
-
 {% endblock %}

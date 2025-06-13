@@ -1,4 +1,4 @@
-{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeListVM" #}
+{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeTeacherListVM" #}
 {% extends "../DesignedLayout.peb" %}
 {% block style %}teachers_list.css{% endblock %}
 

@@ -1,25 +1,26 @@
 package ru.yarsu.web.domain.classes
 
+import ru.yarsu.web.domain.classes.`interface`.PaidPlace
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 
 data class User(
-    var id: Int = -1,
-    var name: String = "",
+    override var id: Int = -1,
+    override var name: String = "",
     var tg_id: Long = 0L,
     var login: String = "",
     var password: String = "",
     var phone: String = "+7 (4852) 73-88-15",
     var experience: Int = 0,
     var abilities: MutableSet<AbilityEnums> = mutableSetOf(),
-    var price: Int = 0,
-    var description: String = "",
-    var address: String = "Ярославль, ул. Загородный Сад, 6",
-    var district: DistrictEnums = DistrictEnums.UNKNOWN,
-    var images: List<String> = listOf(),
-    var twoWeekOccupation: List<Int> = listOf(),
+    override var price: Int = 0,
+    override var description: String = "",
+    override var address: String = "Ярославль, ул. Загородный Сад, 6",
+    override var district: DistrictEnums = DistrictEnums.UNKNOWN,
+    override var images: MutableList<String> = mutableListOf(),
+    override var twoWeekOccupation: MutableList<Int> = mutableListOf(),
     var spots: List<Int> = listOf(),
     var roles: MutableSet<RoleEnums> = mutableSetOf(RoleEnums.ANONYMOUS),
-    var isConfirmed: Boolean = true,
-)
+    var isConfirmed: Boolean = true
+) : PaidPlace

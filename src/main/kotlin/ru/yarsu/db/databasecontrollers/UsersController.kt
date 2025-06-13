@@ -180,7 +180,7 @@ class UsersController {
         transaction {
             val user = UserLine.findById(id)
             user?.let {
-                var roles = stringToRoles(it.roles)
+                val roles = stringToRoles(it.roles)
                 if (roles.contains(RoleEnums.TEACHER)) {
                     roles.remove(RoleEnums.TEACHER)
                     user.roles = rolesToString(roles)
@@ -242,7 +242,7 @@ class UsersController {
                 description = "",
                 address = "",
                 district = DistrictEnums.UNKNOWN,
-                images = emptyList(),
+                images = mutableListOf(),
                 roles = mutableSetOf(RoleEnums.USER),
                 isConfirmed = true,
             ),
@@ -599,7 +599,7 @@ class UsersController {
         return result
     }
 
-    private fun packUser(line: UserLine): User {
+    fun packUser(line: UserLine): User {
         val user = User()
 
         user.id = line.id.value

@@ -348,7 +348,7 @@ class SpotsController {
         return result
     }
 
-    private fun packSpot(line: SpotLine): Spot {
+    fun packSpot(line: SpotLine): Spot {
         val spot = Spot()
 
         spot.id = line.id.value
@@ -360,7 +360,7 @@ class SpotsController {
         spot.description = line.description
         spot.address = line.address
         spot.district = DistrictEnums.from(line.district) ?: DistrictEnums.UNKNOWN
-        spot.images = line.images.toList()
+        spot.images = line.images.toMutableList()
         spot.twoWeekOccupation = line.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
         spot.owners = line.owners.map { user -> user.id.value }.toMutableList()
 

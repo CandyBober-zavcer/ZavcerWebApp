@@ -21,14 +21,7 @@ class DayOccupationLine(
     var day by DayOccupations.day
     val hours by HourOccupationLine referrersOn HourOccupations.day
 
-    fun isFromUser(): Boolean {
-        return UsersDays.select (UsersDays.day eq id ).count() > 0
-    }
-    fun isFromSpot(): Boolean {
-        return SpotsDays.select ( SpotsDays.day eq id ).count() > 0
-    }
-
-    fun getUser(): UserLine? {
+    private fun getUser(): UserLine? {
         return UsersDays
             .innerJoin(Users)
             .select ( UsersDays.day eq id )
@@ -36,7 +29,7 @@ class DayOccupationLine(
             .map { UserLine.wrapRow(it) }
             .firstOrNull()
     }
-    fun getSpot(): SpotLine? {
+    private fun getSpot(): SpotLine? {
         return SpotsDays
             .innerJoin(Spots)
             .select ( SpotsDays.day eq id )

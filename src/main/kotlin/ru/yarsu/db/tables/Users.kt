@@ -49,7 +49,7 @@ class UserLine(
     var twoWeekOccupation by DayOccupationLine via UsersDays
     var roles by Users.roles
     var spots by SpotLine via UsersSpots
-    val occupiedHours by HourOccupationLine optionalReferencedOn HourOccupations.occupation
+    val occupiedHours by HourOccupationLine optionalReferrersOn HourOccupations.occupation
     var isConfirmed by Users.isConfirmed
 
     var images by Users.images.transform(

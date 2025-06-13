@@ -6,16 +6,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.databasecontrollers.OccupationsController
 import ru.yarsu.db.databasecontrollers.SpotsController
 import ru.yarsu.db.databasecontrollers.UsersController
-import ru.yarsu.db.tables.DayOccupations
-import ru.yarsu.db.tables.HourOccupations
-import ru.yarsu.db.tables.Spots
-import ru.yarsu.db.tables.Users
+import ru.yarsu.db.tables.*
 import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
 import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.classes.User
+import ru.yarsu.web.domain.classes.`interface`.PaidPlace
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.models.telegram.TelegramUser
@@ -134,6 +132,25 @@ class DatabaseController {
         user: User,
         password: String,
     ): Boolean = UsersController().verifyPassword(user, password)
+
+    fun getUserSchedule(userId: Int): List<Pair<String, PaidPlace>> {
+        val schedule = mutableListOf<Pair<String, PaidPlace>>()
+
+        transaction {
+            val user = UserLine.findById(userId)
+            user?.occupiedHours?.forEach {
+                var time = ""
+                time += "${it.hour}:00 ${it.day.day}"
+                val place = it.day.getSource()
+                if (place is SpotLine) {
+                    schedule.add(Pair(time, SpotsController().packSpot(place)))
+                } else if (place is UserLine) {
+                    schedule.add(Pair(time, UsersController().packUser(place)))
+                }
+            }
+        }
+        return schedule
+    }
 
     // Работа со Spots
     fun getSpotsByPage(

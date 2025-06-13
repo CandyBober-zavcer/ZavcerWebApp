@@ -1,7 +1,6 @@
 html, body {
     height: 100%;
     margin: 0;
-    font-family: Arial, sans-serif; 
 }
 
 body {
@@ -12,15 +11,15 @@ body {
 
 .content {
     flex: 1 0 auto;
-    padding: 20px; 
+    padding: 20px;
 }
 
 footer {
     flex-shrink: 0;
     text-align: center;
     padding: 10px 0;
-    background-color: #dc3545; 
-    color: white; 
+    background-color: #dc3545;
+    color: white;
 }
 .calendar-header {
     display: flex;
@@ -33,7 +32,7 @@ footer {
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
-    color: #dc3545; 
+    color: #dc3545;
 }
 
 .calendar-nav {
@@ -41,7 +40,7 @@ footer {
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    color: #dc3545; 
+    color: #dc3545;
 }
 
 .calendar-weekdays {
@@ -50,7 +49,7 @@ footer {
     text-align: center;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #dc3545; 
+    color: #dc3545;
 }
 
 .calendar-days {
@@ -64,19 +63,19 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%; 
+    border-radius: 50%;
     cursor: pointer;
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
 }
 
 .calendar-day.available {
-    background-color: #f8f9fa; 
+    background-color: #f8f9fa;
     color: #000;
 }
 
 .calendar-day.available:hover,
 .calendar-day.selected {
-    background-color: #dc3545; 
+    background-color: #dc3545;
     color: white;
 }
 
@@ -107,23 +106,23 @@ footer {
     text-align: center;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease; 
+    transition: background-color 0.3s ease;
 }
 
 .time-slot.available {
-    background-color: #f8f9fa; 
+    background-color: #f8f9fa;
     border: 1px solid #dee2e6;
 }
 
 .time-slot.available:hover,
 .time-slot.selected {
-    background-color: #dc3545; 
+    background-color: #dc3545;
     color: white;
     border-color: #dc3545;
 }
 
 .time-slot.unavailable {
-    background-color: #6c757d; 
+    background-color: #6c757d;
     color: white;
     cursor: not-allowed;
 }
@@ -138,7 +137,7 @@ footer {
 
 .reset-time {
     cursor: pointer;
-    color: #dc3545; 
+    color: #dc3545;
     text-decoration: underline;
     font-size: 0.9em;
     margin-top: 5px;
@@ -151,14 +150,14 @@ footer {
 }
 
 .calendar-day.past {
-    background-color: #e9ecef; 
+    background-color: #e9ecef;
     color: #adb5bd;
     cursor: not-allowed;
 }
 
 img {
     border-radius: 50%;
-    max-width: 100%; 
+    max-width: 100%;
 }
 
 ul {
@@ -170,13 +169,13 @@ ul {
 
 .image-container img {
     width: 100%;
-    height: auto; 
-    object-fit: cover; 
-    border-radius: 50px; 
+    height: auto;
+    object-fit: cover;
+    border-radius: 50px;
 }
 
 .calendar {
-    max-width: 350px; 
-    margin: 0 auto; 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    max-width: 350px;
+    margin: 0 auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

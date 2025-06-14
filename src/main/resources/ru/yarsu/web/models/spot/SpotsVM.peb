@@ -102,13 +102,13 @@
                     <div class="d-flex gap-2">
                         <input type="number" id="price-min" name="priceMin" value=""
                             class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от"
-                            min="100" max="110">
+                           >
                         <input type="number" id="price-max" name="priceMax" value=""
                             class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до"
-                            min="100" max="110">
+                            >
                     </div>
                 </div>
-                
+
                 <div class="mb-3">
                     <div class="form-check">
                             <input class="form-check-input border-secondary focus-ring focus-ring-secondary"

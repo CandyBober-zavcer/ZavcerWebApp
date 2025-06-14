@@ -1,0 +1,37 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.admin.UserListVM" #}
+    {% extends "../Layout.peb" %}
+
+    {% block style %}
+        <link href="/css/Teachers.css" rel="stylesheet">
+    {% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Список пользователей</h1>
+        <div class="row">
+            {% for user in model.users %}
+                <div class="col-md-4 mb-4">
+                    <div class="card-body">
+                        <div class="col-md-5">
+                        {% if user.images is not empty %}
+                            <div class="mb-2">
+                                <img id="teacher-photo-preview" src="/image/{{ user.images[0] }}" alt="Фото пользователя"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% else %}
+                            <div class="mb-2">
+                                <img src="/img/defaultTeacher.webp" alt="Фото пользователя по умолчанию"
+                                     class="img-thumbnail" style="max-width: 200px;">
+                            </div>
+                        {% endif %}
+                        </div>
+                        <h5 class="card-title">{{ user.name }}</h5>
+                        <p class="card-text">{{ user.description }}</p>
+                        <a href="/admin/user/{{ user.id }}" class="btn btn-primary">Просмотреть профиль</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

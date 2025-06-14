@@ -690,4 +690,86 @@ class UsersController {
         }.map { packUser(it) }
     }
 
+    fun addTeacherRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val roles = stringToRoles(it.roles)
+                if (!roles.contains(RoleEnums.TEACHER)) {
+                    roles.add(RoleEnums.TEACHER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun addOwnerRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val roles = stringToRoles(it.roles)
+                if (!roles.contains(RoleEnums.OWNER)) {
+                    roles.add(RoleEnums.OWNER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun removeOwnerRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val roles = stringToRoles(it.roles)
+                if (roles.contains(RoleEnums.OWNER)) {
+                    roles.remove(RoleEnums.OWNER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun deleteUser(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            if (user != null) {
+                Users.deleteWhere { Users.id eq id }
+
+                user.delete()
+
+                result = true
+            }
+        }
+
+        return result
+    }
+
+    fun getOwnerById(id: Int): User? = transaction {
+        val user = UserLine.findById(id) ?: return@transaction null
+        val roles = stringToRoles(user.roles)
+        if (RoleEnums.OWNER in roles && user.isConfirmed) {
+            packUser(user)
+        } else {
+            null
+        }
+    }
+
+    fun getAllUsers(): List<User> = transaction {
+        UserLine.all().map { packUser(it) }.toList()
+    }
+
 }

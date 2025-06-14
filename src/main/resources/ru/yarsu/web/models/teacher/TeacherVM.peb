@@ -19,18 +19,17 @@
     </section>
     <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
         <div class="row g-0">
-            <div class="col-lg-4 col-md-5">
-                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+            <div class="d-flex col-lg-4 col-md-5 bg-light justify-content-center left-image-wrapper">
                     {% if model.teacher.images | length > 0 %}
-                    <img src="/image/{{ model.teacher.images[0] }}" alt="Аватар преподавателя"
-                        class="img-fluid rounded-3 shadow-sm"
-                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                        <img src="/image/{{ model.teacher.images[0] }}" alt="Аватар преподавателя"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-height: 350px; object-fit: cover;">
                     {% else %}
-                    <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
-                        class="img-fluid rounded-3 shadow-sm"
-                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                        <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-height: 350px; object-fit: cover;">
                     {% endif %}
-                </div>
+
             </div>
 
             <div class="col-lg-8 col-md-7">

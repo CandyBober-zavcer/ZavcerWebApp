@@ -32,75 +32,36 @@
                 <div class="mb-3">
                     <label for="experience" class="form-label">Стаж</label>
                     <select id="experience" name="experience"
-                        class="form-select border-secondary focus-ring focus-ring-secondary">
-                        <option value="">Любой</option>
-                        <option value="1">От 1 года</option>
-                        <option value="3">От 3 лет</option>
-                        <option value="5">От 5 лет</option>
-                        <option value="10">От 10 лет</option>
+                            class="form-select border-secondary focus-ring focus-ring-secondary">
+                        {%  for exp in model.expEnums %}
+                            <option value="{{ exp.id }}">{{ exp.experience }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Специализации</label>
                     <div class="d-flex flex-wrap gap-3">
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="гитара" id="instrument-guitar" name="instruments">
-                            <label class="form-check-label" for="instrument-guitar">Гитара</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="фортепиано" id="instrument-piano" name="instruments">
-                            <label class="form-check-label" for="instrument-piano">Фортепиано</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="скрипка" id="instrument-violin" name="instruments">
-                            <label class="form-check-label" for="instrument-violin">Скрипка</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="барабаны" id="instrument-drums" name="instruments">
-                            <label class="form-check-label" for="instrument-drums">Барабаны</label>
-                        </div>
+                        {% for ability in model.abilityEnums %}
+                            <div class="form-check">
+                                <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                       type="checkbox" value="{{  ability.id }}" id="{{  ability.instrument }}" name="abilities">
+                                <label class="form-check-label" for="{{  ability.instrument }}">{{  ability.instrument }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Районы</label>
                     <div class="d-flex flex-wrap gap-3">
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Дзержинский" id="district-dzerzhinsky" name="districts">
-                            <label class="form-check-label" for="district-dzerzhinsky">Дзержинский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Ленинский" id="district-leninsky" name="districts">
-                            <label class="form-check-label" for="district-leninsky">Ленинский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Кировский" id="district-kirovsky" name="districts">
-                            <label class="form-check-label" for="district-kirovsky">Кировский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Заволжский" id="district-zavolzhsky" name="districts">
-                            <label class="form-check-label" for="district-zavolzhsky">Заволжский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Красноперекопский" id="district-krasnoperekopsky"
-                                name="districts">
-                            <label class="form-check-label" for="district-krasnoperekopsky">Красноперекопский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Фрунзенский" id="district-frunzensky" name="districts">
-                            <label class="form-check-label" for="district-frunzensky">Фрунзенский</label>
-                        </div>
+                        {% for district in model.districtEnums %}
+                            <div class="form-check">
+                                <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                       type="checkbox" value="{{ district.id }}" id="{{ district.district }}" name="districts">
+                                <label class="form-check-label" for="{{ district.district }}">{{ district.district }}</label>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -116,9 +77,9 @@
 
                 <div class="mb-3">
                     <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="sort-by-time" id="sort-by-time" name="sort-by-time">
-                            <label class="form-check-label" for="sort-by-time">Ближайшие свободные</label>
+                        <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                               type="checkbox" value="1" id="sort-and-db" name="ifNear">
+                        <label class="form-check-label" for="sort-and-db">Ближайшие свободные</label>
                     </div>
                 </div>
 

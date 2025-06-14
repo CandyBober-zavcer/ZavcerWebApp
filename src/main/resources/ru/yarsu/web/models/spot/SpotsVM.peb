@@ -19,7 +19,7 @@
                 <i class="bi bi-arrow-down-up" style="font-size: 1.5rem;"></i>
             </button>
             <button class="btn btn-link text-secondary p-0" data-bs-toggle="collapse" data-bs-target="#filter-panel"
-                aria-expanded="false" aria-controls="filter-panel">
+                    aria-expanded="false" aria-controls="filter-panel">
                 <i class="bi bi-funnel" style="font-size: 1.5rem;"></i>
             </button>
         </div>
@@ -27,12 +27,12 @@
 
     <div class="collapse" id="filter-panel">
         <div class="filter-card card-body p-0">
-            <form id="filter-form" method="post" class="p-3">
+            <form id="filter-form" method="GET" class="p-3">
                 <div class="mb-3">
                     <label class="form-label">Наличие барабанов</label>
                     <div class="form-check">
                         <input class="form-check-input border-secondary focus-ring focus-ring-secondary" type="checkbox"
-                            value="true" id="has-drums" name="hasDrums">
+                               value="1" id="has-drums" name="hasDrums">
                         <label class="form-check-label" for="has-drums">Есть барабаны</label>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                         <div class="mb-2">
                             <label for="guitar-amps" class="form-label">Количество гитарных комбиков</label>
                             <select id="guitar-amps" name="guitarAmps"
-                                class="form-select border-secondary focus-ring focus-ring-secondary">
+                                    class="form-select border-secondary focus-ring focus-ring-secondary">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -51,7 +51,7 @@
                         <div class="mb-2">
                             <label for="bass-amps" class="form-label">Количество басовых комбиков</label>
                             <select id="bass-amps" name="bassAmps"
-                                class="form-select border-secondary focus-ring focus-ring-secondary">
+                                    class="form-select border-secondary focus-ring focus-ring-secondary">
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -63,57 +63,33 @@
                 <div class="mb-3">
                     <label class="form-label">Районы</label>
                     <div class="d-flex flex-wrap gap-3">
+                        {% for district in model.districtEnums %}
                         <div class="form-check">
                             <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Дзержинский" id="district-dzerzhinsky" name="districts">
-                            <label class="form-check-label" for="district-dzerzhinsky">Дзержинский</label>
+                                   type="checkbox" value="{{ district.id }}" id="{{ district.district }}" name="districts">
+                            <label class="form-check-label" for="{{ district.district }}">{{ district.district }}</label>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Ленинский" id="district-leninsky" name="districts">
-                            <label class="form-check-label" for="district-leninsky">Ленинский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Кировский" id="district-kirovsky" name="districts">
-                            <label class="form-check-label" for="district-kirovsky">Кировский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Заволжский" id="district-zavolzhsky" name="districts">
-                            <label class="form-check-label" for="district-zavolzhsky">Заволжский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Красноперекопский" id="district-krasnoperekopsky"
-                                name="districts">
-                            <label class="form-check-label" for="district-krasnoperekopsky">Красноперекопский</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="Фрунзенский" id="district-frunzensky" name="districts">
-                            <label class="form-check-label" for="district-frunzensky">Фрунзенский</label>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="price" class="form-label">Цена (руб/час)</label>
                     <div class="d-flex gap-2">
-                        <input type="number" id="price-min" name="priceMin" value=""
-                            class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от"
-                           >
-                        <input type="number" id="price-max" name="priceMax" value=""
-                            class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до"
-                            >
+                        <input type="number" id="price-min" name="minGold" value=""
+                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от"
+                               min="100" max="110">
+                        <input type="number" id="price-max" name="maxGold" value=""
+                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до"
+                               min="100" max="110">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <div class="form-check">
-                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
-                                type="checkbox" value="sort-by-time" id="sort-by-time" name="sort-by-time">
-                            <label class="form-check-label" for="sort-by-time">Ближайшие свободные</label>
+                        <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                               type="checkbox" value="1" id="sort-and-db" name="ifNear">
+                        <label class="form-check-label" for="sort-and-db">Ближайшие свободные</label>
                     </div>
                 </div>
 
@@ -129,11 +105,11 @@
         {% for spot in model.spots %}
         <div class="col-md-4">
             <div class="card1 h-100"><a href="/spot/{{ spot.id }}">
-                    {% if spot.images.size > 0 %}
-                    <img src="/image/{{ spot.images[0] }}" class="img-fluid rounded-start" alt="Фото студии">
-                    {% else %}
-                    <img src="/img/defaultStudio.jpg" class="img-fluid rounded-start" alt="Фото студии">
-                    {% endif %}</a>
+                {% if spot.images.size > 0 %}
+                <img src="/image/{{ spot.images[0] }}" class="img-fluid rounded-start" alt="Фото студии">
+                {% else %}
+                <img src="/img/defaultStudio.jpg" class="img-fluid rounded-start" alt="Фото студии">
+                {% endif %}</a>
                 <div class="card-info1 flex-grow-1">
                     <strong>Адрес:</strong> {{ spot.address }}<br>
                     <strong>Район:</strong> {{ spot.district.district }}<br>

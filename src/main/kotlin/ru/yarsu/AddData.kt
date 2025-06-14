@@ -23,6 +23,7 @@ val users = listOf(
         price = 1000,
         description = "Опытный преподаватель гитары и вокала",
         district = DistrictEnums.LENINSKY,
+        images = listOf("profile1.jpg"),
         roles = mutableSetOf(RoleEnums.TEACHER)
     ),
     User(

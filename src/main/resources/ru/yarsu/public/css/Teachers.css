@@ -1,3 +1,5 @@
+@import url('small-btn.css');
+
 .upgrade-button-container {
     position: fixed;
     bottom: 20px;

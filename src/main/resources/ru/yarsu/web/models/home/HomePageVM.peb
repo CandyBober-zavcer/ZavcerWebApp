@@ -51,7 +51,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link"
-                                href="{% if user is not null %}/profile/1{% else %}/auth/signin{% endif %}">
+                                href="{% if user is not null %}/profile/{{ user.id }}{% else %}/auth/signin{% endif %}">
                                 <img src="/img/user-icon.png" alt="Профиль" class="img-fluid" style="max-width: 50px;">
                             </a>
                         </li>

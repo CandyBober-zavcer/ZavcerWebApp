@@ -2,6 +2,7 @@
 {% extends "../DesignedLayout.peb" %}
 {% block style %}Teacher.css{% endblock %}
 {% block content %}
+
 <div class="container mt-5">
     <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
         <a href="/teachers" class="btn btn-link text-secondary p-0">
@@ -72,7 +73,7 @@
                                 <div class="d-flex align-items-center p-3 bg-light rounded-3">
                                     <div class="fs-4 text-info me-3"><img src="/img/piano.svg" width="35" height="35" ></div>
                                     <div>
-                                        <div class="fw-semibold text-muted small">Инструменты</div>
+                                        <div class="fw-semibold text-muted small">Специализации</div>
                                         <div class="fw-bold">
                                             {% if model.abilityNames is not empty %}
                                             {{ model.abilityNames }}
@@ -135,7 +136,7 @@
                         {% if user is not null %}
 
                         <button type="submit" class="btn btn-success btn-lg mt-3">
-                            ✅ Записаться на занятиеAdd commentMore actions
+                            Записаться на занятие
                         </button>
                     </form>
                     {% endif %}
@@ -149,6 +150,10 @@
 {% block script %}
 <script>
     window.userId = {{ model.user | default ("null") }};
+    const json = '{{ model.freeSlots | escape("js") }}';
+    const pricePerHour = {{ model.teacher.price | default(0) }};
+
+
 </script>
 <script src="../js/Teacher.js"></script>
 {% endblock %}

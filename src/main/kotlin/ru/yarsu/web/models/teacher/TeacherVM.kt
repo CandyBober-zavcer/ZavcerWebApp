@@ -4,7 +4,7 @@ import org.http4k.template.ViewModel
 import ru.yarsu.web.domain.classes.User
 
 class TeacherVM(
-    val teacher: User,
+    val teacher: User, val freeSlots: String
 ) : ViewModel {
     val abilityNames: String =
         teacher.abilities

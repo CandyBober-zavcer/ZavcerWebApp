@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    const availableDates = {
-        '2025-06-15': ['10:00', '11:00', '12:00'],
-        '2025-06-16': ['14:00', '15:00', '16:00'],
-    };
+    const availableDates = JSON.parse(json);
 
     const bookedDates = {};
 
@@ -14,11 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const timePicker = document.querySelector('.time-picker');
     const timeSlots = document.querySelector('.time-slots');
     const bookingSummary = document.querySelector('.booking-summary');
-    const pricePerHour = 500;
     if (!calendarDays || !currentMonthYear || !prevMonthBtn || !nextMonthBtn) {
-    console.error("Один из элементов календаря не найден!");
-    return;
-}
+        console.error("Один из элементов календаря не найден!");
+        return;
+    }
     // 3. Инициализация переменных
     const today = new Date();
     today.setHours(0, 0, 0, 0);

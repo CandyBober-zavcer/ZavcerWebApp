@@ -5,6 +5,10 @@ import ru.yarsu.web.domain.classes.User
 
 class ProfileVM(
     val user: User,
+    val freeSlotsTeacher: String,
+    val blockedSlotsTeacher: String,
+    val freeSlotsOwner: String,
+    val blockedSlotsOwner: String
 ) : ViewModel {
     val abilityNames: String =
         user.abilities

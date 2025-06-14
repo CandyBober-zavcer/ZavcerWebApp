@@ -559,11 +559,6 @@ class DatabaseControllerTest {
 
     @Test
     fun `getSpotsByPage with filters should work correctly`() {
-        // 1. Очистка базы перед тестом
-        dbController.dropTables()
-        dbController.init()
-
-        // 2. Создание тестовых данных БЕЗ указания ID
         val spotWithDrums = createTestSpot(hasDrums = true).apply {
             name = "Студия с барабанами"
         }
@@ -573,38 +568,27 @@ class DatabaseControllerTest {
         val spotWithGuitarAmps = createTestSpot(guitarAmps = 2).apply {
             name = "Студия с 2 усилителями"
         }
-
-        // 3. Вставка с получением реальных ID
         val spot1Id = dbController.insertSpot(spotWithDrums)
         val spot2Id = dbController.insertSpot(spotWithoutDrums)
         val spot3Id = dbController.insertSpot(spotWithGuitarAmps)
-
-        // 4. Проверка корректности вставки
         assertNotNull(dbController.getSpotById(spot1Id))
         assertNotNull(dbController.getSpotById(spot2Id))
         assertNotNull(dbController.getSpotById(spot3Id))
-
-        // 5. Тестирование фильтров с разными комбинациями
         val allSpots = dbController.getSpotsByPage(1, 10)
         assertEquals(3, allSpots.size, "Должны вернуться все 3 спота без фильтров")
-
-        // 5.1 Фильтр по барабанам (true)
         val drumsSpots = dbController.getSpotsByPage(1, 10, drums = true)
         assertEquals(1, drumsSpots.size, "Должен вернуться 1 спот с барабанами")
         assertEquals("Студия с барабанами", drumsSpots[0].name)
 
-        // 5.2 Фильтр по барабанам (false)
         val noDrumsSpots = dbController.getSpotsByPage(1, 10, drums = false)
         assertEquals(2, noDrumsSpots.size, "Должны вернуться 2 спота без барабанов")
         assertTrue(noDrumsSpots.any { it.name == "Студия без барабанов" })
         assertTrue(noDrumsSpots.any { it.name == "Студия с 2 усилителями" })
 
-        // 5.3 Фильтр по гитарным усилителям
         val guitarAmpSpots = dbController.getSpotsByPage(1, 10, guitarAmps = 2)
         assertEquals(1, guitarAmpSpots.size, "Должен вернуться 1 спот с 2 усилителями")
         assertEquals("Студия с 2 усилителями", guitarAmpSpots[0].name)
 
-        // 5.4 Комбинированный фильтр
         val combinedFilterSpots = dbController.getSpotsByPage(
             page = 1,
             limit = 10,

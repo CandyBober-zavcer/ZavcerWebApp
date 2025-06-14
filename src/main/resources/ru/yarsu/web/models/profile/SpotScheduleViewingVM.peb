@@ -13,7 +13,7 @@
 
             <a href="/schedule/owner/editing/{{ model.user.id }}" class="btn btn-link text-secondary p-0"
                title="Редактировать расписание">
-                <i class="bi bi-gear" style="font-size: 1.5rem;"></i>
+                <i class="bi bi-pencil "  style="font-size: 1.3rem;"></i>
             </a>
         </div>
     </section>

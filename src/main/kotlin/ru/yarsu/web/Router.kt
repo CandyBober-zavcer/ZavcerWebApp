@@ -14,6 +14,13 @@ import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.models.email.EmailService
 import ru.yarsu.web.domain.models.telegram.JsonLogger
 import ru.yarsu.web.filters.*
+import ru.yarsu.web.handlers.admin.AddOwnerRoleHandler
+import ru.yarsu.web.handlers.admin.AddTeacherRoleHandler
+import ru.yarsu.web.handlers.admin.DeleteUserHandler
+import ru.yarsu.web.handlers.admin.RemoveOwnerRoleHandler
+import ru.yarsu.web.handlers.admin.RemoveTeacherRoleHandler
+import ru.yarsu.web.handlers.admin.UserGetHandler
+import ru.yarsu.web.handlers.admin.UserListHandler
 import ru.yarsu.web.handlers.auth.*
 import ru.yarsu.web.handlers.home.HomePageHandler
 import ru.yarsu.web.handlers.profile.*
@@ -64,6 +71,10 @@ fun router(
         filters.ownerFilter.then(routeGroups.ownerRoutes),
         // Маршруты для не-учителей
         filters.notTeacherFilter.then(routeGroups.notTeacherOrPendingTeacherRoutes),
+        // Маршруты для директоров/админов
+        filters.directorAdminFilter.then(routeGroups.directorOrAdminRoutes),
+        // Маршруты только для админов
+        filters.adminFilter.then(routeGroups.adminRoutes),
     )
 }
 
@@ -73,6 +84,8 @@ private class RouterFilters(
     databaseController: DatabaseController,
 ) {
     val authFilter = authenticatedOnlyFilter(userLens)
+    val adminFilter = onlyAdminFilter(userLens)
+    val directorAdminFilter = directorOrAdminFilter(userLens)
     val notTeacherFilter = notTeacherFilter(userLens)
     val teacherFilter = teacherOrAdminFilter(userLens)
     val spotOwnerFilter = spotOwnerOrAdminFilter(userLens, databaseController)
@@ -178,5 +191,28 @@ private class RouterGroups(
         routes(
             "/upgrade/teacher/{id}" bind Method.GET to UpgradeUserToTeacherGetHandler(htmlView, databaseController),
             "/upgrade/teacher/{id}" bind Method.POST to UpgradeUserToTeacherPostHandler(htmlView, databaseController),
+        )
+
+    val adminRoutes =
+        routes(
+            "/admin/user/delete/{id}" bind Method.POST to DeleteUserHandler(databaseController),
+        )
+
+    val directorOrAdminRoutes =
+        routes(
+            "/admin/users" bind Method.GET to UserListHandler(htmlView, databaseController),
+            "/admin/user/{id}" bind Method.GET to UserGetHandler(htmlView, databaseController),
+            "/admin/user/roles/teacher/add/{id}" bind Method.POST to AddTeacherRoleHandler(databaseController),
+            "/admin/user/roles/teacher/remove/{id}" bind Method.POST to RemoveTeacherRoleHandler(databaseController),
+            "/admin/user/roles/owner/add/{id}" bind Method.POST to AddOwnerRoleHandler(databaseController),
+            "/admin/user/roles/owner/remove/{id}" bind Method.POST to RemoveOwnerRoleHandler(databaseController),
+            "/upgrade/teachers" bind Method.GET to UpgradeTeacherListGetHandler(htmlView, databaseController),
+            "/upgrade/teacher/profiles/{id}" bind Method.GET to UpgradeTeacherProfileGetHandler(htmlView, databaseController),
+            "/upgrade/teacher/accept/{id}" bind Method.POST to AcceptTeacherPostHandler(databaseController),
+            "/upgrade/teacher/reject/{id}" bind Method.POST to RejectTeacherPostHandler(databaseController),
+            "/upgrade/owners" bind Method.GET to UpgradeOwnerListGetHandler(htmlView, databaseController),
+            "/upgrade/owner/profiles/{id}" bind Method.GET to UpgradeOwnerProfileGetHandler(htmlView, databaseController),
+            "/upgrade/owner/accept/{id}" bind Method.POST to AcceptOwnerPostHandler(databaseController),
+            "/upgrade/owner/reject/{id}" bind Method.POST to RejectOwnerPostHandler(databaseController),
         )
 }

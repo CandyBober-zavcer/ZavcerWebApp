@@ -2,6 +2,7 @@ package ru.yarsu.web.domain.models.telegram.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import ru.yarsu.config.AppConfig
+import ru.yarsu.web.handlers.teacher.FormData
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -56,30 +57,43 @@ object TelegramService {
     fun teacherNotification(
         teacherId: Long,
         studentId: Long,
+        formData: FormData,
+        phone: String,
+        address: String
     ) {
         if (teacherId <= 0L) return
 
-        val text =
-            if (studentId > 0L) {
-                "Запись на занятие. Ученик: $studentId"
-            } else {
-                "Запись на занятие. Ученик не указан."
-            }
+        val text = buildString {
+            appendLine("📚 Новая запись на занятие")
+            appendLine("🙋‍♂️ Ученик: ${if (studentId > 0L) "ID $studentId" else "не указан"}")
+            appendLine("📅 Дата: ${formData.date}")
+            appendLine("🕒 Время: ${formData.time}")
+            appendLine("📞 Телефон: $phone")
+            appendLine("📍 Адрес: $address")
+        }
+
         send(teacherId, text)
     }
+
 
     fun studentNotification(
         teacherId: Long,
         studentId: Long,
+        formData: FormData,
+        phone: String,
+        address: String
     ) {
         if (studentId <= 0L) return
 
-        val text =
-            if (teacherId > 0L) {
-                "Запись на занятие. Учитель: $teacherId"
-            } else {
-                "Запись на занятие. Учитель не указан."
-            }
+        val text = buildString {
+            appendLine("📅 Вы записались на занятие")
+            appendLine("👨‍🏫 Учитель: ${if (teacherId > 0L) "ID $teacherId" else "не указан"}")
+            appendLine("🗓️ Дата: ${formData.date}")
+            appendLine("🕒 Время: ${formData.time}")
+            appendLine("📞 Телефон: $phone")
+            appendLine("📍 Адрес: $address")
+        }
+
         send(studentId, text)
     }
 

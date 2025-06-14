@@ -2,6 +2,7 @@ package ru.yarsu.db.databasecontrollers
 
 import kotlinx.datetime.LocalDate
 import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.tables.DayOccupationLine
 import ru.yarsu.db.tables.DayOccupations
@@ -168,6 +169,30 @@ class OccupationsController {
             day?.let {
                 val hour = day.hours.find { it.hour == targetHour }
 //                toList().find { it.hour == targetHour }
+                hour?.let { hoit ->
+                    val user = UserLine.findById(userId)
+                    user?.let { usit ->
+                        hoit.occupation = usit
+                        inputRes = true
+                    }
+                }
+            }
+        }
+        return inputRes
+    }
+
+    fun occupyHour(
+        date: LocalDate,
+        targetHour: Int,
+        userId: Int,
+    ): Boolean {
+        var inputRes = false
+
+        transaction { addLogger(StdOutSqlLogger)
+            val day = DayOccupationLine.find { DayOccupations.day eq date }.firstOrNull()
+            day.let {
+                val hour = day?.hours?.find { it.hour == targetHour }
+                //                toList().find { it.hour == targetHour }
                 hour?.let { hoit ->
                     val user = UserLine.findById(userId)
                     user?.let { usit ->

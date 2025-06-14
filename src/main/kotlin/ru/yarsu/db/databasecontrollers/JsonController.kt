@@ -144,23 +144,25 @@ class JsonController {
 
 
         fun getFreeDatesForTeacherJson(userId: Int): String {
-            val user = UserLine.findById(userId) ?: return ""
-            val freeDates = mutableMapOf<String, MutableList<String>>()
+            return transaction {
+                val user = UserLine.findById(userId) ?: return@transaction "{}"
+                val freeDates = mutableMapOf<String, MutableList<String>>()
 
-            user.twoWeekOccupation.forEach { dayOccupation ->
-                val dateStr = dayOccupation.day.toString()
+                user.twoWeekOccupation.forEach { dayOccupation ->
+                    val dateStr = dayOccupation.day.toString()
 
-                val freeSlots = dayOccupation.hours
-                    .filter { it.occupation == null }
-                    .map { "${it.hour}:00" }
-                    .sorted()
+                    val freeSlots = dayOccupation.hours
+                        .filter { it.occupation == null }
+                        .map { "${it.hour}:00" }
+                        .sorted()
 
-                if (freeSlots.isNotEmpty()) {
-                    freeDates[dateStr] = freeSlots.toMutableList()
+                    if (freeSlots.isNotEmpty()) {
+                        freeDates[dateStr] = freeSlots.toMutableList()
+                    }
                 }
-            }
 
-            return Json.encodeToString(freeDates)
+                Json.encodeToString(freeDates)
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.models.teacher.TeachersVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import org.http4k.lens.Query
+import org.http4k.lens.WebForm
 import org.http4k.lens.boolean
 import org.http4k.lens.int
 import ru.yarsu.web.domain.INPAGE
@@ -39,12 +40,19 @@ class TeachersGetHandler(
 
         val params = prepareParams(abilities, districts)
         val getResult = databaseController.getTeachersByPage(page, INPAGE, params.first, params.second, minGold, maxGold, exp, nearest)
-        val paginator = Paginator(page, getResult.second, uri.removeQueries("page"))
 
-        val viewModel = TeachersVM(getResult.first, ExpEnums.entries, AbilityEnums.entries, DistrictEnums.entries.dropLast(1))
+        val viewModel = TeachersVM(getResult.first, ExpEnums.entries, AbilityEnums.entries, DistrictEnums.entries.dropLast(1),
+            TechersWebParams(exp, params, Pair(minGold, maxGold), nearest))
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 }
+
+data class TechersWebParams(
+    val exp: Int,
+    val enumsParams: Pair<List<Int>, List<Int>>,
+    val goldRange: Pair<Int, Int>,
+    val ifNear: Boolean
+)
 
 fun prepareParams(
     abilities: List<Int>?,

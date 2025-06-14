@@ -77,11 +77,9 @@
                     <label for="price" class="form-label">Цена (руб/час)</label>
                     <div class="d-flex gap-2">
                         <input type="number" id="price-min" name="minGold" value=""
-                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от"
-                               min="100" max="110">
+                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от">
                         <input type="number" id="price-max" name="maxGold" value=""
-                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до"
-                               min="100" max="110">
+                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до">
                     </div>
                 </div>
 

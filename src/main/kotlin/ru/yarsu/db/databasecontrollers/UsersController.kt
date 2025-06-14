@@ -49,14 +49,13 @@ class UsersController {
         transaction {
             val size: Int
 
-            val whereClause: Op<Boolean> =
-                (
-                        (Users.id inSubQuery UsersAbilities.select(UsersAbilities.user).where { UsersAbilities.ability inList abilityIds }) and
-                                (Users.district inList districtIds) and
-                                Users.price.between(priceMin, priceMax) and
-                                (Users.experience greaterEq experienceMin) and
-                                (Users.roles.substring(RoleEnums.TEACHER.id + 1, 1) eq "1")
-                )
+            val whereClause =
+                (Users.id inSubQuery UsersAbilities.select(UsersAbilities.user).where { UsersAbilities.ability inList abilityIds }) and
+                        (Users.district inList districtIds) and
+                        (Users.experience greaterEq experienceMin) and
+                        (Users.roles.substring(RoleEnums.TEACHER.id + 1, 1) eq "1") and
+                        (Users.price greaterEq priceMin) and
+                        (Users.price lessEq priceMax)
             if (sortByNearest) {
                 val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
                 val selectedColumns = Users.columns + HourOccupations.columns + DayOccupations.columns
@@ -75,16 +74,14 @@ class UsersController {
                     )
 
                 size = query.count().toInt()
-                Pair(query.limit(limit)
-                    .offset((page * limit).toLong())
+                Pair(query
                     .map { packUser(UserLine.wrapRow(it)) }.distinctBy { it.id }, size)
             } else {
                 val query =
                 UserLine.find { whereClause }
                     .orderBy(Users.price to SortOrder.ASC)
                 size = query.count().toInt()
-                Pair(query.limit(limit)
-                    .offset((page * limit).toLong())
+                Pair(query
                     .map { packUser(it) }
                     .toList(), size)
             }
@@ -691,6 +688,88 @@ class UsersController {
             (Users.roles.substring(1, 1) eq "1") and
                     (Users.isConfirmed eq true)
         }.map { packUser(it) }
+    }
+
+    fun addTeacherRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val roles = stringToRoles(it.roles)
+                if (!roles.contains(RoleEnums.TEACHER)) {
+                    roles.add(RoleEnums.TEACHER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun addOwnerRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val roles = stringToRoles(it.roles)
+                if (!roles.contains(RoleEnums.OWNER)) {
+                    roles.add(RoleEnums.OWNER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun removeOwnerRoleById(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            user?.let {
+                val roles = stringToRoles(it.roles)
+                if (roles.contains(RoleEnums.OWNER)) {
+                    roles.remove(RoleEnums.OWNER)
+                    user.roles = rolesToString(roles)
+                    result = true
+                }
+            }
+        }
+        return result
+    }
+
+    fun deleteUser(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val user = UserLine.findById(id)
+            if (user != null) {
+                Users.deleteWhere { Users.id eq id }
+
+                user.delete()
+
+                result = true
+            }
+        }
+
+        return result
+    }
+
+    fun getOwnerById(id: Int): User? = transaction {
+        val user = UserLine.findById(id) ?: return@transaction null
+        val roles = stringToRoles(user.roles)
+        if (RoleEnums.OWNER in roles && user.isConfirmed) {
+            packUser(user)
+        } else {
+            null
+        }
+    }
+
+    fun getAllUsers(): List<User> = transaction {
+        UserLine.all().map { packUser(it) }.toList()
     }
 
 }

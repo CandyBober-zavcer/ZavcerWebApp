@@ -39,9 +39,8 @@ class SpotsListHandler(
 
         val params = prepareParams(districts)
         val getResult = databaseController.getSpotsByPage(page, INPAGE, haveDrums, guitarAmps, bassAmps, params, minGold, maxGold, nearest)
-        val paginator = Paginator(page, getResult.second, uri.removeQueries("page"))
 
-        val viewModel = SpotsVM(getResult.first, DistrictEnums.entries)
+        val viewModel = SpotsVM(getResult.first, DistrictEnums.entries.dropLast(1))
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 }

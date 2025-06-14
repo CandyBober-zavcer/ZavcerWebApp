@@ -68,16 +68,14 @@ class SpotsController {
                 )
 
             size = query.count().toInt()
-            Pair(query.limit(limit)
-                .offset((page * limit).toLong())
+            Pair(query
                 .map { packSpot(SpotLine.wrapRow(it)) }.distinctBy { it.id }, size)
         } else {
             val query =
                 SpotLine.find { whereClause }
                     .orderBy(Spots.price to SortOrder.ASC)
             size = query.count().toInt()
-            Pair(query.limit(limit)
-                .offset((page * limit).toLong())
+            Pair(query
                 .map { packSpot(it) }
                 .toList(), size)
         }

@@ -28,7 +28,7 @@
 
     <div class="collapse" id="filter-panel">
         <div class="filter-card card-body p-0">
-            <form id="filter-form" method="post" class="p-3">
+            <form id="filter-form" method="GET" class="p-3">
                 <div class="mb-3">
                     <label for="experience" class="form-label">Стаж</label>
                     <select id="experience" name="experience"
@@ -68,9 +68,9 @@
                 <div class="mb-3">
                     <label for="price" class="form-label">Цена (руб/час)</label>
                     <div class="d-flex gap-2">
-                        <input type="number" id="price-min" name="priceMin"
+                        <input type="number" id="price-min" name="minGold"
                             class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от">
-                        <input type="number" id="price-max" name="priceMax"
+                        <input type="number" id="price-max" name="maxGold"
                             class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до">
                     </div>
                 </div>

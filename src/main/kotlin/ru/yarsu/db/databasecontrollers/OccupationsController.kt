@@ -2,7 +2,6 @@ package ru.yarsu.db.databasecontrollers
 
 import kotlinx.datetime.LocalDate
 import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.tables.DayOccupationLine
 import ru.yarsu.db.tables.DayOccupations
@@ -16,18 +15,21 @@ class OccupationsController {
      * @return класс DayOccupation (duh). При неудаче класс будет с ID, равным -1.
      */
     fun getDayOccupationById(id: Int): DayOccupation {
-        val dayOccupation = DayOccupation()
+        var dayOccupation = DayOccupation()
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(id)
             day?.let { line ->
-                dayOccupation.id = id
-                dayOccupation.occupation = line.hours.associateBy({ it.hour }, { it.occupation?.id?.value }).toMutableMap()
+                dayOccupation = packDayOccupation(line)
             }
         }
         return dayOccupation
     }
+
+    fun getListDayOccupation(ids: List<Int>): List<DayOccupation> =
+        transaction {
+            DayOccupationLine.find { DayOccupations.id inList ids }.map { packDayOccupation(it) }
+        }
 
     /**
      * Пользователь задаёт день для записи.
@@ -37,7 +39,6 @@ class OccupationsController {
         var id = -1
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day =
                 DayOccupationLine.new {
                     day = date
@@ -58,7 +59,6 @@ class OccupationsController {
         var id = -1
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.findById(dateId)
             date?.let {
                 val hourLine =
@@ -84,7 +84,6 @@ class OccupationsController {
         val ids = mutableListOf<Int>()
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.findById(dateId)
             date?.let {
                 for (time in times) {
@@ -112,7 +111,6 @@ class OccupationsController {
         var id = -1
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.find { DayOccupations.day eq dateTarget }.singleOrNull()
             date?.let {
                 val hourLine =
@@ -138,7 +136,6 @@ class OccupationsController {
         val ids = mutableListOf<Int>()
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val date = DayOccupationLine.find { DayOccupations.day eq dateTarget }.singleOrNull()
             date?.let {
                 for (time in times) {
@@ -167,7 +164,6 @@ class OccupationsController {
         var inputRes = false
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(dayId)
             day?.let {
                 val hour = day.hours.find { it.hour == targetHour }
@@ -196,7 +192,6 @@ class OccupationsController {
         var inputRes = false
 
         transaction {
-            addLogger(StdOutSqlLogger)
             val day = DayOccupationLine.findById(dayId)
             day?.let {
                 val hour = day.hours.find { it.hour == targetHour }
@@ -208,5 +203,13 @@ class OccupationsController {
             }
         }
         return inputRes
+    }
+
+    private fun packDayOccupation(line: DayOccupationLine): DayOccupation {
+        val dayOccupation = DayOccupation()
+
+        dayOccupation.id = line.id.value
+        dayOccupation.occupation = line.hours.associateBy({ it.hour }, { it.occupation?.id?.value }).toMutableMap()
+        return dayOccupation
     }
 }

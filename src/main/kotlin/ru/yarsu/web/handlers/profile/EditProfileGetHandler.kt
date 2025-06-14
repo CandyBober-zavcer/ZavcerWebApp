@@ -5,14 +5,14 @@ import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.models.profile.EditProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
 class EditProfileGetHandler(
     private val htmlView: ContextAwareViewRender,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
@@ -34,7 +34,7 @@ class EditProfileGetHandler(
                 ?: return Response(BAD_REQUEST).body("Некорректный ID профиля")
 
         val user =
-            users.getById(userId)
+            databaseController.getUserById(userId)
                 ?: return Response(NOT_FOUND).body("Профиль не найден")
 
         val allAbility = AbilityEnums.entries

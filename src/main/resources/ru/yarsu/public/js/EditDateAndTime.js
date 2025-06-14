@@ -197,18 +197,12 @@ document.addEventListener('DOMContentLoaded', function () {
     saveScheduleBtn.addEventListener('click', (e) => {
         e.preventDefault();
 
-        // Создаем объект для отправки, включающий ID пользователя
-        const dataToSend = {
-            userId: window.userId,  // Добавляем ID пользователя из глобальной переменной
-            freeSlots: freeDates   // Свободные слоты
-        };
-
-        console.log('Отправляемые данные:', dataToSend);
+        console.log('Отправляемые свободные слоты:', freeDates);
 
         fetch('http://localhost:8080/teacher/куда?', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dataToSend)  // Отправляем новый объект
+            body: JSON.stringify(freeDates)
         })
             .then(res => {
                 if (!res.ok) throw new Error("Ошибка отправки");

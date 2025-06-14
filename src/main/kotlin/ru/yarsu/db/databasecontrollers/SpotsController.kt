@@ -1,63 +1,96 @@
 package ru.yarsu.db.databasecontrollers
 
-import org.jetbrains.exposed.sql.SizedCollection
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.yarsu.db.tables.DayOccupationLine
-import ru.yarsu.db.tables.DayOccupations
-import ru.yarsu.db.tables.SpotLine
-import ru.yarsu.db.tables.UserLine
-import ru.yarsu.db.tables.Users
+import ru.yarsu.db.tables.*
+import ru.yarsu.db.tables.manyToMany.*
 import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.enums.DistrictEnums
+import kotlinx.datetime.*
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 
 class SpotsController {
     /**
      * Собирает список объектов класса Spot по заданному номеру страницы.
+     * @param drums Boolean? Если не null, производит фильтрацию по наличию барабанов. По умолчанию null.Add commentMore actions
+     * @param guitarAmps Содержит необходимый минимум гитарных комбиков. По умолчанию 0.
+     * @param bassAmps Содержит необходимый минимум басовых комбиков. По умолчанию 0.
+     * @param districtList Список айдишников районов. По умолчанию состоит из всех айдишников.
+     * @param priceLow Нижняя граница цены. По умолчанию 0.
+     * @param priceHigh Верхняя граница цены. По умолчанию Int.MAX_VALUE.
+     * @param sortByNearest Если true, оставляет в списке места со свободными часами
+     * и сортирует по ближайшим к сегодняшней дате.
      * @return список Spot`ов. При неудаче список будет пустым.
      */
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-    ): List<Spot> {
-        val result = mutableListOf<Spot>()
+        drums: Boolean? = null,
+        guitarAmps: Int = 0,
+        bassAmps: Int = 0,
+        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        priceLow: Int = 0,
+        priceHigh: Int = Int.MAX_VALUE,
+        sortByNearest: Boolean = false
+    ): List<Spot> =
+    transaction {
+        val districts = districtList.map { it.id }
+        Spots.selectAll()
 
-        transaction {
-            val spots =
-                SpotLine
-                    .all()
-                    .offset((limit * page).toLong())
-                    .limit(limit)
-                    .toList()
-            for (spot in spots) {
-                result.add(packSpot(spot))
-            }
+        var whereClause =
+            (Spots.district inList districts) and
+                    (Spots.guitarAmps greaterEq guitarAmps) and
+                    (Spots.bassAmps greaterEq bassAmps) and
+                    (Spots.price greaterEq priceLow) and
+                    (Spots.price lessEq priceHigh)
+
+        drums?.let { whereClause = whereClause and (Spots.hasDrums eq it) }
+
+        if (sortByNearest) {
+            val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            (Spots innerJoin SpotsDays innerJoin DayOccupations innerJoin HourOccupations)
+                .select(
+                    whereClause and
+                            (HourOccupations.occupation.isNull()) and
+                            (DayOccupations.day greaterEq today)
+                )
+                .orderBy(
+                    DayOccupations.day to SortOrder.ASC,
+                    HourOccupations.hour to SortOrder.ASC
+                )
+                .limit(limit)
+                .offset((page * limit).toLong())
+                .map { packSpot(SpotLine.wrapRow(it)) }
+                .distinctBy { it.id }
+        } else {
+            SpotLine.find { whereClause }
+                .limit(limit)
+                .offset((page * limit).toLong())
+                .map { packSpot(it) }
+                .toList()
         }
-        return result
     }
+
+    fun getAllSpots(): List<Spot> =
+        transaction {
+            SpotLine.all().map { packSpot(it) }
+        }
 
     /**
      * Собирает класс Spot из строчки базы данных по выбранному ID.
      * @return класс Spot (duh). При неудаче класс будет с ID, равным -1.
      */
-    fun getSpotById(id: Int): Spot {
-        var spot = Spot()
+    fun getSpotById(id: Int): Spot? {
+        var spot: Spot? = null
 
         transaction {
             val spotLine = SpotLine.findById(id)
             spotLine?.let {
                 spot = packSpot(it)
-//                spot.id = it.id.value
-//                spot.name = it.name
-//                spot.price = it.price
-//                spot.hasDrums = it.hasDrums
-//                spot.guitarAmps = it.guitarAmps
-//                spot.bassAmps = it.bassAmps
-//                spot.description = it.description
-//                spot.address = it.address
-//                spot.district = DistrictEnums.from(it.district) ?: DistrictEnums.UNKNOWN
-//                spot.images = it.images.toList()
-//                spot.twoWeekOccupation = it.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
-//                spot.owners = it.owners.map { user -> user.id.value }.toMutableList()
             }
         }
         return spot
@@ -87,6 +120,19 @@ class SpotsController {
             id = spotLine.id.value
         }
         return id
+    }
+
+    fun deleteSpot(id: Int): Boolean {
+        var result = false
+
+        transaction {
+            val spot = getSpotById(id)
+            spot?.let {
+                Spots.deleteWhere { Spots.id eq id }
+                result = true
+            }
+        }
+        return result
     }
 
     /**
@@ -302,7 +348,7 @@ class SpotsController {
         return result
     }
 
-    private fun packSpot(line: SpotLine): Spot {
+    fun packSpot(line: SpotLine): Spot {
         val spot = Spot()
 
         spot.id = line.id.value
@@ -314,7 +360,7 @@ class SpotsController {
         spot.description = line.description
         spot.address = line.address
         spot.district = DistrictEnums.from(line.district) ?: DistrictEnums.UNKNOWN
-        spot.images = line.images.toList()
+        spot.images = line.images.toMutableList()
         spot.twoWeekOccupation = line.twoWeekOccupation.map { day -> day.id.value }.toMutableList()
         spot.owners = line.owners.map { user -> user.id.value }.toMutableList()
 

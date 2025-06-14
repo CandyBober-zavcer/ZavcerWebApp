@@ -6,24 +6,25 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.yarsu.db.databasecontrollers.OccupationsController
 import ru.yarsu.db.databasecontrollers.SpotsController
 import ru.yarsu.db.databasecontrollers.UsersController
-import ru.yarsu.db.tables.DayOccupations
-import ru.yarsu.db.tables.HourOccupations
-import ru.yarsu.db.tables.Spots
-import ru.yarsu.db.tables.Users
+import ru.yarsu.db.tables.*
 import ru.yarsu.db.tables.manyToMany.SpotsDays
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.db.tables.manyToMany.UsersSpots
 import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.classes.DayOccupation
 import ru.yarsu.web.domain.classes.User
+import ru.yarsu.web.domain.classes.`interface`.PaidPlace
+import ru.yarsu.web.domain.enums.AbilityEnums
+import ru.yarsu.web.domain.enums.DistrictEnums
+import ru.yarsu.web.domain.models.telegram.TelegramUser
 
-class DataBaseController {
+class DatabaseController {
     /**
      * Создаёт таблицы в базе данных.
      */
     fun init() {
         transaction {
-            SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots)
+            SchemaUtils.create(DayOccupations, HourOccupations, Spots, Users, SpotsDays, UsersDays, UsersSpots, UsersAbilities)
         }
     }
 
@@ -40,9 +41,45 @@ class DataBaseController {
     fun getUserByPage(
         page: Int,
         limit: Int,
-    ): List<User> = UsersController().getUsersByPage(page, limit)
+        abilityIds: List<Int> = AbilityEnums.entries.map { it.id },
+        districtIds: List<Int> = DistrictEnums.entries.map { it.id },
+        priceMin: Int = 0,
+        priceMax: Int = Int.MAX_VALUE,
+        experienceMin: Int = 0,
+        sortByNearest: Boolean = false
+    ): List<User> = UsersController().getUsersByPage(page, limit, abilityIds, districtIds, priceMin, priceMax, experienceMin, sortByNearest)
 
-    fun getUserById(id: Int): User = UsersController().getUserById(id)
+    fun getUserById(id: Int): User? = UsersController().getUserById(id)
+
+    fun getUserByEmail(email: String): User? = UsersController().getUserByEmail(email)
+
+    fun getUserByLogin(login: String): User? = UsersController().getUserByLogin(login)
+
+    fun getTeacherById(id: Int): User? = UsersController().getTeacherById(id)
+
+    fun getTeacherByIdIfRolePendingTeacher(id: Int): User? = UsersController().getTeacherByIdIfRolePendingTeacher(id)
+
+    fun getUserIfNotTeacher(id: Int): User? = UsersController().getUserIfNotTeacher(id)
+
+    fun getAllUsersByRole(role: Int): List<User> = UsersController().getAllUsersByRole(role)
+
+    fun updateTeacherRequest(id: Int, accept: Boolean): Boolean = UsersController().updateTeacherRequest(id, accept)
+
+    fun removeTeacherRoleById(id: Int): Boolean = UsersController().removeTeacherRoleById(id)
+
+    fun confirmUser(userId: Int): Boolean = UsersController().confirmUser(userId)
+
+    fun updateUserPassword(
+        userId: Int,
+        newPassword: String,
+    ): Boolean = UsersController().updateUserPassword(userId, newPassword)
+
+    fun findOrCreateTelegramUser(telegramData: TelegramUser): User = UsersController().findOrCreateTelegramUser(telegramData)
+
+    fun attachTelegram(
+        userId: Int,
+        telegramId: Long,
+    ): Boolean = UsersController().attachTelegram(userId, telegramId)
 
     fun insertUser(user: User): Int = UsersController().insertUser(user)
 
@@ -91,15 +128,50 @@ class DataBaseController {
         daysId: List<Int>,
     ): Boolean = UsersController().removeDayOccupation(userId, daysId)
 
+    fun verifyPassword(
+        user: User,
+        password: String,
+    ): Boolean = UsersController().verifyPassword(user, password)
+
+    fun getUserSchedule(userId: Int): List<Pair<String, PaidPlace>> {
+        val schedule = mutableListOf<Pair<String, PaidPlace>>()
+
+        transaction {
+            val user = UserLine.findById(userId)
+            user?.occupiedHours?.forEach {
+                var time = ""
+                time += "${it.hour}:00 ${it.day.day}"
+                val place = it.day.getSource()
+                if (place is SpotLine) {
+                    schedule.add(Pair(time, SpotsController().packSpot(place)))
+                } else if (place is UserLine) {
+                    schedule.add(Pair(time, UsersController().packUser(place)))
+                }
+            }
+        }
+        return schedule
+    }
+
     // Работа со Spots
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-    ): List<Spot> = SpotsController().getSpotsByPage(page, limit)
+        drums: Boolean? = null,
+        guitarAmps: Int = 0,
+        bassAmps: Int = 0,
+        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        priceLow: Int = 0,
+        priceHigh: Int = Int.MAX_VALUE,
+        sortByNearest: Boolean = false
+    ): List<Spot> = SpotsController().getSpotsByPage(page, limit, drums, guitarAmps, bassAmps, districtList, priceLow, priceHigh, sortByNearest)
 
-    fun getSpotById(id: Int): Spot = SpotsController().getSpotById(id)
+    fun getAllSpots(): List<Spot> = SpotsController().getAllSpots()
+
+    fun getSpotById(id: Int): Spot? = SpotsController().getSpotById(id)
 
     fun insertSpot(spot: Spot): Int = SpotsController().insertSpot(spot)
+
+    fun deleteSpot(id: Int): Boolean = SpotsController().deleteSpot(id)
 
     fun updateSpotInfo(
         id: Int,
@@ -148,6 +220,8 @@ class DataBaseController {
 
     // Работа с DayOccupations и HourOccupations
     fun getDayOccupationById(id: Int): DayOccupation = OccupationsController().getDayOccupationById(id)
+
+    fun getListDayOccupation(ids: List<Int>): List<DayOccupation> = OccupationsController().getListDayOccupation(ids)
 
     fun insertDayOccupation(date: LocalDate): Int = OccupationsController().insertDayOccupation(date)
 

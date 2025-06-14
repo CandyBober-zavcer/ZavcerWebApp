@@ -3,7 +3,7 @@ package ru.yarsu.web.handlers.spot
 import org.http4k.core.*
 import org.http4k.lens.MultipartForm
 import org.http4k.lens.MultipartFormField
-import ru.yarsu.web.domain.article.Spot
+import ru.yarsu.web.domain.classes.Spot
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.models.spot.AddSpotVM
 import ru.yarsu.web.templates.ContextAwareViewRender
@@ -33,7 +33,7 @@ class AddSpotGetHandler(
                 address = "",
                 district = DistrictEnums.UNKNOWN,
                 images = listOf("defaultStudio.jpg"),
-                schedule = emptyMap(),
+                twoWeekOccupation = mutableListOf(),
                 owners = emptyList(),
             )
 

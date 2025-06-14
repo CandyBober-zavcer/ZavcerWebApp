@@ -6,7 +6,7 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.funs.lensOrDefault
@@ -19,7 +19,7 @@ import java.nio.file.Paths
 
 class EditTeacherPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val teachers: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
@@ -51,7 +51,7 @@ class EditTeacherPostHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Неверный ID преподавателя")
 
         val existingTeacher =
-            teachers.getTeacherById(teacherId)
+            databaseController.getTeacherById(teacherId)
                 ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
         val form = formLens(request)
@@ -105,10 +105,10 @@ class EditTeacherPostHandler(
                 address = address,
                 district = district,
                 images = updatedImages,
-                schedule = existingTeacher.schedule,
+                twoWeekOccupation = existingTeacher.twoWeekOccupation,
             )
 
-        teachers.update(teacherId, updatedTeacher)
+        databaseController.updateUserInfo(teacherId, updatedTeacher)
         return Response(FOUND).header("Location", "/teacher/$teacherId")
     }
 }

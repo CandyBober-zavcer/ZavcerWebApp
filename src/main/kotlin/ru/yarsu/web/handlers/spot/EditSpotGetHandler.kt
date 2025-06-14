@@ -5,13 +5,13 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.SpotData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.models.spot.EditSpotVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
 class EditSpotGetHandler(
     private val htmlView: ContextAwareViewRender,
-    private val spotData: SpotData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
@@ -28,7 +28,7 @@ class EditSpotGetHandler(
                 ?: return Response(NOT_FOUND).body("Неверный ID")
 
         val spot =
-            spotData.getById(id)
+            databaseController.getSpotById(id)
                 ?: return Response(NOT_FOUND).body("Спот не найден")
 
         val form =

@@ -2,12 +2,12 @@ package ru.yarsu.web.models.profile
 
 import org.http4k.lens.MultipartForm
 import org.http4k.template.ViewModel
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.AbilityEnums
 import kotlin.enums.EnumEntries
 
 class EditProfileVM(
-    val user: UserModel,
+    val user: User,
     private val allAbility: EnumEntries<AbilityEnums>,
     val form: MultipartForm,
 ) : ViewModel {

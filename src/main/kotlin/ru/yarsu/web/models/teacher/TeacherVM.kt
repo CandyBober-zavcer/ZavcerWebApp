@@ -1,10 +1,10 @@
 package ru.yarsu.web.models.teacher
 
 import org.http4k.template.ViewModel
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.web.domain.classes.User
 
 class TeacherVM(
-    val teacher: UserModel,
+    val teacher: User,
 ) : ViewModel {
     val abilityNames: String =
         teacher.abilities

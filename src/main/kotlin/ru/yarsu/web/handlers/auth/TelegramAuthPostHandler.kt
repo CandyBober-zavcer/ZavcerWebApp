@@ -4,8 +4,8 @@ import org.http4k.core.*
 import org.http4k.core.cookie.Cookie
 import org.http4k.core.cookie.SameSite
 import org.http4k.core.cookie.cookie
-import ru.yarsu.db.UserData
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.db.DatabaseController
+import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.models.telegram.*
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -14,7 +14,7 @@ import java.time.ZonedDateTime
 class TelegramAuthPostHandler(
     private val jsonLogger: JsonLogger,
     private val botToken: String,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
     private val authSalt: String,
 ) : HttpHandler {
     override fun invoke(request: Request): Response =
@@ -30,7 +30,7 @@ class TelegramAuthPostHandler(
                     last_name = telegramData.lastName,
                 )
 
-            val user = users.findOrCreateTelegramUser(telegramUser)
+            val user = databaseController.findOrCreateTelegramUser(telegramUser)
 
             Response(Status.FOUND)
                 .header("Location", "/")
@@ -41,7 +41,7 @@ class TelegramAuthPostHandler(
         }
 
     private fun createAuthCookie(
-        user: UserModel,
+        user: User,
         authSalt: String,
     ): Cookie {
         val rawData = "${user.id}:${user.login}"

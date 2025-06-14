@@ -7,7 +7,5 @@ fun rendererProvider(dir: Boolean): ContextAwareTemplateRenderer =
     if (dir) {
         ContextAwarePebbleTemplates().HotReload("src/main/resources/")
     } else {
-        ContextAwarePebbleTemplates().CachingClasspath(
-            "src/main/resources/",
-        )
+        ContextAwarePebbleTemplates().CachingClasspath()
     }

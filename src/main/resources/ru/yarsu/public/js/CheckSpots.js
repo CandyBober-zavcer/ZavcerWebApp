@@ -1,24 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedData = {
-        'Точка 1': {
-            '2025-06-15': [
-                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
-                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
-            ],
-            '2025-06-18': [
-                { start: '10:00', end: '11:30', user: 'Иван Иванов' }
-            ]
-        },
-        'Точка 2': {
-            '2025-06-16': [
-                { start: '9:00', end: '12:00', user: 'Елена Федорова' }
-            ],
-            '2025-06-15': [
-                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
-                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
-            ],
-        }
-    };
+    const blockedData = JSON.parse(jsonblockedSlotsOwner)
 
     const calendarDays = document.getElementById('calendarDays');
     const currentMonthYear = document.getElementById('currentMonthYear');
@@ -85,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dayEl.className = `calendar-day ${date < today ? 'past' : 'available'}`;
             dayEl.textContent = i;
 
-           
+
             let hasBlocked = false;
             for (const loc in blockedData) {
                 if (blockedData[loc][dateStr]) {

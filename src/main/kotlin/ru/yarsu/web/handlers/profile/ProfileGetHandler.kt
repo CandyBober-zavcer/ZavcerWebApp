@@ -3,6 +3,7 @@ package ru.yarsu.web.handlers.profile
 import org.http4k.core.*
 import org.http4k.routing.path
 import ru.yarsu.db.DatabaseController
+import ru.yarsu.db.databasecontrollers.JsonController
 import ru.yarsu.web.models.profile.ProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 
@@ -17,7 +18,7 @@ class ProfileGetHandler(
         val user =
             databaseController.getUserById(userId)
                 ?: return Response(Status.NOT_FOUND).body("Профиль не найден")
-        val viewModel = ProfileVM(user)
+        val viewModel = ProfileVM(user, JsonController.getAvailableDatesForTeacherJson(userId), JsonController.getBlockedDatesForTeacherJson(userId), JsonController.getAvailableDatesForSpotJson(userId), JsonController.getBlockedDatesForUserSpotsJson(userId))
         return Response(Status.OK).with(htmlView(request) of viewModel)
     }
 }

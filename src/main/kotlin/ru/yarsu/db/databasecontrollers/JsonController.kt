@@ -10,7 +10,7 @@ class JsonController {
     companion object {
         //Свободные часы у точки
         fun getAvailableDatesForSpotJson(spotId: Int): String = transaction {
-            val spot = SpotLine.findById(spotId) ?: return@transaction ""
+            val spot = SpotLine.findById(spotId) ?: return@transaction "{}"
             val availableDates = mutableMapOf<String, List<String>>()
 
             spot.twoWeekOccupation.forEach { dayOccupation ->
@@ -32,7 +32,7 @@ class JsonController {
         //Свободные часы у учителя
         fun getAvailableDatesForTeacherJson(userId: Int): String {
             return transaction {
-                val user = UserLine.findById(userId) ?: return@transaction ""
+                val user = UserLine.findById(userId) ?: return@transaction "{}"
                 val availableDates = mutableMapOf<String, List<String>>()
 
                 user.twoWeekOccupation.forEach { dayOccupation ->
@@ -54,36 +54,39 @@ class JsonController {
 
 
         // Занятые часы в точках юзера
-        private fun getBlockedDatesForUserSpotsJson(userId: Int): String {
-            val user = UserLine.findById(userId) ?: return ""
-            val blockedData = mutableMapOf<String, MutableMap<String, MutableList<BlockedTimeSlot>>>()
+        fun getBlockedDatesForUserSpotsJson(userId: Int): String {
+            return transaction {
+                val user = UserLine.findById(userId) ?: return@transaction "{}"
+                val blockedData = mutableMapOf<String, MutableMap<String, MutableList<BlockedTimeSlot>>>()
 
-            user.spots.forEach { spot ->
-                val spotName = spot.name
+                user.spots.forEach { spot ->
+                    val spotName = spot.name
 
-                spot.twoWeekOccupation.forEach { dayOccupation ->
-                    val dateStr = dayOccupation.day.toString()
+                    spot.twoWeekOccupation.forEach { dayOccupation ->
+                        val dateStr = dayOccupation.day.toString()
 
-                    val slots = dayOccupation.hours
-                        .filter { it.occupation != null }
-                        .map { hour ->
-                            BlockedTimeSlot(
-                                time = "${hour.hour}:00",
-                                user = hour.occupation?.login ?: "Can anyone hear me?"
-                            )
+                        val slots = dayOccupation.hours
+                            .filter { it.occupation != null }
+                            .map { hour ->
+                                BlockedTimeSlot(
+                                    time = "${hour.hour}:00",
+                                    user = hour.occupation?.login ?: "Can anyone hear me?"
+                                )
+                            }
+
+                        if (slots.isNotEmpty()) {
+                            blockedData.getOrPut(spotName) { mutableMapOf() }[dateStr] = slots.toMutableList()
                         }
-
-                    if (slots.isNotEmpty()) {
-                        blockedData.getOrPut(spotName) { mutableMapOf() }[dateStr] = slots.toMutableList()
                     }
                 }
-            }
 
-            return Json.encodeToString(blockedData)
+                Json.encodeToString(blockedData)
+            }
         }
 
+
         //Свободные часы в точках юзера
-        private fun getFreeDatesForUserSpotsJson(userId: Int): String {
+         fun getFreeDatesForUserSpotsJson(userId: Int): String {
             val user = UserLine.findById(userId) ?: return ""
             val freeDates = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
 
@@ -109,29 +112,32 @@ class JsonController {
 
         //Занятые часы у учителя
         fun getBlockedDatesForTeacherJson(userId: Int): String {
-            val user = UserLine.findById(userId) ?: return ""
+            return transaction {
+                val user = UserLine.findById(userId) ?: return@transaction "{}"
 
-            val blockedDates = mutableMapOf<String, MutableList<BlockedTimeSlot>>()
-            user.twoWeekOccupation.forEach { dayOccupation ->
-                val dateStr = dayOccupation.day.toString()
+                val blockedDates = mutableMapOf<String, MutableList<BlockedTimeSlot>>()
+                user.twoWeekOccupation.forEach { dayOccupation ->
+                    val dateStr = dayOccupation.day.toString()
 
-                val slots = dayOccupation.hours
-                    .filter { it.occupation != null }
-                    .map { hour ->
-                        BlockedTimeSlot(
-                            time = "${hour.hour}:00",
-                            user = hour.occupation?.login ?: "It's so dark here..."
-                        )
+                    val slots = dayOccupation.hours
+                        .filter { it.occupation != null }
+                        .map { hour ->
+                            BlockedTimeSlot(
+                                time = "${hour.hour}:00",
+                                user = hour.occupation?.login ?: "It's so dark here..."
+                            )
+                        }
+                        .sortedBy { it.time }
+
+                    if (slots.isNotEmpty()) {
+                        blockedDates[dateStr] = slots.toMutableList()
                     }
-                    .sortedBy { it.time }
-
-                if (slots.isNotEmpty()) {
-                    blockedDates[dateStr] = slots.toMutableList()
                 }
-            }
 
-            return Json.encodeToString(blockedDates)
+                Json.encodeToString(blockedDates)
+            }
         }
+
 
         fun getFreeDatesForTeacherJson(userId: Int): String {
             val user = UserLine.findById(userId) ?: return ""

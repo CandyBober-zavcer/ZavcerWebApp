@@ -1,35 +1,37 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.ProfileVM" #}
-
 {% extends "../DesignedLayout.peb" %}
-{% block style %}Teacher.css{% endblock %}
+{% block style %}edit-teacher.css{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
-        <a href="#" class="btn btn-link text-secondary p-0">
+        <a href="/profiles" class="btn btn-link text-secondary p-0" title="Назад">
             <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
         </a>
 
         <div class="d-flex gap-3">
-
-            <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-link text-secondary p-0">
+            <a href="/edit/profile/delete-{{ model.user.id }}" class="btn btn-link text-secondary p-0"
+                title="Удалить профиль">
+                <i class="bi bi-x" style="font-size: 1.5rem;"></i>
+            </a>
+            <a href="/edit/profile/edit-{{ model.user.id }}" class="btn btn-link text-secondary p-0"
+                title="Редактировать профиль">
                 <i class="bi bi-gear" style="font-size: 1.5rem;"></i>
             </a>
         </div>
     </section>
-
     <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
         <div class="row g-0">
             <div class="col-lg-4 col-md-5">
                 <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
                     {% if model.user.images | length > 0 %}
-                        <img src="/image/{{ model.user.images[0] }}" alt="Аватар пользователя"
-                            class="img-fluid rounded-3 shadow-sm"
-                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    <img src="/image/{{ model.user.images[0] }}" alt="Аватар пользователя"
+                        class="img-fluid rounded-3 shadow-sm"
+                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
                     {% else %}
-                        <img src="/img/defaultProfile.webp" alt="Фото пользователя по умолчанию"
-                            class="img-fluid rounded-3 shadow-sm"
-                            style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    <img src="/img/defaultProfile.webp" alt="Фото пользователя по умолчанию"
+                        class="img-fluid rounded-3 shadow-sm"
+                        style="max-width: 280px; max-height: 350px; object-fit: cover;">
                     {% endif %}
                 </div>
             </div>
@@ -38,52 +40,189 @@
                 <div class="card-body p-4 p-lg-5">
                     <div class="mb-4">
                         <h1 class="display-6 fw-bold mb-2">{{ model.user.name }}</h1>
-                        <p class="lead text-muted">
-                            {{ model.user.description | default("Описание отсутствует") }}
-                        </p>
+                        <p class="lead text-muted">{{ model.user.description | default("Описание отсутствует") }}</p>
                     </div>
 
                     <div class="container">
                         <div class="row g-3 mb-4">
-                            <div class="col-sm-12">
+
+
+                            <div class="col-sm-6">
                                 <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3">
+                                        <img src="/img/phone.svg" width="35" height="35" alt="Телефон">
+                                    </div>
                                     <div>
-                                        <div class="fw-semibold text-muted small">Специализации</div>
-                                        <div class="fw-bold">
-                                            {% if model.abilityNames is not empty %}
-                                                {{ model.abilityNames }}
-                                            {% else %}
-                                                <span class="text-muted">Не указаны</span>
-                                            {% endif %}
-                                        </div>
+                                        <div class="fw-semibold text-muted small">Телефон</div>
+                                        {% if model.user.phone %}
+                                        <div class="fw-bold">{{ model.user.phone }}</div>
+                                        {% else %}
+                                        <div class="text-muted">Не указан</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        {% if model.user.tg_id != 0 %}
-                            <span class="badge bg-success p-2">Telegram привязан</span>
-                        {% else %}
-                            <script async src="https://telegram.org/js/telegram-widget.js?22"
-                                    data-telegram-login="Zavcer_bot"
-                                    data-size="large"
-                                    data-userpic="false"
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3">
+                                        <img src="/img/chalkboard-teacher.svg" width="35" height="35">
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Опыт</div>
+                                        {% if model.user.experience and model.user.experience > 0 %}
+                                        <div class="fw-bold">{{ model.user.experience }} лет</div>
+                                        {% else %}
+                                        <div class="text-muted">Не указан</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3">
+                                        <img src="/img/piano.svg" width="35" height="35">
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Специализации</div>
+                                        {% if model.abilityNames is not empty %}
+                                        <div class="fw-bold" style="word-break: break-word;">{{ model.abilityNames }}
+                                        </div>
+                                        {% else %}
+                                        <div class="text-muted">Не указаны</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3">
+                                        <img src="/img/map-pin.svg" width="35" height="35" alt="Адрес">
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Адрес</div>
+                                        {% if model.user.address %}
+                                        <div class="fw-bold">{{ model.user.address }}</div>
+                                        {% else %}
+                                        <div class="text-muted">Не указан</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="mb-3">
+                                {% if model.user.tg_id != 0 %}
+                                <span class="badge bg-success p-2">Telegram привязан</span>
+                                {% else %}
+                                <script async src="https://telegram.org/js/telegram-widget.js?22"
+                                    data-telegram-login="Zavcer_bot" data-size="large" data-userpic="false"
                                     data-request-access="write"
                                     data-auth-url="https://zavcer.ru.tuna.am/auth/attach-telegram?userId={{ model.user.id }}"
-                                    data-lang="ru">
-                            </script>
-                        {% endif %}
-                    </div>
+                                    data-lang="ru"></script>
+                                {% endif %}
+                            </div>
+                            {% set isTeacher = false %}
+                            {% set isOwner = false %}
+                            {% for role in model.user.roles %}
+                            {% if role.role == "Преподаватель" %}
+                            {% set isTeacher = true %}
+                            {% endif %}
+                            {% if role.role == "Владелец точек" %}
+                            {% set isOwner = true %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if isTeacher %}
+                            <form id="bookingFormTeacher">
+                                <div class="mb-3">
+                                    <label class="form-label">Выберите дату</label>
+                                    <div class="calendar">
+                                        <div class="calendar-header">
+                                            <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                                            <div class="calendar-title" id="currentMonthYear"></div>
+                                            <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+                                        </div>
+                                        <div class="calendar-weekdays">
+                                            <div>Пн</div>
+                                            <div>Вт</div>
+                                            <div>Ср</div>
+                                            <div>Чт</div>
+                                            <div>Пт</div>
+                                            <div>Сб</div>
+                                            <div>Вс</div>
+                                        </div>
+                                        <div class="calendar-days" id="calendarDays"></div>
+                                        <button id="saveScheduleBtn"
+                                            style="margin-top: 20px; display: block; width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                            Сохранить расписание
+                                        </button>
+                                    </div>
+                                    <div id="blockedSlotsInfo"
+                                        style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
+                                    </div>
+                                    <div class="time-picker">
+                                        <label class="form-label">Выберите время</label>
+                                        <div class="time-slots"></div>
+                                        <div class="reset-time">Сбросить выбор времени</div>
+                                    </div>
+                                </div>
+                            </form>
 
+                            {% endif %}
+
+                            {% if isOwner %}
+                            <form id="bookingForm">
+
+                                <div class="mb-3">
+                                    <div class="calendar">
+                                        <div class="calendar-header">
+                                            <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                                            <div class="calendar-title" id="currentMonthYear"></div>
+                                            <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+                                        </div>
+                                        <div class="calendar-weekdays">
+                                            <div>Пн</div>
+                                            <div>Вт</div>
+                                            <div>Ср</div>
+                                            <div>Чт</div>
+                                            <div>Пт</div>
+                                            <div>Сб</div>
+                                            <div>Вс</div>
+                                        </div>
+                                        <div class="calendar-days" id="calendarDays"></div>
+                                    </div>
+                                    <div id="blockedSlotsInfo"
+                                        style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
+                                    </div>
+                                </div>
+
+                            </form>
+                            {% endif %}
+
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
+
+
         </div>
     </div>
-</div>
-{% endblock %}
+    {% endblock %}
 
-{% block script %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
-{% endblock %}
+    {% block script %}
+    <script>
+        const jsonfreeSlotsTeacher = '{{ model.freeSlotsTeacher | escape("js") }}';
+        const jsonblockedSlotsTeacher = '{{ model.blockedSlotsTeacher | escape("js") }}';
+        const jsonfreeSlotsOwner = '{{ model.freeSlotsOwner | escape("js") }}';
+        const jsonblockedSlotsOwner = '{{ model.blockedSlotsOwner | escape("js") }}';
+    </script>
+    <script src="/js/EditDateAndTime.js"></script>
+    <script src="/js/CheckSpots.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
+        crossorigin="anonymous"></script>
+    {% endblock %}

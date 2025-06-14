@@ -1,109 +1,92 @@
-{# @pebvariable name="model" type="ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM" #}
 {% extends "../DesignedLayout.peb" %}
-{% block style %}user.css{% endblock %}
+{% block style %}Teacher.css{% endblock %}
 {% block content %}
 <div class="container mt-5">
-    <form method="post" enctype="multipart/form-data">
-        <div class="row">
-            <div class="row">
-                <div class="col"></div>
-                <div class="col"></div>
-            </div>
-            <div class="row"></div>
-            <div class="col">
-                <div class="mb-3">
-                    <label for="photo" class="form-label">Фотография преподавателя</label>
-
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-lg-4 col-md-5">
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
                     {% if model.user.images is not empty %}
-                    <div class="mb-2">
-                        <label for="photo" style="cursor: pointer;">
-                            <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}"
-                                alt="Фото преподавателя" class="img-thumbnail fixed-photo">
-                        </label>
-                    </div>
+                    <label for="photo" style="cursor: pointer;">
+                        <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}" alt="Фото преподавателя"
+                             class="img-fluid rounded-3 shadow-sm" style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    </label>
                     {% else %}
-                    <div class="mb-2">
-                        <label for="photo" style="cursor: pointer;">
-                            <img id="teacher-photo-preview" src="/img/defaultTeacher.webp"
-                                alt="Фото преподавателя по умолчанию" class="img-thumbnail"
-                                style="width: 400px; height: 400px; object-fit: cover;">
-                        </label>
-                    </div>
+                    <label for="photo" style="cursor: pointer;">
+                        <img id="teacher-photo-preview" src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                             class="img-fluid rounded-3 shadow-sm" style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    </label>
                     {% endif %}
-                    <input type="file" class="form-control d-none" id="photo" name="photo" accept="image/*"
-                        onchange="previewImage(this)">
-                </div>
-                <div class="mb-3">
-                    <label for="shortDescription" class="form-label">О себе</label>
-                    <input type="text" value="{{ model.user.description }}" class="form-control" id="description"
-                        name="description" required>
+                    <input type="file" class="form-control d-none" id="photo" name="photo" accept="image/*" onchange="previewImage(this)">
                 </div>
             </div>
-            <div class="col">
-                <div class="mb-3">
-                    <label for="fullName" class="form-label">Полное имя</label>
-                    <input type="text" value="{{ model.user.name }} " class="form-control" id="name" name="name"
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">Номер телефона</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" required
-                        value="{{ model.user.phone }}">
-                </div>
-                <div class="mb-3">
-                    <label for="experience" class="form-label">Опыт преподавания (в годах)</label>
-                    <input type="number" class="form-control" id="experience" name="experience" min="0" required
-                        value="{{ model.user.experience }}">
-                </div>
-                <div class="mb-3">
-                    <label for="district" class="form-label">Район</label>
-                    <select class="form-select" id="district" name="district" required>
-                        {% for district in model.allDistricts %}
-                        <option value="{{ district.name }}" {% if district.name==model.user.district.name %}selected{%
-                            endif %}>
-                            {{ district.district }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Адрес проведения занятий</label>
-                    <input type="text" class="form-control" id="address" name="address" required
-                        value="{{ model.user.address }}">
-                </div>
-            </div>
-            <div class="col d-flex flex-column">
-                <div class="mb-3">
-                    <label for="price" class="form-label">Стоимость за час</label>
-                    <input type="number" class="form-control" id="price" name="price" min="0" required
-                        value="{{ model.user.price }}">
-                </div>
-                <div class="form-group mb-3">
-                    <label class="form-label">Специализации</label>
-                    <div class="d-flex flex-wrap">
-                        {% for ability in model.allAbilityWithNames %}
-                        <div class="form-check me-3 mb-2">
-                            <input class="form-check-input" type="checkbox" id="ability-{{ ability.first }}"
-                                name="abilities" value="{{ ability.first }}" {% if model.abilitySelected[ability.first]
-                                %}checked{% endif %}>
-                            <label class="form-check-label" for="ability-{{ ability.first }}">
-                                {{ ability.second }}
-                            </label>
+
+            <div class="col-lg-8 col-md-7">
+                <form method="post" enctype="multipart/form-data" class="card-body p-4 p-lg-5">
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Полное имя</label>
+                            <input type="text" value="{{ model.user.name }}" class="form-control" id="name" name="name" required>
                         </div>
-                        {% endfor %}
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-semibold">О себе</label>
+                            <input type="text" value="{{ model.user.description }}" class="form-control" id="description" name="description" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-semibold">Номер телефона</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required value="{{ model.user.phone }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="experience" class="form-label fw-semibold">Опыт преподавания (в годах)</label>
+                            <input type="number" class="form-control" id="experience" name="experience" min="0" required value="{{ model.user.experience }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="district" class="form-label fw-semibold">Район</label>
+                            <select class="form-select" id="district" name="district" required>
+                                {% for district in model.allDistricts %}
+                                <option value="{{ district.name }}" {% if district.name == model.user.district.name %}selected{% endif %}>
+                                    {{ district.district }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label fw-semibold">Адрес проведения занятий</label>
+                            <input type="text" class="form-control" id="address" name="address" required value="{{ model.user.address }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label fw-semibold">Стоимость за час</label>
+                            <input type="number" class="form-control" id="price" name="price" min="0" required value="{{ model.user.price }}">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-semibold">Специализации</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                {% for ability in model.allAbilityWithNames %}
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input" type="checkbox" id="ability-{{ ability.first }}" name="abilities" value="{{ ability.first }}" {% if model.abilitySelected[ability.first] %}checked{% endif %}>
+                                    <label class="form-check-label" for="ability-{{ ability.first }}">
+                                        {{ ability.second }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-danger mt-auto">Сохранить</button>
+                    <button type="submit" class="btn btn-danger w-100">Сохранить</button>
+                </form>
             </div>
-
         </div>
-
-
-
-
-    </form>
+    </div>
 </div>
 {% endblock %}
+
 {% block script %}
 <script>
     function previewImage(input) {

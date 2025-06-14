@@ -1,21 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedDates = {
-        '2025-06-15': [
-            { time: '10:00', user: 'Иван Иванов' },
-            { time: '11:00', user: 'Мария Петрова' },
-            { time: '12:00', user: 'Сергей Смирнов' }
-        ],
-        '2025-06-16': [
-            { time: '14:00', user: 'Анна Кузнецова' },
-            { time: '15:00', user: 'Дмитрий Орлов' },
-            { time: '16:00', user: 'Елена Федорова' }
-        ],
-    };
+    const blockedDates = JSON.parse(jsonblockedSlotsTeacher)
 
-    const freeDates = {
-        '2025-06-17': ['10:00', '11:00', '12:00'],
-        '2025-06-18': ['14:00', '15:00', '16:00'],
-    };
+    const freeDates = JSON.parse(jsonfreeSlotsTeacher)
 
     const calendarDays = document.getElementById('calendarDays');
     const currentMonthYear = document.getElementById('currentMonthYear');

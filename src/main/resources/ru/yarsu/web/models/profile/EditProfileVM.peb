@@ -1,73 +1,108 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.profile.EditProfileVM" #}
 
-    {% extends "../DesignedLayout.peb" %}
-    {% block style %}Teacher.css{% endblock %}
+{% extends "../DesignedLayout.peb" %}
+<!-- {% block style %}Teacher.css{% endblock %} -->
 
-    {% block content %}
-<section style="background-color: #eee;">
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Редактирование профиля</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post" enctype="multipart/form-data">
-                            <div class="row mb-4">
-                                <div class="col-md-4 text-center">
-                                    <img src="{{ model.user.images | length > 0 ? '/image/' ~ model.user.images[0] : '/img/defaultProfile.webp' }}" alt="Аватар пользователя"
-                                        class="rounded-circle img-fluid" style="width: 150px;">
-                                    <div class="d-flex justify-content-center">
-                                        <input type="file" class="form-control" id="avatar" name="avatar"
-                                               accept="image/*" style="width: 200px;">
+{% block content %}
+<div class="container mt-5">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="/profile/{{ model.user.id }}" class="btn btn-link text-secondary p-0" title="Назад к профилю">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <button type="submit" form="info" class="btn p-0 bg-transparent border-0 text-secondary" title="Сохранить">
+            <i class="bi bi-check2" style="font-size: 1.5rem;"></i>
+        </button>
+
+
+    </section>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mt-3">
+        <div class="row g-0">
+            <div class="col-lg-4 col-md-5 bg-light d-flex flex-column align-items-center justify-content-center p-4">
+                <img src="{{ model.user.images | length > 0 ? '/image/' ~ model.user.images[0] : '/img/defaultProfile.webp' }}"
+                    alt="Аватар пользователя" class="img-fluid rounded-3 shadow-sm mb-3"
+                    style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                <input type="file" class="form-control mt-2" id="avatar" name="avatar" accept="image/*"
+                    style="max-width: 280px;">
+                <small class="text-muted mt-1">Загрузите новое изображение</small>
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div class="card-body p-4 p-lg-5">
+                    <form method="post" id="info" enctype="multipart/form-data" novalidate>
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-semibold">Имя</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                value="{{ model.user.name | default('') }}" required>
+                            {% if not model.user.name %}
+                            <div class="form-text text-danger">Не указано</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">Описание</label>
+                            <textarea class="form-control" id="description" name="description"
+                                rows="3">{{ model.user.description | default('') }}</textarea>
+                            {% if not model.user.description %}
+                            <div class="form-text text-muted">Описание отсутствует</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-4 d-flex justify-content-between align-items-center">
+                            <div>
+                                <label class="form-label fw-semibold">Специализации</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    {% for ability in model.allAbilityWithNames %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="ability-{{ ability.first }}"
+                                            name="abilities" value="{{ ability.first }}" {% if
+                                            model.abilitySelected[ability.first] %}checked{% endif %}>
+                                        <label class="form-check-label" for="ability-{{ ability.first }}">
+                                            {{ ability.second }}
+                                        </label>
                                     </div>
-                                    <small class="text-muted">Загрузите новое изображение</small>
+                                    {% endfor %}
                                 </div>
-
-                                <div class="col-md-8">
-                                    <div class="form-group mb-3">
-                                        <label for="name" class="form-label">Имя</label>
-                                        <input type="text" class="form-control" id="name" name="name"
-                                               value="{{ model.user.name }}" required>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label for="description" class="form-label">Описание</label>
-                                        <textarea class="form-control" id="description" name="description" rows="3">{{ model.user.description }}</textarea>
-                                    </div>
-
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">Специализации</label>
-                                        <div class="d-flex flex-wrap">
-                                            {% for ability in model.allAbilityWithNames %}
-                                                <div class="form-check me-3 mb-2">
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           id="ability-{{ ability.first }}"
-                                                           name="abilities"
-                                                           value="{{ ability.first }}"
-                                                           {% if model.abilitySelected[ability.first] %}checked{% endif %}>
-                                                    <label class="form-check-label" for="ability-{{ ability.first }}">
-                                                        {{ ability.second }}
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
+                                {% if model.abilitySelected | length == 0 %}
+                                <div class="form-text text-muted">Не указаны</div>
+                                {% endif %}
                             </div>
 
-                            <div class="d-flex justify-content-end">
-                                <a href="/profile/{{ model.user.id }}" class="btn btn-secondary me-2">Отмена</a>
-                                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                            <div class="d-flex align-items-center ms-3" style="min-width: 120px;">
+                                <a href="/auth/signout" class="btn btn-outline-danger" title="Выйти из профиля">
+                                    <i class="bi bi-door-open" style="font-size: 1.2rem;"></i>
+                                </a>
                             </div>
-                        </form>
+                        </div>
 
-                    </div>
+
+
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('avatar');
+        const img = document.querySelector('img[alt="Аватар пользователя"]');
+
+        input.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+
 {% endblock %}

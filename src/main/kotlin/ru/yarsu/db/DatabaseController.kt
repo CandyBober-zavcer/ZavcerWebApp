@@ -268,4 +268,12 @@ class DatabaseController {
 
     fun getPendingTeachers(): List<User> = UsersController().getPendingTeachers()
     fun getPendingOwners(): List<User> = UsersController().getPendingOwners()
+
+    fun addTeacherRoleById(id: Int): Boolean = UsersController().addTeacherRoleById(id)
+    fun addOwnerRoleById(id: Int): Boolean = UsersController().addOwnerRoleById(id)
+    fun removeOwnerRoleById(id: Int): Boolean = UsersController().removeOwnerRoleById(id)
+    fun deleteUser(id: Int): Boolean = UsersController().deleteUser(id)
+    fun getOwnerById(id: Int): User? = UsersController().getOwnerById(id)
+
+    fun getAllUsers(): List<User> = UsersController().getAllUsers()
 }

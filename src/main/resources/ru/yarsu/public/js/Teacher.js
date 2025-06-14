@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                alert(`Студия успешно забронирована на ${selectedDate} в ${selectedTime}`);
+                alert(`Запись успешно забронирована на ${selectedDate} в ${selectedTime}`);
             })
             .catch(error => {
                 alert("Ошибка при бронировании.");

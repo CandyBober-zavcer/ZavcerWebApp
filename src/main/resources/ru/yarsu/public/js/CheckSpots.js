@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (blockedData[loc][dateStr]) {
                     html += `<p><strong>${loc}:</strong></p><ul>`;
                     blockedData[loc][dateStr].forEach(slot => {
-                        html += `<li>${slot.start}–${slot.end} — ${slot.user}</li>`;
+                        html += `<li>${slot.time} — ${slot.user}</li>`;
                     });
                     html += `</ul>`;
                     hasData = true;
@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
             timePicker.style.display = 'none';
             timeSlots.innerHTML = '';
         }
+
 
 
         initCalendar();

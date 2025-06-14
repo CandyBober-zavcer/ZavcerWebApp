@@ -53,7 +53,7 @@ fun main() {
     val app =
         requestContextFilter
             .then(combinedUserFilter(appConfig.webConfig.authSalt, databaseController, sessionStorage))
-            .then(NotFoundFilter(htmlView))
+            .then(NotFoundFilter(htmlView)).then(ServerErrorFilter(htmlView))
             .then(
                 routes(
                     router(renderer, htmlView, appConfig, databaseController, sessionStorage, UserModelLens),

@@ -4,6 +4,7 @@ import org.http4k.core.Uri
 import org.http4k.core.query
 
 const val RANGE = 3
+const val INPAGE = 9
 
 class Paginator(
     private var viewPage: Int,

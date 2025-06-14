@@ -154,12 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             slot.className = 'time-slot';
             slot.textContent = time;
 
-            const isBlocked = blocked.some(({ start, end }) => {
-                const [sh, sm] = start.split(':').map(Number);
-                const [eh, em] = end.split(':').map(Number);
-                const slotTime = parseInt(time.split(':')[0], 10);
-                return slotTime >= sh && slotTime < eh;
-            });
+            const isBlocked = blocked.some(({ time: blockedTime }) => blockedTime === time);
 
             if (isBlocked) {
                 slot.classList.add('blocked');
@@ -169,8 +164,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 slot.classList.add('available');
             }
 
+
             slot.addEventListener('click', () => {
                 if (isBlocked) return;
+
                 const times = freeDates[currentLocation] ||= {};
                 const list = times[selectedDate] ||= [];
 
@@ -185,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
             timeSlots.appendChild(slot);
         });
     }
+
 
     resetTimeBtn.addEventListener('click', () => {
         if (selectedDate && freeDates[currentLocation]?.[selectedDate]) {
@@ -217,12 +215,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const slots = blockedData[currentLocation]?.[dateStr] || [];
         let html = '<strong>Забронированные часы:</strong><ul>';
         slots.forEach(slot => {
-            html += `<li>${slot.start}–${slot.end} — ${slot.user}</li>`;
+            html += `<li>${slot.time} — ${slot.user}</li>`;
         });
         html += '</ul>';
         blockedSlotsInfo.innerHTML = html;
         blockedSlotsInfo.style.display = 'block';
     }
+
 
     function hideBlockedSlotsInfo() {
         blockedSlotsInfo.style.display = 'none';

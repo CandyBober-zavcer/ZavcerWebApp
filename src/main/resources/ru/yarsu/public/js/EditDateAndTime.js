@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('Отправляемые свободные слоты:', freeDates);
 
-            fetch('schedule/teacher/${userId}', {
+            fetch('schedule/teacher/{id}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(freeDates)

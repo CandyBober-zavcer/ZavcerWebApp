@@ -70,6 +70,9 @@ fun router(
         "/auth/register" bind Method.POST to EmailRegisterPostHandler(databaseController, tokenStorage, emailService),
         "/auth/confirm" bind Method.GET to EmailConfirmHandler(tokenStorage, databaseController, renderer),
         "/profile/{id}" bind Method.GET to ProfileGetHandler(htmlView, databaseController),
+        "schedule/teacher/{id}" bind Method.GET to TeacherScheduleGetHandler(htmlView, databaseController),
+        "schedule/owner/viewing/{id}" bind Method.GET to SpotScheduleViewingHandler(htmlView, databaseController),
+        "schedule/owner/editing/{id}" bind Method.GET to SpotScheduleEditingGetHandler(htmlView, databaseController),
         "/edit/profile/edit-{id}" bind Method.GET to EditProfileGetHandler(htmlView, databaseController),
         "/edit/profile/edit-{id}" bind Method.POST to EditProfilePostHandler(htmlView, databaseController),
         "/auth/attach-telegram" bind Method.GET to

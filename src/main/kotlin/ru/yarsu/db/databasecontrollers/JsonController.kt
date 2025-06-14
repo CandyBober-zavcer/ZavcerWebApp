@@ -86,29 +86,33 @@ class JsonController {
 
 
         //Свободные часы в точках юзера
-         fun getFreeDatesForUserSpotsJson(userId: Int): String {
-            val user = UserLine.findById(userId) ?: return ""
-            val freeDates = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
+        fun getFreeDatesForUserSpotsJson(userId: Int): String {
+            return transaction {
+                val user = UserLine.findById(userId) ?: return@transaction "{}"
 
-            user.spots.forEach { spot ->
-                val spotName = spot.name
+                val freeDates = mutableMapOf<String, MutableMap<String, MutableList<String>>>()
 
-                spot.twoWeekOccupation.forEach { dayOccupation ->
-                    val dateStr = dayOccupation.day.toString()
+                user.spots.forEach { spot ->
+                    val spotName = spot.name
 
-                    val freeSlots = dayOccupation.hours
-                        .filter { it.occupation == null }
-                        .map { "${it.hour}:00" }
-                        .sorted()
+                    spot.twoWeekOccupation.forEach { dayOccupation ->
+                        val dateStr = dayOccupation.day.toString()
 
-                    if (freeSlots.isNotEmpty()) {
-                        freeDates.getOrPut(spotName) { mutableMapOf() }[dateStr] = freeSlots.toMutableList()
+                        val freeSlots = dayOccupation.hours
+                            .filter { it.occupation == null }
+                            .map { "${it.hour}:00" }
+                            .sorted()
+
+                        if (freeSlots.isNotEmpty()) {
+                            freeDates.getOrPut(spotName) { mutableMapOf() }[dateStr] = freeSlots.toMutableList()
+                        }
                     }
                 }
-            }
 
-            return Json.encodeToString(freeDates)
+                Json.encodeToString(freeDates)
+            }
         }
+
 
         //Занятые часы у учителя
         fun getBlockedDatesForTeacherJson(userId: Int): String {

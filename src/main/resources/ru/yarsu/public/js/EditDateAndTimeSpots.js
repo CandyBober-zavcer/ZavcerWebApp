@@ -1,30 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedData = {
-        'Точка 1': {
-            '2025-06-15': [
-                { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
-                { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
-            ],
-            '2025-06-18': [
-                { start: '10:00', end: '11:30', user: 'Иван Иванов' }
-            ]
-        },
-        'Точка 2': {
-            '2025-06-16': [
-                { start: '9:00', end: '12:00', user: 'Елена Федорова' }
-            ]
-        }
-    };
+    const freeSlotsOwner = JSON.parse(jsonfreeSlotsOwner);
+    const blockedSlotsOwner = JSON.parse(jsonblockedSlotsOwner);
 
-    const freeDates = {
-        'Точка 1': {
-            '2025-06-15': ['13:00', '14:00', '17:00'],
-            '2025-06-18': ['12:00', '13:00']
-        },
-        'Точка 2': {
-            '2025-06-16': ['13:00', '14:00'],
-        }
-    };
+    const blockedData = blockedSlotsOwner;
+    const freeDates = freeSlotsOwner;
+    console.log(blockedData)
+    console.log(freeDates)
 
     const locationSelect = document.getElementById('locationSelect');
     const calendarDays = document.getElementById('calendarDays');
@@ -56,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedDate = null;
     let currentLocation = null;
 
-    const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+    const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
 
     function formatDate(date) {
         const year = date.getFullYear();
@@ -67,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function populateLocations() {
         locationSelect.innerHTML = '';
-        const locations = Object.keys(blockedData);
+        const locations = Object.keys(freeDates);
         locations.forEach(loc => {
             const option = document.createElement('option');
             option.value = loc;
@@ -216,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
         console.log('Отправляемые свободные слоты:', freeDates);
 
-        fetch('http://localhost:8080/teacher/schedule', {
+        fetch('/schedule/owner/editing/${userId}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(freeDates)

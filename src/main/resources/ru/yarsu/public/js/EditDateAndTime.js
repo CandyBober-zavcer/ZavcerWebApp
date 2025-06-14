@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentDate.setDate(1);
         let selectedDate = null;
 
-        const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+        const timeRange = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'];
 
         function formatDate(date) {
             const year = date.getFullYear();
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('Отправляемые свободные слоты:', freeDates);
 
-            fetch('http://localhost:8080/teacher/куда?', {
+            fetch('schedule/teacher/${userId}', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(freeDates)

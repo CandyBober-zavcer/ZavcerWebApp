@@ -1,0 +1,62 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.profile.SpotScheduleViewingVM" #}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}edit-teacher.css{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="javascript:void(0)" onclick="history.back()" class="btn btn-link text-secondary p-0" title="Назад">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <div class="d-flex gap-3">
+
+            <a href="/schedule/owner/editing/{{ model.user.id }}" class="btn btn-link text-secondary p-0"
+               title="Редактировать расписание">
+                <i class="bi bi-gear" style="font-size: 1.5rem;"></i>
+            </a>
+        </div>
+    </section>
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0 ">
+            <form id="bookingForm">
+
+                <div class="mb-3">
+                    <div class="calendar" id="calendarOwner">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav" id="prevMonthOwner">❮</button>
+                            <div class="calendar-title" id="currentMonthYearOwner"></div>
+                            <button type="button" class="calendar-nav" id="nextMonthOwner">❯</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div>Пн</div>
+                            <div>Вт</div>
+                            <div>Ср</div>
+                            <div>Чт</div>
+                            <div>Пт</div>
+                            <div>Сб</div>
+                            <div>Вс</div>
+                        </div>
+                        <div class="calendar-days" id="calendarDaysOwner"></div>
+                    </div>
+                    <div id="blockedSlotsInfo"
+                         style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    const userId = {{ model.user.id | default ("null") }};
+    const jsonfreeSlotsOwner = '{{ model.freeSlotsOwner | escape("js") }}';
+    const jsonblockedSlotsOwner = '{{ model.blockedSlotsOwner | escape("js") }}';
+</script>
+<script src="/js/CheckSpots.js"></script>
+{% endblock %}

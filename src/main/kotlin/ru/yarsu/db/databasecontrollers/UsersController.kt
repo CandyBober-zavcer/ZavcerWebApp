@@ -5,10 +5,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import org.jetbrains.exposed.sql.*
-<<<<<<< HEAD
-=======
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.between
->>>>>>> f5bf3113d27b20b5396eb34d3b39d5ec6443a4be
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inSubQuery
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq

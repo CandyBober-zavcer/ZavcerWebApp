@@ -49,11 +49,11 @@ class TeacherPostHandler(private val databaseController: DatabaseController) : H
         val studentHasTelegram = user.tg_id > 0L
 
         if (teacherHasTelegram) {
-            TelegramService.teacherNotification(teacher.tg_id, user.tg_id)
+            TelegramService.teacherNotification(teacher.tg_id, user.tg_id, formData, teacher.phone, teacher.address)
         }
 
         if (studentHasTelegram) {
-            TelegramService.studentNotification(teacher.tg_id, user.tg_id)
+            TelegramService.studentNotification(teacher.tg_id, user.tg_id, formData, teacher.phone, teacher.address)
         }
         databaseController.occupyHour(LocalDate.parse(formData.date), formData.time.split(":")[0].toInt(), formData.userId)
 

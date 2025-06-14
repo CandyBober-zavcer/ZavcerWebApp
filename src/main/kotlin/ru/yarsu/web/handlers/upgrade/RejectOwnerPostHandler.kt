@@ -5,12 +5,11 @@ import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.routing.path
-import org.jetbrains.exposed.sql.OffsetWindowFrameBound
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
 class RejectOwnerPostHandler(
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
         val ownerId =
@@ -18,10 +17,10 @@ class RejectOwnerPostHandler(
                 ?: return Response(BAD_REQUEST).body("Неверный ID пользователя")
 
         val user =
-            users.getOwnerByIdIfRolePendingOwner(ownerId)
+            databaseController.getOwnerByIdIfRolePendingOwner(ownerId)
                 ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
-        users.rejectOwnerRequest(ownerId)
+        databaseController.rejectOwnerRequest(ownerId)
 
         if (user.tg_id > 0L) {
             TelegramService.notifyOwnerRejected(user.tg_id)

@@ -4,11 +4,11 @@ import org.http4k.core.*
 import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
 class AcceptOwnerPostHandler(
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     override fun invoke(request: Request): Response {
         val ownerId =
@@ -16,10 +16,10 @@ class AcceptOwnerPostHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Некорректный ID")
 
         val user =
-            users.getOwnerByIdIfRolePendingOwner(ownerId)
+            databaseController.getOwnerByIdIfRolePendingOwner(ownerId)
                 ?: return Response(NOT_FOUND).body("Пользователь не найден")
 
-        val success = users.acceptOwnerRequest(ownerId)
+        val success = databaseController.acceptOwnerRequest(ownerId)
 
         if (success && user.tg_id > 0L) {
             TelegramService.notifyOwnerSuccess(user.tg_id)

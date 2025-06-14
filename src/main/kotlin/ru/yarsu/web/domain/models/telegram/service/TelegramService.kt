@@ -53,36 +53,49 @@ object TelegramService {
         send(chatId, text)
     }
 
-    fun teacherNotification(teacherId: Long, studentId: Long) {
+    fun teacherNotification(
+        teacherId: Long,
+        studentId: Long,
+    ) {
         if (teacherId <= 0L) return
 
-        val text = if (studentId > 0L) {
-            "Запись на занятие. Ученик: $studentId"
-        } else {
-            "Запись на занятие. Ученик не указан."
-        }
+        val text =
+            if (studentId > 0L) {
+                "Запись на занятие. Ученик: $studentId"
+            } else {
+                "Запись на занятие. Ученик не указан."
+            }
         send(teacherId, text)
     }
 
-    fun studentNotification(teacherId: Long, studentId: Long) {
+    fun studentNotification(
+        teacherId: Long,
+        studentId: Long,
+    ) {
         if (studentId <= 0L) return
 
-        val text = if (teacherId > 0L) {
-            "Запись на занятие. Учитель: $teacherId"
-        } else {
-            "Запись на занятие. Учитель не указан."
-        }
+        val text =
+            if (teacherId > 0L) {
+                "Запись на занятие. Учитель: $teacherId"
+            } else {
+                "Запись на занятие. Учитель не указан."
+            }
         send(studentId, text)
     }
 
-    fun spotOwnerNotification(ownerIds: List<Long>, spotId: Long, studentId: Long) {
+    fun spotOwnerNotification(
+        ownerIds: List<Long>,
+        spotId: Long,
+        studentId: Long,
+    ) {
         if (ownerIds.isEmpty()) return
 
-        val text = if (studentId > 0L) {
-            "Запись на репетиционную точку №$spotId. Ученик: $studentId"
-        } else {
-            "Запись на репетиционную точку №$spotId. Ученик не указан."
-        }
+        val text =
+            if (studentId > 0L) {
+                "Запись на репетиционную точку №$spotId. Ученик: $studentId"
+            } else {
+                "Запись на репетиционную точку №$spotId. Ученик не указан."
+            }
 
         ownerIds.forEach { ownerId ->
             if (ownerId > 0L) {
@@ -91,18 +104,60 @@ object TelegramService {
         }
     }
 
-    fun studentSpotNotification(ownerIds: List<Long>, spotId: Long, studentId: Long) {
+    fun studentSpotNotification(
+        ownerIds: List<Long>,
+        spotId: Long,
+        studentId: Long,
+    ) {
         if (studentId <= 0L) return
 
         val validOwners = ownerIds.filter { it > 0L }
-        val text = if (validOwners.isNotEmpty()) {
-            "Запись на репетиционную точку №$spotId. Владелец(и): ${validOwners.joinToString(", ")}"
-        } else {
-            "Запись на репетиционную точку №$spotId. Владелец не указан."
-        }
+        val text =
+            if (validOwners.isNotEmpty()) {
+                "Запись на репетиционную точку №$spotId. Владелец(и): ${validOwners.joinToString(", ")}"
+            } else {
+                "Запись на репетиционную точку №$spotId. Владелец не указан."
+            }
 
         send(studentId, text)
     }
 
+    fun notifyUserDeleted(
+        chatId: Long,
+        userName: String? = null,
+    ) {
+        val text =
+            if (!userName.isNullOrBlank()) {
+                "⚠️ Пользователь $userName был удалён из системы."
+            } else {
+                "⚠️ Пользователь был удалён из системы."
+            }
+        send(chatId, text)
+    }
 
+    fun notifyRoleRemoved(
+        chatId: Long,
+        role: String,
+    ) {
+        val text =
+            when (role.lowercase()) {
+                "teacher" -> "⚠️ Ваша роль преподавателя была удалена."
+                "owner" -> "⚠️ Ваша роль владельца точки была удалена."
+                else -> "⚠️ Ваша роль \"$role\" была удалена."
+            }
+        send(chatId, text)
+    }
+
+    fun notifyRoleAdded(
+        chatId: Long,
+        role: String,
+    ) {
+        val text =
+            when (role.lowercase()) {
+                "teacher" -> "🎉 Вам была назначена роль преподавателя!"
+                "owner" -> "🎉 Вам была назначена роль владельца точки!"
+                else -> "🎉 Вам была назначена роль \"$role\"!"
+            }
+        send(chatId, text)
+    }
 }

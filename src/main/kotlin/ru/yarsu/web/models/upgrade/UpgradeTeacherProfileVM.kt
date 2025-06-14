@@ -1,10 +1,10 @@
 package ru.yarsu.web.models.upgrade
 
 import org.http4k.template.ViewModel
-import ru.yarsu.web.domain.article.UserModel
+import ru.yarsu.web.domain.classes.User
 
 data class UpgradeTeacherProfileVM(
-    val user: UserModel,
+    val user: User,
 ) : ViewModel {
     val abilityNames: String =
         user.abilities

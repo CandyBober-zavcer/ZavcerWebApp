@@ -55,9 +55,12 @@
                                 <div class="d-flex flex-wrap gap-3">
                                     {% for ability in model.allAbilityWithNames %}
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="ability-{{ ability.first }}"
-                                            name="abilities" value="{{ ability.first }}" {% if
-                                            model.abilitySelected[ability.first] %}checked{% endif %}>
+                                        <input class="form-check-input"
+                                           type="checkbox"
+                                           id="ability-{{ ability.first }}"
+                                           name="abilities[]"
+                                           value="{{ ability.first }}"
+                                           {% if model.abilitySelected[ability.first] %}checked{% endif %}>
                                         <label class="form-check-label" for="ability-{{ ability.first }}">
                                             {{ ability.second }}
                                         </label>
@@ -75,9 +78,6 @@
                                 </a>
                             </div>
                         </div>
-
-
-
                     </form>
                 </div>
             </div>

@@ -3,6 +3,7 @@ package ru.yarsu.web.handlers.upgrade
 import org.http4k.core.*
 import org.http4k.lens.*
 import org.http4k.routing.path
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.db.UserData
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.models.upgrade.UpgradeUserToOwnerVM
@@ -10,7 +11,7 @@ import ru.yarsu.web.templates.ContextAwareViewRender
 
 class UpgradeUserToOwnerGetHandler(
     private val htmlView: ContextAwareViewRender,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val pathLens = Path.long().of("id")
 
@@ -31,7 +32,7 @@ class UpgradeUserToOwnerGetHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Некорректный ID пользователя")
 
         val user =
-            users.getUserIfNotOwner(userId)
+            databaseController.getUserIfNotOwner(userId)
                 ?: return Response(Status.NOT_FOUND).body("Пользователь не найден или не может стать владельцем")
 
         val allAbility = AbilityEnums.entries

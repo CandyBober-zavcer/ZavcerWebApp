@@ -1,5 +1,6 @@
 package ru.yarsu.db.databasecontrollers
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -634,4 +635,52 @@ class UsersController {
         }
         return user
     }
+
+    fun getOwnerByIdIfRolePendingOwner(id: Int): User? =
+        transaction {
+            UserLine.find {
+                (Users.id eq id) and
+                        (Users.roles.substring(6, 1) eq "1" ) and
+                        (Users.isConfirmed eq true)
+            }.firstOrNull()?.let { packUser(it) }
+        }
+
+    fun getUserIfNotOwner(id: Int): User? =
+        transaction {
+            UserLine.find {
+                (Users.id eq id) and
+                        not(Users.roles.substring(1, 1) eq "1") and
+                        (Users.isConfirmed eq true)
+            }.firstOrNull()?.let { packUser(it) }
+        }
+
+    fun updateUserRole(id: Int, role: RoleEnums, add: Boolean): Boolean = transaction {
+        val user = UserLine.findById(id) ?: return@transaction false
+
+        val roles = stringToRoles(user.roles).toMutableSet()
+        if (add) roles.add(role) else roles.remove(role)
+
+        user.roles = rolesToString(roles)
+        true
+    }
+
+    fun acceptTeacherRequest(id: Int) = updateUserRole(id, RoleEnums.TEACHER, add = true)
+    fun rejectTeacherRequest(id: Int) = updateUserRole(id, RoleEnums.TEACHER, add = false)
+    fun acceptOwnerRequest(id: Int) = updateUserRole(id, RoleEnums.OWNER, add = true)
+    fun rejectOwnerRequest(id: Int) = updateUserRole(id, RoleEnums.OWNER, add = false)
+
+    fun getPendingTeachers(): List<User> = transaction {
+        UserLine.find {
+            (Users.roles.substring(5, 1) eq "1") and
+                    (Users.isConfirmed eq true)
+        }.map { packUser(it) }
+    }
+
+    fun getPendingOwners(): List<User> = transaction {
+        UserLine.find {
+            (Users.roles.substring(1, 1) eq "1") and
+                    (Users.isConfirmed eq true)
+        }.map { packUser(it) }
+    }
+
 }

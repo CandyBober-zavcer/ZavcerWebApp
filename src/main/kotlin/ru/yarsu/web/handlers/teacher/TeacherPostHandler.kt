@@ -8,11 +8,12 @@ import org.http4k.core.Status.Companion.FOUND
 import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.UNAUTHORIZED
 import org.http4k.routing.path
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.db.UserData
 import ru.yarsu.web.context.UserModelLens
 import ru.yarsu.web.domain.models.telegram.service.TelegramService
 
-class TeacherPostHandler(private val users: UserData) : HttpHandler {
+class TeacherPostHandler(private val databaseController: DatabaseController) : HttpHandler {
     override fun invoke(request: Request): Response {
         val user = UserModelLens(request)
             ?: return Response(UNAUTHORIZED).body("Пользователь не авторизован")
@@ -20,7 +21,7 @@ class TeacherPostHandler(private val users: UserData) : HttpHandler {
         val teacherId = request.path("id")?.toIntOrNull()
             ?: return Response(BAD_REQUEST).body("Некорректный ID")
 
-        val teacher = users.getTeacherById(teacherId)
+        val teacher = databaseController.getTeacherById(teacherId)
             ?: return Response(NOT_FOUND).body("Преподаватель не найден")
 
         val teacherHasTelegram = teacher.tg_id > 0L

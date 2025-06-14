@@ -10,6 +10,7 @@ import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.funs.lensOrDefault
+import ru.yarsu.web.funs.lensOrDefaultAbilities
 import ru.yarsu.web.models.teacher.EditTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
@@ -30,6 +31,7 @@ class EditTeacherPostHandler(
     private val experienceLens = MultipartFormField.string().required("experience")
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
+    private val abilitiesLens = MultipartFormField.multi.required("abilities[]")
 
     private val formLens =
         Body
@@ -43,6 +45,7 @@ class EditTeacherPostHandler(
                 experienceLens,
                 phoneLens,
                 priceLens,
+                abilitiesLens,
             ).toLens()
 
     override fun invoke(request: Request): Response {
@@ -57,6 +60,11 @@ class EditTeacherPostHandler(
         val form = formLens(request)
         val errors = form.errors.map { it.meta.name }
         val allAbility = AbilityEnums.entries
+
+        val selectedAbilities =
+            lensOrDefaultAbilities(abilitiesLens, form) {
+                existingTeacher.abilities
+            }
 
         if (errors.isNotEmpty()) {
             val viewModel =
@@ -99,7 +107,7 @@ class EditTeacherPostHandler(
                 name = name,
                 phone = phone,
                 experience = experience,
-                abilities = existingTeacher.abilities,
+                abilities = selectedAbilities,
                 price = price,
                 description = description,
                 address = address,

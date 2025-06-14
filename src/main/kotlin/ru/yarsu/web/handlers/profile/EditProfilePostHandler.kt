@@ -10,6 +10,7 @@ import org.http4k.routing.path
 import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.funs.lensOrDefault
+import ru.yarsu.web.funs.lensOrDefaultAbilities
 import ru.yarsu.web.models.profile.EditProfileVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
@@ -25,6 +26,7 @@ class EditProfilePostHandler(
     private val nameLens = MultipartFormField.string().required("name")
     private val descriptionLens = MultipartFormField.string().required("description")
     private val abilityLens = MultipartFormField.multi.optional("abilities")
+    private val abilitiesLens = MultipartFormField.multi.required("abilities[]")
     private val imageLens = MultipartFormFile.optional("avatar")
 
     private val formLens =
@@ -48,6 +50,11 @@ class EditProfilePostHandler(
 
         val allAbility = AbilityEnums.entries
         val form = formLens(request)
+
+        val selectedAbilities =
+            lensOrDefaultAbilities(abilitiesLens, form) {
+                existingUser.abilities
+            }
 
         val errors = form.errors.map { it.meta.name }
         if (errors.isNotEmpty()) {
@@ -86,6 +93,7 @@ class EditProfilePostHandler(
                 name = name,
                 description = description,
                 images = updatedImages,
+                abilities = selectedAbilities,
             )
 
         databaseController.updateUserInfo(userId, updatedUser)

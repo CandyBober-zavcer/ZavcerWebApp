@@ -1,7 +1,6 @@
 package ru.yarsu.db
 
 import ru.yarsu.web.domain.article.UserModel
-import ru.yarsu.web.domain.classes.User
 import ru.yarsu.web.domain.enums.*
 import ru.yarsu.web.domain.models.email.hashPassword
 import ru.yarsu.web.domain.models.email.verifyPassword
@@ -62,6 +61,22 @@ class UserData {
                 district = DistrictEnums.DZERZHINSKY,
                 images = emptyList(),
                 roles = setOf(RoleEnums.TEACHER),
+            ),
+        )
+        add(
+            UserModel(
+                name = "Володя",
+                tg_id = 0L,
+                login = "admin",
+                password = "admin",
+                experience = 1,
+                abilities = emptySet(),
+                price = 1000,
+                description = "Талантище",
+                address = "Тута",
+                district = DistrictEnums.UNKNOWN,
+                images = emptyList(),
+                roles = setOf(RoleEnums.ADMIN),
             ),
         )
     }
@@ -126,6 +141,11 @@ class UserData {
             it.id == id && RoleEnums.OWNER !in it.roles && it.isConfirmed
         }
 
+    fun getUserIfOwner(id: Int): UserModel? =
+        users.find {
+            it.id == id && RoleEnums.OWNER in it.roles && it.isConfirmed
+        }
+
     fun getTeacherByIdIfRolePendingTeacher(id: Int): UserModel? =
         users.find {
             it.id == id && RoleEnums.PENDING_TEACHER in it.roles && it.isConfirmed
@@ -135,6 +155,28 @@ class UserData {
         users.find {
             it.id == id && RoleEnums.PENDING_OWNER in it.roles && it.isConfirmed
         }
+
+    fun addTeacherRoleById(id: Int): Boolean {
+        val user = users.find { it.id == id }
+        return if (user != null && RoleEnums.TEACHER !in user.roles) {
+            val updatedRoles = user.roles.toMutableSet().apply { add(RoleEnums.TEACHER) }
+            val updatedUser = user.copy(roles = updatedRoles)
+            update(id, updatedUser)
+        } else {
+            false
+        }
+    }
+
+    fun addOwnerRoleById(id: Int): Boolean {
+        val user = users.find { it.id == id }
+        return if (user != null && RoleEnums.OWNER !in user.roles) {
+            val updatedRoles = user.roles.toMutableSet().apply { add(RoleEnums.OWNER) }
+            val updatedUser = user.copy(roles = updatedRoles)
+            update(id, updatedUser)
+        } else {
+            false
+        }
+    }
 
     fun removeTeacherRoleById(id: Int): Boolean {
         val user = users.find { it.id == id }
@@ -149,7 +191,7 @@ class UserData {
 
     fun removeOwnerRoleById(id: Int): Boolean {
         val user = users.find { it.id == id }
-        return if (user != null && RoleEnums.TEACHER in user.roles) {
+        return if (user != null && RoleEnums.OWNER in user.roles) {
             val updatedRoles = user.roles.toMutableSet().apply { remove(RoleEnums.OWNER) }
             val updatedUser = user.copy(roles = updatedRoles)
             update(id, updatedUser)
@@ -179,7 +221,7 @@ class UserData {
     fun getByEmail(email: String): UserModel? = users.find { it.login.equals(email, ignoreCase = true) }
 
     fun verifyPassword(
-        user: User,
+        user: UserModel,
         password: String,
     ): Boolean = verifyPassword(password, user.password)
 

@@ -256,4 +256,16 @@ class DatabaseController {
         targetHour: Int,
         userId: Int,
     ): Boolean = OccupationsController().unoccupyHour(dayId, targetHour, userId)
+
+    fun getOwnerByIdIfRolePendingOwner(id: Int): User? = UsersController().getOwnerByIdIfRolePendingOwner(id)
+
+    fun getUserIfNotOwner(id: Int): User? = UsersController().getUserIfNotOwner(id)
+
+    fun acceptTeacherRequest(id: Int): Boolean = UsersController().acceptTeacherRequest(id)
+    fun rejectTeacherRequest(id: Int): Boolean = UsersController().rejectTeacherRequest(id)
+    fun acceptOwnerRequest(id: Int): Boolean = UsersController().acceptOwnerRequest(id)
+    fun rejectOwnerRequest(id: Int): Boolean = UsersController().rejectOwnerRequest(id)
+
+    fun getPendingTeachers(): List<User> = UsersController().getPendingTeachers()
+    fun getPendingOwners(): List<User> = UsersController().getPendingOwners()
 }

@@ -11,6 +11,7 @@ import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.funs.lensOrDefault
+import ru.yarsu.web.funs.lensOrDefaultAbilities
 import ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
@@ -31,6 +32,7 @@ class UpgradeUserToTeacherPostHandler(
     private val experienceLens = MultipartFormField.string().required("experience")
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
+    private val abilitiesLens = MultipartFormField.multi.required("abilities[]")
 
     private val formLens =
         Body
@@ -44,6 +46,7 @@ class UpgradeUserToTeacherPostHandler(
                 experienceLens,
                 phoneLens,
                 priceLens,
+                abilitiesLens,
             ).toLens()
 
     override fun invoke(request: Request): Response {
@@ -58,6 +61,11 @@ class UpgradeUserToTeacherPostHandler(
         val form = formLens(request)
         val errors = form.errors.map { it.meta.name }
         val allAbility = AbilityEnums.entries
+
+        val selectedAbilities =
+            lensOrDefaultAbilities(abilitiesLens, form) {
+                existingUser.abilities
+            }
 
         if (errors.isNotEmpty()) {
             val viewModel =
@@ -98,7 +106,7 @@ class UpgradeUserToTeacherPostHandler(
                 name = name,
                 phone = phone,
                 experience = experience,
-                abilities = existingUser.abilities,
+                abilities = selectedAbilities,
                 price = price,
                 description = description,
                 address = address,

@@ -6,13 +6,13 @@ import org.http4k.core.Status.Companion.NOT_FOUND
 import org.http4k.core.Status.Companion.OK
 import org.http4k.lens.*
 import org.http4k.routing.path
-import ru.yarsu.db.UserData
+import ru.yarsu.db.DatabaseController
 import ru.yarsu.web.domain.enums.AbilityEnums
 import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import ru.yarsu.web.funs.lensOrDefault
+import ru.yarsu.web.funs.lensOrDefaultAbilities
 import ru.yarsu.web.models.upgrade.UpgradeUserToOwnerVM
-import ru.yarsu.web.models.upgrade.UpgradeUserToTeacherVM
 import ru.yarsu.web.templates.ContextAwareViewRender
 import ru.yarsu.web.utils.ImageUtils.generateSafePngFilename
 import ru.yarsu.web.utils.ImageUtils.saveImageAsPng
@@ -21,7 +21,7 @@ import java.nio.file.Paths
 
 class UpgradeUserToOwnerPostHandler(
     private val htmlView: ContextAwareViewRender,
-    private val users: UserData,
+    private val databaseController: DatabaseController,
 ) : HttpHandler {
     private val pathLens = Path.long().of("id")
     private val nameLens = MultipartFormField.string().required("name")
@@ -32,6 +32,7 @@ class UpgradeUserToOwnerPostHandler(
     private val experienceLens = MultipartFormField.string().required("experience")
     private val phoneLens = MultipartFormField.string().required("phone")
     private val priceLens = MultipartFormField.string().required("price")
+    private val abilitiesLens = MultipartFormField.multi.required("abilities[]")
 
     private val formLens =
         Body
@@ -45,6 +46,7 @@ class UpgradeUserToOwnerPostHandler(
                 experienceLens,
                 phoneLens,
                 priceLens,
+                abilitiesLens
             ).toLens()
 
     override fun invoke(request: Request): Response {
@@ -53,12 +55,17 @@ class UpgradeUserToOwnerPostHandler(
                 ?: return Response(Status.BAD_REQUEST).body("Неверный ID пользоватя")
 
         val existingUser =
-            users.getUserIfNotOwner(userId)
+            databaseController.getUserIfNotOwner(userId)
                 ?: return Response(NOT_FOUND).body("Пользователь не найден")
 
         val form = formLens(request)
         val errors = form.errors.map { it.meta.name }
         val allAbility = AbilityEnums.entries
+
+        val selectedAbilities =
+            lensOrDefaultAbilities(abilitiesLens, form) {
+                existingUser.abilities
+            }
 
         if (errors.isNotEmpty()) {
             val viewModel =
@@ -99,16 +106,16 @@ class UpgradeUserToOwnerPostHandler(
                 name = name,
                 phone = phone,
                 experience = experience,
-                abilities = existingUser.abilities,
+                abilities = selectedAbilities,
                 price = price,
                 description = description,
                 address = address,
                 district = district,
                 images = updatedImages,
-                roles = existingUser.roles + RoleEnums.PENDING_OWNER,
+                roles = (existingUser.roles + RoleEnums.PENDING_OWNER).toMutableSet(),
             )
 
-        users.update(userId, updatedOwner)
+        databaseController.updateUserInfo(userId, updatedOwner)
         return Response(FOUND).header("Location", "/spots")
     }
 }

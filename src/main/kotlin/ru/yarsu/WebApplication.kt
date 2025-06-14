@@ -48,7 +48,7 @@ fun main() {
     val databaseController = DatabaseController()
     val sessionStorage = SessionStorage()
 
-//    AddData(databaseController, OccupationsController())
+    AddData(databaseController, OccupationsController())
 
     val app =
         requestContextFilter
@@ -56,7 +56,7 @@ fun main() {
             .then(NotFoundFilter(htmlView))
             .then(
                 routes(
-                    router(renderer, htmlView, appConfig, databaseController, sessionStorage),
+                    router(renderer, htmlView, appConfig, databaseController, sessionStorage, UserModelLens),
                     static(ResourceLoader.Classpath("/ru/yarsu/public")),
                     "/image" bind static(ResourceLoader.Directory("public/image")),
                 ),

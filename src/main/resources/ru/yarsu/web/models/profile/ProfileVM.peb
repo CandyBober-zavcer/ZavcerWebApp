@@ -135,72 +135,20 @@
                             {% set isOwner = true %}
                             {% endif %}
                             {% endfor %}
-                            {% if isTeacher %}
-                            <form id="bookingFormTeacher">
-                                <div class="mb-3">
-                                    <label class="form-label">Выберите дату</label>
-                                    <div class="calendar" id="calendarTeacher">
-                                        <div class="calendar-header">
-                                            <button type="button" class="calendar-nav" id="prevMonthTeacher">❮</button>
-                                            <div class="calendar-title" id="currentMonthYearTeacher"></div>
-                                            <button type="button" class="calendar-nav" id="nextMonthTeacher">❯</button>
-                                        </div>
-                                        <div class="calendar-weekdays">
-                                            <div>Пн</div>
-                                            <div>Вт</div>
-                                            <div>Ср</div>
-                                            <div>Чт</div>
-                                            <div>Пт</div>
-                                            <div>Сб</div>
-                                            <div>Вс</div>
-                                        </div>
-                                        <div class="calendar-days" id="calendarDaysTeacher"></div>
-                                        <button id="saveScheduleBtn"
-                                            style="margin-top: 20px; display: block; width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                                            Сохранить расписание
-                                        </button>
-                                    </div>
-                                    <div id="blockedSlotsInfo"
-                                        style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
-                                    </div>
-                                    <div class="time-picker">
-                                        <label class="form-label">Выберите время</label>
-                                        <div class="time-slots"></div>
-                                        <div class="reset-time">Сбросить выбор времени</div>
-                                    </div>
+                            <div class="container mt-5">
+                                <div class="upgrade-button-container d-flex justify-content-between">
+                                    {% if isOwner %}
+                                    <a href="/schedule/owner/viewing/{{ model.user.id }}" class="upgrade-button">
+                                        Расписание ваших студий
+                                    </a>
+                                    {% endif %}
+                                    {% if isTeacher %}
+                                    <a href="/schedule/teacher/{{ model.user.id }}" class="upgrade-button">
+                                        Расписание ваших занятий
+                                    </a>
+                                    {% endif %}
                                 </div>
-                            </form>
-
-                            {% endif %}
-
-                            {% if isOwner %}
-                            <form id="bookingForm">
-
-                                <div class="mb-3">
-                                    <div class="calendar" id="calendarOwner">
-                                        <div class="calendar-header">
-                                            <button type="button" class="calendar-nav" id="prevMonthOwner">❮</button>
-                                            <div class="calendar-title" id="currentMonthYearOwner"></div>
-                                            <button type="button" class="calendar-nav" id="nextMonthOwner">❯</button>
-                                        </div>
-                                        <div class="calendar-weekdays">
-                                            <div>Пн</div>
-                                            <div>Вт</div>
-                                            <div>Ср</div>
-                                            <div>Чт</div>
-                                            <div>Пт</div>
-                                            <div>Сб</div>
-                                            <div>Вс</div>
-                                        </div>
-                                        <div class="calendar-days" id="calendarDaysOwner"></div>
-                                    </div>
-                                    <div id="blockedSlotsInfo"
-                                        style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
-                                    </div>
-                                </div>
-
-                            </form>
-                            {% endif %}
+                            </div>
 
                         </div>
                     </div>
@@ -215,18 +163,6 @@
     {% endblock %}
 
     {% block script %}
-    <script>
-        const jsonfreeSlotsTeacher = '{{ model.freeSlotsTeacher | escape("js") }}';
-        const jsonblockedSlotsTeacher = '{{ model.blockedSlotsTeacher | escape("js") }}';
-        const jsonfreeSlotsOwner = '{{ model.freeSlotsOwner | escape("js") }}';
-        const jsonblockedSlotsOwner = '{{ model.blockedSlotsOwner | escape("js") }}';
-    </script>
-    {% if isTeacher %}
-    <script src="/js/EditDateAndTime.js"></script>
-    {% endif %}
-    {% if isOwner %}
-    <script src="/js/CheckSpots.js"></script>
-    {% endif %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
         crossorigin="anonymous"></script>
     {% endblock %}

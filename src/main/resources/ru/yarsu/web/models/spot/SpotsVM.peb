@@ -1,0 +1,142 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.spot.SpotsVM" #}
+
+{% extends "../DesignedLayout.peb" %}
+{% block style %}studios_list.css{% endblock %}
+{% block content %}
+
+<div class="container container-custom-margin">
+
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="javascript:void(0)" onclick="history.back()" class="btn btn-link text-secondary p-0" title="Назад">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <div class="d-flex gap-3">
+            <a href="/edit/spot/add" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-plus" style="font-size: 2.4rem;"></i>
+            </a>
+            <button class="btn btn-link text-secondary p-0">
+                <i class="bi bi-arrow-down-up" style="font-size: 1.5rem;"></i>
+            </button>
+            <button class="btn btn-link text-secondary p-0" data-bs-toggle="collapse" data-bs-target="#filter-panel"
+                    aria-expanded="false" aria-controls="filter-panel">
+                <i class="bi bi-funnel" style="font-size: 1.5rem;"></i>
+            </button>
+        </div>
+    </section>
+
+    <div class="collapse" id="filter-panel">
+        <div class="filter-card card-body p-0">
+            <form id="filter-form" method="GET" class="p-3">
+                <div class="mb-3">
+                    <label class="form-label">Наличие барабанов</label>
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary focus-ring focus-ring-secondary" type="checkbox"
+                               value="1" id="has-drums" name="hasDrums">
+                        <label class="form-check-label" for="has-drums">Есть барабаны</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="mb-2">
+                            <label for="guitar-amps" class="form-label">Количество гитарных комбиков</label>
+                            <select id="guitar-amps" name="guitarAmps"
+                                    class="form-select border-secondary focus-ring focus-ring-secondary">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="bass-amps" class="form-label">Количество басовых комбиков</label>
+                            <select id="bass-amps" name="bassAmps"
+                                    class="form-select border-secondary focus-ring focus-ring-secondary">
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Районы</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        {% for district in model.districtEnums %}
+                        <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                   type="checkbox" value="{{ district.id }}" id="{{ district.district }}" name="districts">
+                            <label class="form-check-label" for="{{ district.district }}">{{ district.district }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Цена (руб/час)</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" id="price-min" name="minGold" value=""
+                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="от">
+                        <input type="number" id="price-max" name="maxGold" value=""
+                               class="form-control border-secondary focus-ring focus-ring-secondary" placeholder="до">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                               type="checkbox" value="1" id="sort-and-db" name="ifNear">
+                        <label class="form-check-label" for="sort-and-db">Ближайшие свободные</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-2">Применить фильтры</button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <div class="row g-4">
+        {% for spot in model.spots %}
+        <div class="col-md-4">
+            <div class="card1 h-100"><a href="/spot/{{ spot.id }}">
+                {% if spot.images.size > 0 %}
+                <img src="/image/{{ spot.images[0] }}" class="img-fluid rounded-start" alt="Фото студии">
+                {% else %}
+                <img src="/image/BlankLight.png" class="img-fluid rounded-start" alt="Фото студии">
+                {% endif %}</a>
+                <div class="card-info1 flex-grow-1">
+                    <strong>Адрес:</strong> {{ spot.address }}<br>
+                    <strong>Район:</strong> {{ spot.district.district }}<br>
+                    <strong>Барабаны:</strong> {{ spot.hasDrums ? "Да" : "Нет" }}<br>
+                    <strong>Гитарных комбиков:</strong> {{ spot.guitarAmps }}<br>
+                    <strong>Басовых комбиков:</strong> {{ spot.bassAmps }}<br>
+                    <strong>Цена:</strong> {{ spot.price }} руб/час
+                    <div class="for_admin">
+                        <p><a href="/edit/spot/delete-{{ spot.id }}">Удалить</a>&nbsp;&nbsp;&nbsp;<a
+                                href="/edit/spot/edit-{{ spot.id }}">Редактировать</a></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% if user is not null %}
+<div class="container mt-5">
+    <div class="upgrade-button-container  d-flex justify-content-between">
+        <a href="/upgrade/owner/{{ user.id }}" class="upgrade-button">
+            Стать владельцем точки
+        </a>
+        <a href="/upgrade/owners" class="upgrade-button">
+            Приём владельцев точек
+        </a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

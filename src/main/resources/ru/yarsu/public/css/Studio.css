@@ -1,0 +1,147 @@
+@import url('small-btn.css');
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+.content {
+    flex: 1 0 auto;
+    padding: 20px;
+}
+footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #dc3545;
+    color: white;
+}
+.calendar {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 3%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: px solid white;
+    border-radius: 20px;
+}
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+.calendar-title {
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1;
+    color: black;
+}
+.calendar-nav {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: black;
+}
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: black;
+}
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.calendar-day.available {
+    background-color: #f8f9fa;
+    color: #000;
+}
+.calendar-day.available:hover,
+.calendar-day.selected {
+    background-color: red;
+    color: white;
+}
+.calendar-day.unavailable {
+    background-color: #6c757d;
+    color: white;
+    cursor: not-allowed;
+}
+.calendar-day.other-month {
+    color: #adb5bd;
+}
+.time-picker {
+    display: none;
+    margin-top: 20px;
+}
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.time-slot {
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.time-slot.available {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+.time-slot.available:hover,
+.time-slot.selected {
+    background-color: red;
+    border-color: red;
+    color: white;
+}
+.time-slot.unavailable {
+    background-color: #6c757d;
+    color: white;
+    cursor: not-allowed;
+}
+.booking-summary {
+    display: none;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+.reset-time {
+    cursor: pointer;
+    color: red;
+    text-decoration: underline;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: none;
+    color: white;
+}
+.calendar-nav.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.calendar-day.past {
+    background-color: #e9ecef;
+    color: #adb5bd;
+    cursor: not-allowed;
+}

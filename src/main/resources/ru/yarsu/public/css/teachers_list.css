@@ -1,0 +1,63 @@
+@import url('filter.css');
+@import url('small-btn.css');
+.for_admin p a,
+.for_admin p a:visited,
+.for_admin p a:hover,
+.for_admin p a:active {
+    color: #4a4a4a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.upgrade-button-container  a,
+.upgrade-button-container  a:visited,
+.upgrade-button-container  a:hover,
+.upgrade-button-container  a:active {
+    color: #4a4a4a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.for_admin p a:hover {
+    color: #ff5f5f;
+}
+
+.upgrade-button-container a:hover {
+    color: #ff5f5f;
+}
+
+.card1 {
+    width: 300px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: #ffffff;
+    margin: 20px auto;
+    transition: transform 0.3s ease;
+}
+
+.card1:hover {
+    transform: translateY(-5px);
+}
+
+.card1 img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.card-info1 {
+    padding: 20px;
+    font-size: 16px;
+    color: #545454;
+}
+
+.card-info1 p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.card-info1 p:last-child {
+    margin-bottom: 0;
+}

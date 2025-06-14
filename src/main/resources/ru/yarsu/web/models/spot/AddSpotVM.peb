@@ -1,0 +1,193 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.spot.AddSpotVM" #}
+    {% extends "../DesignedLayout.peb" %}
+
+{% block content %}
+<style>
+    .input-small {
+        max-width: 200px;
+    }
+
+    .image-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .image-preview .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .image-preview img {
+        max-width: 150px;
+        max-height: 150px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+        line-height: 18px;
+        text-align: center;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    function blockNonDigits(e) {
+        if (["e", "E", "+", "-"].includes(e.key)) {
+            e.preventDefault();
+        }
+    }
+
+    function sanitizeInput(input) {
+        input.value = input.value.replace(/\D/g, '');
+    }
+
+    let selectedImages = [];
+
+    function previewImages(input) {
+        const previewContainer = document.getElementById('imagePreview');
+        previewContainer.innerHTML = '';
+
+        selectedImages = Array.from(input.files);
+
+        selectedImages.forEach((file, realIndex) => {
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const container = document.createElement('div');
+                    container.classList.add('image-container');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.onerror = function () {
+                        this.onerror = null;
+                        this.src = '/img/defaultStudio.jpg';
+                    };
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.classList.add('remove-btn');
+                    removeBtn.innerHTML = '&times;';
+                    removeBtn.onclick = () => {
+                        selectedImages.splice(realIndex, 1);
+                        updateFileInput(input);
+                        previewImages(input);
+                    };
+
+                    container.appendChild(img);
+                    container.appendChild(removeBtn);
+                    previewContainer.appendChild(container);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    function updateFileInput(input) {
+        const dataTransfer = new DataTransfer();
+        selectedImages.forEach(file => dataTransfer.items.add(file));
+        input.files = dataTransfer.files;
+    }
+</script>
+
+<div class="container mt-5">
+    <h2>Добавление новой репетиционной точки</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="name" class="form-label">Название</label>
+            <input type="text" class="form-control" id="name" name="name" required
+                   value="{{ model.form.field('name').value | escape }}">
+            {% if model.form.fields('name').errors.size > 0 %}
+                <div class="text-danger">{{ model.form.fields('name').errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea class="form-control" id="description" name="description" rows="3">{{ model.form.field('description').value | escape }}</textarea>
+            {% if model.form.fields('description').errors.size > 0 %}
+                <div class="text-danger">{{ model.form.fields('description').errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Адрес</label>
+            <input type="text" class="form-control" id="address" name="address" required
+                   value="{{ model.form.field('address').value | escape }}">
+            {% if model.form.fields('address').errors.size > 0 %}
+                <div class="text-danger">{{ model.form.fields('address').errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3" style="max-width: 300px;">
+            <label for="district" class="form-label">Район</label>
+            <select class="form-select" id="district" name="district" required>
+                <option value="" disabled {% if model.form.fields("district").value is empty %}selected{% endif %}>Выберите район</option>
+                {% for district in model.allDistricts %}
+    {% if district != 'UNKNOWN' %}
+                        <option value="{{ district.name }}"
+                            {% if model.form.fields("district").value == district.name %}selected{% endif %}>
+                            {{ district.district }}
+                        </option>
+                    {% endif %}
+{% endfor %}
+            </select>
+            {% if model.form.fields('district').errors.size > 0 %}
+                <div class="text-danger">{{ model.form.fields('district').errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="price" class="form-label">Цена за час (₽)</label>
+            <input type="number" class="form-control input-small" id="price" name="price" required min="0"
+                   value="{{ model.form.field('price').value | escape }}"
+                   onkeydown="blockNonDigits(event)" oninput="sanitizeInput(this)">
+            {% if model.form.fields('price').errors.size > 0 %}
+                <div class="text-danger">{{ model.form.fields('price').errors[0] }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="hasDrums" name="hasDrums"
+                   {% if model.form.fields('hasDrums').value == 'true' %}checked{% endif %}>
+            <label class="form-check-label" for="hasDrums">Есть ударная установка</label>
+        </div>
+
+        <div class="row mb-3 align-items-end">
+            <div class="col-auto">
+                <label for="guitarAmps" class="form-label">Гитарных усилителей</label>
+                <input type="number" class="form-control input-small" id="guitarAmps" name="guitarAmps"
+                       min="0" value="{{ model.form.field('guitarAmps').value | escape }}"
+                       onkeydown="blockNonDigits(event)" oninput="sanitizeInput(this)">
+            </div>
+            <div class="col-auto">
+                <label for="bassAmps" class="form-label">Басовых усилителей</label>
+                <input type="number" class="form-control input-small" id="bassAmps" name="bassAmps"
+                       min="0" value="{{ model.form.field('bassAmps').value | escape }}"
+                       onkeydown="blockNonDigits(event)" oninput="sanitizeInput(this)">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="photo" class="form-label">Фотографии</label>
+            <input type="file" class="form-control" id="photo" name="photo" multiple accept="image/*" onchange="previewImages(this)">
+            <div id="imagePreview" class="image-preview"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

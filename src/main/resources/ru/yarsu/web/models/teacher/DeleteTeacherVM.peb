@@ -1,0 +1,38 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.DeleteTeacherVM" #}
+    {% extends "../DesignedLayout.peb" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Подтверждение удаления преподавателя</h2>
+    <form method="post" action="/edit/teacher/delete-{{ model.teacher.id }}" enctype="application/x-www-form-urlencoded">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3 class="card-title">{{ model.teacher.name }}</h3>
+                <p class="card-text">{{ model.teacher.description }}</p>
+
+                <div class="mb-3">
+                    <h5>Информация об опыте:</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Полное имя: {{ model.teacher.name }}</li>
+                        <li class="list-group-item">Опыт преподавания: {{ model.teacher.experience }}</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-danger">
+                    <h4 class="alert-heading">Внимание!</h4>
+                    <p>Вы собираетесь удалить преподавателя. Это действие невозможно отменить.</p>
+                </div>
+
+                <input type="hidden" name="teacherId" value="{{ model.teacher.id }}">
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="/teachers" class="btn btn-secondary">Отмена</a>
+            <button type="submit" class="btn btn-danger">Да, удалить преподавателя</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

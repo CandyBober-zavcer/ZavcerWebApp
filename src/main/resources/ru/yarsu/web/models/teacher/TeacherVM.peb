@@ -1,0 +1,159 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.teacher.TeacherVM" #}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}Teacher.css{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="/teachers" class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <div class="d-flex gap-3">
+            <a href="/edit/teacher/delete-{{ model.teacher.id }}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-x" style="font-size: 1.5rem;"></i>
+            </a>
+            <a href="/edit/teacher/edit-{{model.teacher.id}}" class="btn btn-link text-secondary p-0">
+                <i class="bi bi-gear" style="font-size: 1.5rem;"></i>
+            </a>
+        </div>
+    </section>
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="d-flex col-lg-4 col-md-5 bg-light justify-content-center left-image-wrapper">
+                    {% if model.teacher.images | length > 0 %}
+                        <img src="/image/{{ model.teacher.images[0] }}" alt="Аватар преподавателя"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-height: 350px; object-fit: cover;">
+                    {% else %}
+                        <img src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                            class="img-fluid rounded-3 shadow-sm"
+                            style="max-height: 350px; object-fit: cover;">
+                    {% endif %}
+
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="mb-4">
+                        <h1 class="display-6 fw-bold mb-2">{{ model.teacher.name }}</h1>
+                        <p class="lead text-muted">{{ model.teacher.description }}</p>
+                    </div>
+
+                    <div class="container">
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3"><img src="/img/phone.svg" width="35" height="35" ></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Телефон</div>
+                                        <div class="fw-bold">{{ model.teacher.phone }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3"><img src="/img/currency-rubel.svg" width="35" height="35" ></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Стоимость за час</div>
+                                        <div class="fw-bold text-success">{{ model.teacher.price }} ₽</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3"><img src="/img/chalkboard-teacher.svg" width="35" height="35" ></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Опыт преподавания</div>
+                                        <div class="fw-bold">{{ model.teacher.experience }} лет</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3"><img src="/img/piano.svg" width="35" height="35" ></div>
+                                    <div>
+                                        <div class="fw-semibold text-muted small">Специализации</div>
+                                        <div class="fw-bold">
+                                            {% if model.abilityNames is not empty %}
+                                            {{ model.abilityNames }}
+                                            {% else %}
+                                            <span class="text-muted">Не указаны</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card bg bg-opacity-10 border-opacity-25 mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text d-flex align-items-center mb-3">
+                                <span class="fs-4 me-2"><img src="/img/map-pin.svg" width="35" height="35" ></span>
+                                Местоположение
+                            </h5>
+                            <p class="card-text mb-2"><strong>Адрес:</strong> {{ model.teacher.address }}</p>
+                            <p class="card-text mb-0"><strong>Район:</strong> {{ model.teacher.district.district }}</p>
+                        </div>
+                    </div>
+                    <form method="POST" id="bookingForm">
+                        <div class="mb-3">
+
+                            <div id="calendarCollapse">
+                                <div class="calendar">
+                                    <div class="calendar-header">
+                                        <button type="button" class="calendar-nav" id="prevMonth">❮</button>
+                                        <div class="calendar-title" id="currentMonthYear"></div>
+                                        <button type="button" class="calendar-nav" id="nextMonth">❯</button>
+                                    </div>
+                                    <div class="calendar-weekdays">
+                                        <div>Пн</div>
+                                        <div>Вт</div>
+                                        <div>Ср</div>
+                                        <div>Чт</div>
+                                        <div>Пт</div>
+                                        <div>Сб</div>
+                                        <div>Вс</div>
+                                    </div>
+                                    <div class="calendar-days" id="calendarDays"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="time-picker">
+                            <label class="form-label">Выберите время</label>
+                            <div class="time-slots"></div>
+                            <div class="reset-time">Сбросить выбор времени</div>
+                        </div>
+
+                        <div class="booking-summary">
+                            <h6>Ваше бронирование:</h6>
+                            <p>Дата: <span class="summary-date"></span></p>
+                            <p>Время: <span class="summary-time"></span></p>
+                            <p>Стоимость: <span class="summary-price"></span> руб.</p>
+                        </div>
+
+                        {% if user is not null %}
+
+                        <button type="submit" class="btn btn-success btn-lg mt-3">
+                            Записаться на занятие
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    window.userId = {{ user.id | default ("null") }};
+    const json = '{{ model.freeSlots | escape("js") }}';
+    const pricePerHour = {{ model.teacher.price | default(0) }};
+
+
+</script>
+<script src="../js/Teacher.js"></script>
+{% endblock %}

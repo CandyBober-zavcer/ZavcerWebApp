@@ -1,0 +1,52 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.home.HomePageVM" #}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAVCER</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/{% block style %}{% endblock %}">
+</head>
+
+<body>
+<header class="border-bottom sticky-top bg-white">
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <a class="navbar-brand fs-1" href="/">CandyБобер</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link fs-4" href="/spots">Реп точки</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fs-4" href="/teachers">Преподаватели</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% if user is not null %}/profile/{{ user.id }}{% else %}/auth/signin{% endif %}">
+              <img src="/img/user-icon.png" alt="Профиль" class="img-fluid" style="max-width: 50px;">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</header>
+
+    {% block content %}{% endblock %}
+
+
+
+{% block script %}{% endblock %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

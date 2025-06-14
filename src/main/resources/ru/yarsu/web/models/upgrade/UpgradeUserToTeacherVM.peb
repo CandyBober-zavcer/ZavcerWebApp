@@ -1,0 +1,113 @@
+{% extends "../DesignedLayout.peb" %}
+{% block style %}Teacher.css{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-lg-4 col-md-5">
+                <div class="p-4 h-100 d-flex align-items-center justify-content-center bg-light">
+                    {% if model.user.images is not empty %}
+                    <label for="photo" style="cursor: pointer;">
+                        <img id="teacher-photo-preview" src="/image/{{ model.user.images[0] }}" alt="Фото преподавателя"
+                             class="img-fluid rounded-3 shadow-sm" style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    </label>
+                    {% else %}
+                    <label for="photo" style="cursor: pointer;">
+                        <img id="teacher-photo-preview" src="/img/defaultTeacher.webp" alt="Фото преподавателя по умолчанию"
+                             class="img-fluid rounded-3 shadow-sm" style="max-width: 280px; max-height: 350px; object-fit: cover;">
+                    </label>
+                    {% endif %}
+                    <input type="file" class="form-control d-none" id="photo" name="photo" accept="image/*" onchange="previewImage(this)">
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <form method="post" enctype="multipart/form-data" class="card-body p-4 p-lg-5">
+                    <div class="mb-4">
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Полное имя</label>
+                            <input type="text" value="{{ model.user.name }}" class="form-control" id="name" name="name" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-semibold">О себе</label>
+                            <input type="text" value="{{ model.user.description }}" class="form-control" id="description" name="description" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-semibold">Номер телефона</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required value="{{ model.user.phone }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="experience" class="form-label fw-semibold">Опыт преподавания (в годах)</label>
+                            <input type="number" class="form-control" id="experience" name="experience" min="0" required value="{{ model.user.experience }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="district" class="form-label fw-semibold">Район</label>
+                            <select class="form-select" id="district" name="district" required>
+                                {% for district in model.allDistricts %}
+                                <option value="{{ district.name }}" {% if district.name == model.user.district.name %}selected{% endif %}>
+                                    {{ district.district }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label fw-semibold">Адрес проведения занятий</label>
+                            <input type="text" class="form-control" id="address" name="address" required value="{{ model.user.address }}">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label fw-semibold">Стоимость за час</label>
+                            <input type="number" class="form-control" id="price" name="price" min="0" required value="{{ model.user.price }}">
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-semibold">Специализации</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                {% for ability in model.allAbilityWithNames %}
+                                <div class="form-check me-3 mb-2">
+                                    <input class="form-check-input"
+                                       type="checkbox"
+                                       id="ability-{{ ability.first }}"
+                                       name="abilities[]"
+                                       value="{{ ability.first }}"
+                                       {% if model.abilitySelected[ability.first] %}checked{% endif %}>
+                                    <label class="form-check-label" for="ability-{{ ability.first }}">
+                                        {{ ability.second }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('teacher-photo-preview');
+        const file = input.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "{{ model.user.images is not empty ? '/image/' + model.user.images[0] : '/img/defaultTeacher.webp' }}";
+        }
+    }
+</script>
+{% endblock %}

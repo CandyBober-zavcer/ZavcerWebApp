@@ -1,0 +1,11 @@
+.btn-link {
+  transition: color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.btn-link:hover {
+  transform: scale(1.1) translateZ(0);
+}

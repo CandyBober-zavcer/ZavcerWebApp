@@ -1,0 +1,50 @@
+.filter-card {
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto 40px auto;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.filter-card .form-label {
+    font-weight: 600;
+    color: #dc3545; 
+}
+
+.filter-card .form-control,
+.filter-card .form-select {
+    border-radius: 10px;
+    border: 1px solid #dc3545;
+    background-color: #fff3f3;
+    transition: border-color 0.3s ease;
+}
+
+.filter-card .form-control:focus,
+.filter-card .form-select:focus {
+    border-color: #c9302c; 
+    box-shadow: 0 0 5px rgba(217, 53, 78, 0.5); 
+}
+
+.filter-card .btn-primary {
+    background-color: #dc3545; 
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px; 
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.filter-card .btn-primary:hover {
+    background-color: #c9302c; 
+    transform: scale(1.05); 
+}
+
+.filter-card .btn-primary:active {
+    transform: scale(0.95); 
+}

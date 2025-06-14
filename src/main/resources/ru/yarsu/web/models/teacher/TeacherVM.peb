@@ -149,7 +149,7 @@
 
 {% block script %}
 <script>
-    window.userId = {{ model.user | default ("null") }};
+    window.userId = {{ user.id | default ("null") }};
     const json = '{{ model.freeSlots | escape("js") }}';
     const pricePerHour = {{ model.teacher.price | default(0) }};
 

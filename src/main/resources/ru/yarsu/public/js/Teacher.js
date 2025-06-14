@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     const availableDates = JSON.parse(json);
+    console.log('userId:', window.userId); // убедитесь, что значение есть
 
     const bookedDates = {};
 
@@ -216,11 +217,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = {
             date: selectedDate,
             time: selectedTime,
-            userId: window.userId  
+            userId: window.userId
         };
+        const parts = window.location.href.split('/');
+        const cardId = parts[parts.length - 1];
+
 
         console.log('Отправляемые данные:', formData);
-        fetch('/studio/1', {
+        fetch(`/teacher/${cardId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

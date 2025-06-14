@@ -22,10 +22,12 @@ footer {
 }
 .calendar {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
+    padding: 3%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
+    border: px solid white;
+    border-radius: 20px;
 }
 .calendar-header {
     display: flex;
@@ -38,14 +40,14 @@ footer {
     font-weight: bold;
     text-align: center;
     flex-grow: 1;
-    color: #dc3545;
+    color: black;
 }
 .calendar-nav {
     background: none;
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
-    color: #dc3545;
+    color: black;
 }
 .calendar-weekdays {
     display: grid;
@@ -53,7 +55,7 @@ footer {
     text-align: center;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #dc3545;
+    color: black;
 }
 .calendar-days {
     display: grid;
@@ -75,7 +77,7 @@ footer {
 }
 .calendar-day.available:hover,
 .calendar-day.selected {
-    background-color: #dc3545;
+    background-color: red;
     color: white;
 }
 .calendar-day.unavailable {
@@ -109,8 +111,9 @@ footer {
 }
 .time-slot.available:hover,
 .time-slot.selected {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: red;
+    border-color: red;
+    color: white;
 }
 .time-slot.unavailable {
     background-color: #6c757d;
@@ -126,11 +129,12 @@ footer {
 }
 .reset-time {
     cursor: pointer;
-    color: #dc3545;
+    color: red;
     text-decoration: underline;
     font-size: 0.9em;
     margin-top: 5px;
     display: none;
+    color: white;
 }
 .calendar-nav.disabled {
     opacity: 0.5;

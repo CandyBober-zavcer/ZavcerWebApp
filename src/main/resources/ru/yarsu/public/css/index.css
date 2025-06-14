@@ -50,6 +50,11 @@ img {
   color: #fff;
 }
 
+.navbar-brand{
+    letter-spacing: 5px;
+    weight: 100;
+}
+
 .btn-danger {
   background-color: red;
   border: none;

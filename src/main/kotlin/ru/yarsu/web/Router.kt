@@ -119,6 +119,10 @@ private class RouterGroups(
             "/spots" bind Method.GET to SpotsListHandler(htmlView, databaseController),
             "/spot/{id}" bind Method.GET to SpotGetHandler(htmlView, databaseController),
             "/profile/{id}" bind Method.GET to ProfileGetHandler(htmlView, databaseController),
+
+            "schedule/teacher/{id}" bind Method.GET to TeacherScheduleGetHandler(htmlView, databaseController),
+            "schedule/owner/viewing/{id}" bind Method.GET to SpotScheduleViewingHandler(htmlView, databaseController),
+            "schedule/owner/editing/{id}" bind Method.GET to SpotScheduleEditingGetHandler(htmlView, databaseController),
         )
 
     val authenticatedRoutes =

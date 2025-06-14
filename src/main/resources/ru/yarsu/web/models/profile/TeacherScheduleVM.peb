@@ -1,0 +1,68 @@
+{# @pebvariable name="model" type="ru.yarsu.web.models.profile.TeacherScheduleVM" #}
+{% extends "../DesignedLayout.peb" %}
+{% block style %}edit-teacher.css{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="javascript:void(0)" onclick="history.back()" class="btn btn-link text-secondary p-0" title="Назад">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+
+        <button type="submit" form="bookingFormTeacher" id="saveScheduleBtn"
+                class="btn p-0 bg-transparent border-0 text-secondary" title="Сохранить">
+            <i class="bi bi-check2" style="font-size: 1.5rem;"></i>
+        </button>
+
+    </section>
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0 ">
+            <form id="bookingFormTeacher">
+                <div class="mb-3">
+                    <label class="form-label">Выберите дату</label>
+                    <div class="calendar" id="calendarTeacher">
+                        <div class="calendar-header">
+                            <button type="button" class="calendar-nav" id="prevMonthTeacher">❮</button>
+                            <div class="calendar-title" id="currentMonthYearTeacher"></div>
+                            <button type="button" class="calendar-nav" id="nextMonthTeacher">❯</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <div>Пн</div>
+                            <div>Вт</div>
+                            <div>Ср</div>
+                            <div>Чт</div>
+                            <div>Пт</div>
+                            <div>Сб</div>
+                            <div>Вс</div>
+                        </div>
+                        <div class="calendar-days" id="calendarDaysTeacher"></div>
+                        <!--                <button id="saveScheduleBtn"-->
+                        <!--                        style="margin-top: 20px; display: block; width: 100%; padding: 10px; background-color: #0d6efd; color: white; border: none; border-radius: 5px; cursor: pointer;">-->
+                        <!--                    Сохранить расписание-->
+                        <!--                </button>-->
+                    </div>
+                    <div id="blockedSlotsInfo"
+                         style="display:none; margin-top:10px; padding:10px; border:1px solid #ccc; border-radius:5px; max-width:400px; margin-left:auto; margin-right:auto;">
+                    </div>
+                    <div class="time-picker">
+                        <label class="form-label">Выберите время</label>
+                        <div class="time-slots"></div>
+                        <div class="reset-time">Сбросить выбор времени</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    const userId = {{ model.user.id | default ("null") }};
+    const jsonfreeSlotsTeacher = '{{ model.freeSlotsTeacher | escape("js") }}';
+    const jsonblockedSlotsTeacher = '{{ model.blockedSlotsTeacher | escape("js") }}';
+</script>
+<script src="/js/EditDateAndTime.js"></script>
+{% endblock %}

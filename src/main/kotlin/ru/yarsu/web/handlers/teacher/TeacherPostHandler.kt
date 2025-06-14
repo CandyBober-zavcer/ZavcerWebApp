@@ -2,6 +2,7 @@ package ru.yarsu.web.handlers.teacher
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import kotlinx.datetime.LocalDate
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Request
@@ -22,7 +23,7 @@ import ru.yarsu.web.domain.models.telegram.service.TelegramService
 data class FormData(
     val date: String,
     val time: String,
-    val userId: Long
+    val userId: Int
 
 )
 
@@ -54,7 +55,7 @@ class TeacherPostHandler(private val databaseController: DatabaseController) : H
         if (studentHasTelegram) {
             TelegramService.studentNotification(teacher.tg_id, user.tg_id)
         }
-        databaseController.occ
+        databaseController.occupyHour(LocalDate.parse(formData.date), formData.time.split(":")[0].toInt(), formData.userId)
 
         println("Полученные данные бронирования:")
         println("Дата: ${formData.date}")

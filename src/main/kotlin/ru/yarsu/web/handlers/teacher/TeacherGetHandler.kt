@@ -22,7 +22,7 @@ class TeacherGetHandler(
 
         val viewModel =
             TeacherVM(
-                teacher, JsonController.getAvailableDatesForTeacherJson(teacherId)
+                teacher, JsonController.getFreeDatesForTeacherJson(teacherId)
             )
 
         return Response(Status.OK).with(htmlView(request) of viewModel)

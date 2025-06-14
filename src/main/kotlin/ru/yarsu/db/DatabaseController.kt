@@ -246,10 +246,10 @@ class DatabaseController {
     ): List<Int> = OccupationsController().insertHourGroupOccupation(times, dateTarget)
 
     fun occupyHour(
-        dayId: Int,
+        date: LocalDate,
         targetHour: Int,
         userId: Int,
-    ): Boolean = OccupationsController().occupyHour(dayId, targetHour, userId)
+    ): Boolean = OccupationsController().occupyHour(date, targetHour, userId)
 
     fun unoccupyHour(
         dayId: Int,

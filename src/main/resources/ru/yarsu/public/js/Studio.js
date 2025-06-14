@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
             endTime: endTime,
         };
         console.log('Отправляемые данные:', formData);
-        fetch('http://localhost:8080/studio/1', {
+        fetch('/spot/1', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

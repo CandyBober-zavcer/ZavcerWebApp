@@ -132,7 +132,7 @@
                     {% if spot.images.size > 0 %}
                     <img src="/image/{{ spot.images[0] }}" class="img-fluid rounded-start" alt="Фото студии">
                     {% else %}
-                    <img src="/img/defaultStudio.jpg" class="img-fluid rounded-start" alt="Фото студии">
+                    <img src="/image/BlankLight.png" class="img-fluid rounded-start" alt="Фото студии">
                     {% endif %}</a>
                 <div class="card-info1 flex-grow-1">
                     <strong>Адрес:</strong> {{ spot.address }}<br>

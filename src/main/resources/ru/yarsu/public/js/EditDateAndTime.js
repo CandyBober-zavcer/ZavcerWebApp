@@ -1,8 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('calendarTeacher')) {
-        const blockedDates = JSON.parse(jsonblockedSlotsTeacher)
+        const blockedDates = {
+                '2025-06-15': [
+                    { time: '10:00', user: 'Иван Иванов' },
+                    { time: '11:00', user: 'Мария Петрова' },
+                    { time: '12:00', user: 'Сергей Смирнов' }
+                ],
+                '2025-06-16': [
+                    { time: '14:00', user: 'Анна Кузнецова' },
+                    { time: '15:00', user: 'Дмитрий Орлов' },
+                    { time: '16:00', user: 'Елена Федорова' }
+                ],
+            };
 
-        const freeDates = JSON.parse(jsonfreeSlotsTeacher)
+        const freeDates = {
+                '2025-06-17': ['10:00', '11:00', '12:00'],
+                '2025-06-18': ['14:00', '15:00', '16:00'],
+            };
 
         const calendarDays = document.getElementById('calendarDaysTeacher');
         const currentMonthYear = document.getElementById('currentMonthYearTeacher');
@@ -138,12 +152,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (isBlocked) {
                     slot.classList.add('blocked');
                     slot.style.cursor = 'not-allowed';
-                    slot.style.backgroundColor = '#dc3545';
+                    slot.style.backgroundColor = '#f8f9fa';
                     slot.style.color = 'white';
                 } else if (freeSlots.includes(time)) {
                     slot.classList.add('free');
                     slot.style.cursor = 'pointer';
-                    slot.style.backgroundColor = '#0d6efd';
+                    slot.style.backgroundColor = 'red';
                     slot.style.color = 'white';
                 } else {
                     slot.classList.add('available');

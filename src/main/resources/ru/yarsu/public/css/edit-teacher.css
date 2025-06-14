@@ -62,7 +62,7 @@ footer {
 }
 .calendar-day.blocked:hover,
 .calendar-day.selected {
-    background-color: #0d6efd;
+    background-color: red;
     color: white;
 }
 .calendar-day.unavailable {
@@ -96,10 +96,10 @@ footer {
 .time-slot.blocked:hover{
     background-color: #f70c0c;
     color: white;
-    border-color: #0d6efd;
+    border-color: red;
 }
-.time-slot.selected .bloced{
-    background-color: #ff0707;
+.time-slot.selected .blocked{
+    background-color: red;
     color: white;
     border-color: #0d6efd;
 }
@@ -117,7 +117,7 @@ footer {
 }
 .reset-time {
     cursor: pointer;
-    color: #0d6efd;
+    color: red;
     text-decoration: underline;
     font-size: 0.9em;
     margin-top: 5px;
@@ -134,9 +134,9 @@ footer {
 }
 
 .time-slot.free {
-    background-color: #0d6efd;
+    background-color: red;
     color: white;
-    border: 1px solid #0a58ca;
+    border: 1px solid #bb2d3b;
 }
 
 .time-slot.free:hover {
@@ -152,9 +152,9 @@ footer {
 }
 
 .time-slot.free {
-    background-color: #ffffff;
+    background-color: red;
     color: white;
-    cursor: pointer;
+    border: 1px solid #bb2d3b;
 }
 
 .time-slot.available {
@@ -203,13 +203,13 @@ footer {
 }
 
 .time-slot.free {
-    background-color: #0d6efd;
+    background-color: red;
     color: white;
-    border: 1px solid #0a58ca;
+    border: 1px solid #bb2d3b;
 }
 
 .time-slot.free:hover {
-    background-color: #0b5ed7;
+    background-color: #bb2d3b;
 }
 
 .time-slot.available {
@@ -220,7 +220,7 @@ footer {
 
 .time-slot.available:hover {
     background-color: #f8f9fa !important;
-    border-color: #0d6efd !important;
+    border-color: red !important;
 }
 
 

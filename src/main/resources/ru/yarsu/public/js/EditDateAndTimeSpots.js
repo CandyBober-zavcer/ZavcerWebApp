@@ -1,6 +1,28 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const freeSlotsOwner = JSON.parse(jsonfreeSlotsOwner);
-    const blockedSlotsOwner = JSON.parse(jsonblockedSlotsOwner);
+    const freeDates = {
+            '2025-06-17': ['10:00', '11:00', '12:00'],
+            '2025-06-18': ['14:00', '15:00', '16:00'],
+        };
+    const blockedData = {
+            'Точка 1': {
+                '2025-06-15': [
+                    { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
+                    { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
+                ],
+                '2025-06-18': [
+                    { start: '10:00', end: '11:30', user: 'Иван Иванов' }
+                ]
+            },
+            'Точка 2': {
+                '2025-06-16': [
+                    { start: '9:00', end: '12:00', user: 'Елена Федорова' }
+                ],
+                '2025-06-15': [
+                    { start: '9:00', end: '12:00', user: 'Анна Кузнецова' },
+                    { start: '15:00', end: '17:00', user: 'Дмитрий Орлов' },
+                ],
+            }
+        };
 
     const blockedData = blockedSlotsOwner;
     const freeDates = freeSlotsOwner;

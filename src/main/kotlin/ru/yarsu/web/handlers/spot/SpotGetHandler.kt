@@ -19,8 +19,9 @@ class SpotGetHandler(
 
         val spot = databaseController.getSpotById(id)
             ?: return Response(NOT_FOUND).body("Спот не найден")
-
-        val viewModel = SpotVM(spot, JsonController.getAvailableDatesForSpotJson(id))
+        val userId = spot.owners[0]
+        val phone = databaseController.getUserById(userId)?.phone
+        val viewModel = SpotVM(spot, JsonController.getAvailableDatesForSpotJson(id), phone)
         return Response(OK).with(htmlView(request) of viewModel)
     }
 }

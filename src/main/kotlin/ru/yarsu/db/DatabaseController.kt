@@ -38,7 +38,7 @@ class DatabaseController {
     }
 
     // Работа с Users
-    fun getUserByPage(
+    fun getTeachersByPage(
         page: Int,
         limit: Int,
         abilityIds: List<Int> = AbilityEnums.entries.map { it.id },
@@ -47,7 +47,7 @@ class DatabaseController {
         priceMax: Int = Int.MAX_VALUE,
         experienceMin: Int = 0,
         sortByNearest: Boolean = false
-    ): List<User> = UsersController().getUsersByPage(page, limit, abilityIds, districtIds, priceMin, priceMax, experienceMin, sortByNearest)
+    ): Pair<List<User>, Int> = UsersController().getTeachersByPage(page, limit, abilityIds, districtIds, priceMin, priceMax, experienceMin, sortByNearest)
 
     fun getUserById(id: Int): User? = UsersController().getUserById(id)
 
@@ -156,14 +156,14 @@ class DatabaseController {
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-        drums: Boolean? = null,
+        drums: Boolean = false,
         guitarAmps: Int = 0,
         bassAmps: Int = 0,
-        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        districtList: List<Int> = DistrictEnums.entries.map { it.id },
         priceLow: Int = 0,
         priceHigh: Int = Int.MAX_VALUE,
         sortByNearest: Boolean = false
-    ): List<Spot> = SpotsController().getSpotsByPage(page, limit, drums, guitarAmps, bassAmps, districtList, priceLow, priceHigh, sortByNearest)
+    ): Pair<List<Spot>, Int> = SpotsController().getSpotsByPage(page, limit, drums, guitarAmps, bassAmps, districtList, priceLow, priceHigh, sortByNearest)
 
     fun getAllSpots(): List<Spot> = SpotsController().getAllSpots()
 

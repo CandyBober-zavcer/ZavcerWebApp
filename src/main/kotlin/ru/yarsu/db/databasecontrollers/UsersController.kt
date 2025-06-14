@@ -5,6 +5,10 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import org.jetbrains.exposed.sql.*
+<<<<<<< HEAD
+=======
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.between
+>>>>>>> f5bf3113d27b20b5396eb34d3b39d5ec6443a4be
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inSubQuery
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.lessEq
@@ -16,6 +20,7 @@ import ru.yarsu.web.domain.enums.DistrictEnums
 import ru.yarsu.web.domain.enums.RoleEnums
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNotNull
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
 import ru.yarsu.db.tables.manyToMany.UsersDays
 import ru.yarsu.web.domain.models.email.hashPassword
@@ -34,7 +39,7 @@ class UsersController {
      * и сортирует по ближайшим к сегодняшней дате.
      * @return список User`ов. При неудаче список будет пустым.
      */
-    fun getUsersByPage(
+    fun getTeachersByPage(
         page: Int,
         limit: Int,
         abilityIds: List<Int> = AbilityEnums.entries.map { it.id },
@@ -43,41 +48,45 @@ class UsersController {
         priceMax: Int = Int.MAX_VALUE,
         experienceMin: Int = 0,
         sortByNearest: Boolean = false
-    ): List<User> =
+    ): Pair<List<User>, Int> =
         transaction {
-            val whereClause: Op<Boolean> =
-                (
-                    Users.id inSubQuery
-                            UsersAbilities
-                                .select(UsersAbilities.user)
-                                .where { UsersAbilities.ability inList abilityIds }
-                    ) and (Users.district inList districtIds) and (
-                    (Users.price greaterEq priceMin) and
-                            (Users.price lessEq priceMax)
-                    ) and (Users.experience greaterEq experienceMin)
+            val size: Int
+
+            val whereClause =
+                (Users.id inSubQuery UsersAbilities.select(UsersAbilities.user).where { UsersAbilities.ability inList abilityIds }) and
+                        (Users.district inList districtIds) and
+                        (Users.experience greaterEq experienceMin) and
+                        (Users.roles.substring(RoleEnums.TEACHER.id + 1, 1) eq "1") and
+                        (Users.price greaterEq priceMin) and
+                        (Users.price lessEq priceMax)
             if (sortByNearest) {
                 val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
-                (Users innerJoin UsersDays innerJoin DayOccupations innerJoin HourOccupations)
-                    .select(
-                        whereClause and
-                                (HourOccupations.occupation.isNull()) and
-                                (DayOccupations.day greaterEq today)
-                    )
+                val selectedColumns = Users.columns + HourOccupations.columns + DayOccupations.columns
+                val query = Users
+                    .innerJoin(UsersDays, { Users.id }, { user })
+                    .innerJoin(DayOccupations, { UsersDays.day }, { id })
+                    .innerJoin(HourOccupations, { DayOccupations.id }, { day })
+                    .select (
+                        columns = selectedColumns
+                    ).where {
+                        HourOccupations.occupation.isNull() and whereClause and (DayOccupations.day greaterEq today)
+                    }
                     .orderBy(
                         DayOccupations.day to SortOrder.ASC,
-                        HourOccupations.hour to SortOrder.ASC
+                        Users.price to SortOrder.ASC
                     )
-                    .limit(limit)
-                    .offset((page * limit).toLong())
-                    .map { packUser(UserLine.wrapRow(it)) }
-                    .distinctBy { it.id }
+
+                size = query.count().toInt()
+                Pair(query
+                    .map { packUser(UserLine.wrapRow(it)) }.distinctBy { it.id }, size)
             } else {
+                val query =
                 UserLine.find { whereClause }
                     .orderBy(Users.price to SortOrder.ASC)
-                    .limit(limit)
-                    .offset((page * limit).toLong())
+                size = query.count().toInt()
+                Pair(query
                     .map { packUser(it) }
-                    .toList()
+                    .toList(), size)
             }
         }
 
@@ -611,7 +620,7 @@ class UsersController {
         user.password = line.password
         user.phone = line.phone
         user.experience = line.experience
-        user.abilities = line.abilities.map { AbilityEnums.from(it.id.value) ?: AbilityEnums.VOICE }.toMutableSet()
+        user.abilities = line.abilities.map { AbilityEnums.from(it.ability) ?: AbilityEnums.VOICE }.toMutableSet()
         user.price = line.price
         user.description = line.description
         user.address = line.address

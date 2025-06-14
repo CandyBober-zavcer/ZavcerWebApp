@@ -12,6 +12,7 @@ import ru.yarsu.web.domain.enums.DistrictEnums
 import kotlinx.datetime.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.isNull
+import ru.yarsu.web.domain.classes.User
 
 class SpotsController {
     /**
@@ -29,49 +30,54 @@ class SpotsController {
     fun getSpotsByPage(
         page: Int,
         limit: Int,
-        drums: Boolean? = null,
+        drums: Boolean = false,
         guitarAmps: Int = 0,
         bassAmps: Int = 0,
-        districtList: List<DistrictEnums> = DistrictEnums.entries,
+        districtList: List<Int> = DistrictEnums.entries.map { it.id },
         priceLow: Int = 0,
         priceHigh: Int = Int.MAX_VALUE,
         sortByNearest: Boolean = false
-    ): List<Spot> =
+    ): Pair<List<Spot>, Int> =
     transaction {
-        val districts = districtList.map { it.id }
-        Spots.selectAll()
+        val size: Int
 
         var whereClause =
-            (Spots.district inList districts) and
+            (Spots.district inList districtList) and
                     (Spots.guitarAmps greaterEq guitarAmps) and
                     (Spots.bassAmps greaterEq bassAmps) and
                     (Spots.price greaterEq priceLow) and
                     (Spots.price lessEq priceHigh)
-
-        drums?.let { whereClause = whereClause and (Spots.hasDrums eq it) }
+        if (drums)
+            whereClause = whereClause and (Spots.hasDrums eq true)
 
         if (sortByNearest) {
             val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
-            (Spots innerJoin SpotsDays innerJoin DayOccupations innerJoin HourOccupations)
-                .select(
-                    whereClause and
-                            (HourOccupations.occupation.isNull()) and
-                            (DayOccupations.day greaterEq today)
-                )
+            val selectedColumns = Spots.columns + HourOccupations.columns + DayOccupations.columns
+            val query = Spots
+                .innerJoin(SpotsDays, { Spots.id }, { spot })
+                .innerJoin(DayOccupations, { SpotsDays.day }, { id })
+                .innerJoin(HourOccupations, { DayOccupations.id }, { day })
+                .select (
+                    columns = selectedColumns
+                ).where {
+                    HourOccupations.occupation.isNull() and whereClause and (DayOccupations.day greaterEq today)
+                }
                 .orderBy(
                     DayOccupations.day to SortOrder.ASC,
-                    HourOccupations.hour to SortOrder.ASC
+                    Spots.price to SortOrder.ASC
                 )
-                .limit(limit)
-                .offset((page * limit).toLong())
-                .map { packSpot(SpotLine.wrapRow(it)) }
-                .distinctBy { it.id }
+
+            size = query.count().toInt()
+            Pair(query
+                .map { packSpot(SpotLine.wrapRow(it)) }.distinctBy { it.id }, size)
         } else {
-            SpotLine.find { whereClause }
-                .limit(limit)
-                .offset((page * limit).toLong())
+            val query =
+                SpotLine.find { whereClause }
+                    .orderBy(Spots.price to SortOrder.ASC)
+            size = query.count().toInt()
+            Pair(query
                 .map { packSpot(it) }
-                .toList()
+                .toList(), size)
         }
     }
 

@@ -215,11 +215,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const formData = {
             date: selectedDate,
-            time: selectedTime
+            time: selectedTime,
+            userId: window.userId  
         };
 
         console.log('Отправляемые данные:', formData);
-        fetch('http://localhost:8080/studio/1', {
+        fetch('/studio/1', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

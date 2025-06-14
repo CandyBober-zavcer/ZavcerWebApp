@@ -1,17 +1,170 @@
 {# @pebvariable name="model" type="ru.yarsu.web.models.teacher.EditTeacherVM" #}
-{% extends "../DesignedLayout.peb" %}
+    {% extends "../DesignedLayout.peb" %}
+    {% block style %}Teacher.css{% endblock %}
 
-
-
-{% block content %}
+    {% block content %}
 <div class="container mt-5">
-    <form method="post" id="bookingForm" enctype="multipart/form-data">
+    <section class="d-flex justify-content-between align-items-center px-3 py-2 filter-custom-margin">
+        <a href="/teachers" class="btn btn-link text-secondary p-0">
+            <i class="bi bi-chevron-left" style="font-size: 1.5rem;"></i>
+        </a>
+        <h2 class="mb-0">Редактирование преподавателя</h2>
+        <div style="width: 40px;"></div> <!-- Для выравнивания -->
+    </section>
 
-        <div class="mb-3">
-            <label for="fullName" class="form-label">Полное имя</label>
-            <input type="text" value="{{ model.teacher.name }} " class="form-control" id="name" name="name" required>
-        </div>
+    <form method="post" enctype="multipart/form-data" action="/edit/teacher/edit-{{ model.teacher.id }}">
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-lg-4 col-md-5">
+                <div class="h-100 d-flex bg-light flex-column p-4">
+                    <div class="position-relative mb-4">
+                        {% if model.teacher.images | length > 0 %}
+                            <img id="teacher-photo-preview" src="/image/{{ model.teacher.images[0] }}"
+                                 alt="Фото преподавателя" class="img-fluid rounded-3 shadow-sm"
+                                 style="max-height: 350px; object-fit: cover;">
+                        {% else %}
+                            <img id="teacher-photo-preview" src="/img/defaultTeacher.webp"
+                                 alt="Фото преподавателя" class="img-fluid rounded-3 shadow-sm"
+                                 style="max-height: 350px; object-fit: cover;">
+                        {% endif %}
+                    </div>
 
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Фотография преподавателя</label>
+                        <input type="file" class="form-control" id="photo" name="photo" accept="image/*"
+                               onchange="previewPhoto(event)">
+                        {% for error in model.form.fields("photo").errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                <div class="card-body p-4 p-lg-5">
+                        <input type="hidden" name="_csrf" value="{{ csrf_token }}">
+
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-semibold">Полное имя</label>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" required
+                                   value="{{ model.teacher.name }}">
+                            {% for error in model.form.fields("name").errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">Краткое описание</label>
+                            <input type="text" class="form-control" id="description" name="description" required
+                                   value="{{ model.teacher.description }}">
+                            {% for error in model.form.fields("description").errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3"><img src="/img/phone.svg" width="35" height="35"></div>
+                                    <div style="flex-grow: 1;">
+                                        <label for="phone" class="form-label fw-semibold">Телефон</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone" required
+                                               value="{{ model.teacher.phone }}">
+                                        {% for error in model.form.fields("phone").errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-success me-3"><img src="/img/currency-rubel.svg" width="35" height="35"></div>
+                                    <div style="flex-grow: 1;">
+                                        <label for="price" class="form-label fw-semibold">Стоимость за час</label>
+                                        <input type="number" class="form-control" id="price" name="price" min="0" required
+                                               value="{{ model.teacher.price }}">
+                                        {% for error in model.form.fields("price").errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3"><img src="/img/chalkboard-teacher.svg" width="35" height="35"></div>
+                                    <div style="flex-grow: 1;">
+                                        <label for="experience" class="form-label fw-semibold">Опыт преподавания</label>
+                                        <input type="number" class="form-control" id="experience" name="experience" min="0" required
+                                               value="{{ model.teacher.experience }}">
+                                        {% for error in model.form.fields("experience").errors %}
+                                            <div class="text-danger">{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="d-flex align-items-center p-3 bg-light rounded-3">
+                                    <div class="fs-4 text-info me-3"><img src="/img/piano.svg" width="35" height="35"></div>
+                                    <div style="flex-grow: 1;">
+                                        <div class="form-label fw-semibold">Инструменты</div>
+                                        <div class="form-check">
+                                            {% for ability in model.allAbilityWithNames %}
+                                                <input class="form-check-input" type="checkbox"
+                                                       id="ability-{{ ability.first }}" name="abilities"
+                                                       value="{{ ability.first }}"
+                                                       {% if model.abilitySelected[ability.first] %}checked{% endif %}>
+                                                <label class="form-check-label" for="ability-{{ ability.first }}">
+                                                    {{ ability.second }}
+                                                </label><br>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card bg bg-opacity-10 border-opacity-25 mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title text d-flex align-items-center mb-3">
+                                    <span class="fs-4 me-2"><img src="/img/map-pin.svg" width="35" height="35"></span>
+                                    Местоположение
+                                </h5>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label fw-semibold">Адрес</label>
+                                    <input type="text" class="form-control" id="address" name="address" required
+                                           value="{{ model.teacher.address }}">
+                                    {% for error in model.form.fields("address").errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-0">
+                                    <label for="district" class="form-label fw-semibold">Район</label>
+                                    <select class="form-select" id="district" name="district" required>
+                                        {% for district in model.allDistricts %}
+                                            <option value="{{ district.name }}"
+                                                    {% if district.name == model.teacher.district.name %}selected{% endif %}>
+                                                {{ district.district }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    {% for error in model.form.fields("district").errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Сохранить изменения
+                            </button>
+                        </div>
+
+<<<<<<< HEAD
+=======
         <div class="mb-3">
             <label for="shortDescription" class="form-label">Краткое описание</label>
             <input type="text" value="{{ model.teacher.description }}" class="form-control" id="description"
@@ -83,19 +236,38 @@
                     <label class="form-check-label" for="ability-{{ ability.first }}">
                         {{ ability.second }}
                     </label>
+>>>>>>> 5b786fb222667aab48826a5344fc7ad604a18117
                 </div>
-                {% endfor %}
             </div>
         </div>
+<<<<<<< HEAD
+    </div>
+=======
 
 
         <button type="submit" class="btn btn-primary">Сохранить данные преподавателя</button>
 
+>>>>>>> 5b786fb222667aab48826a5344fc7ad604a18117
     </form>
 </div>
+
+<script>
+function previewPhoto(event) {
+    const preview = document.getElementById('teacher-photo-preview');
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = function() {
+        preview.src = reader.result;
+    }
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+}
+</script>
 {% endblock %}
 
 {% block script %}
-
 <script src="/js/EditDateAndTime.js"></script>
 {% endblock %}

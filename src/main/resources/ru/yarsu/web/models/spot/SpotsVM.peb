@@ -108,6 +108,14 @@
                             min="100" max="110">
                     </div>
                 </div>
+                
+                <div class="mb-3">
+                    <div class="form-check">
+                            <input class="form-check-input border-secondary focus-ring focus-ring-secondary"
+                                type="checkbox" value="sort-by-time" id="sort-by-time" name="sort-by-time">
+                            <label class="form-check-label" for="sort-by-time">Ближайшие свободные</label>
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary w-100 mt-2">Применить фильтры</button>
             </form>

@@ -48,7 +48,7 @@ fun main() {
     val databaseController = DatabaseController()
     val sessionStorage = SessionStorage()
 
-//    AddData(databaseController, OccupationsController())
+    AddData(databaseController, OccupationsController())
 
     val app =
         requestContextFilter
